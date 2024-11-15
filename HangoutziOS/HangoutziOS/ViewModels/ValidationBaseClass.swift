@@ -11,8 +11,7 @@ class Validation {
     
     // Checks whether the email string is of correct email format, including the dot and @
     func isValidEmail(_ email: String) -> Bool {
-        let emailRegex = "^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$"
-        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", Constants.emailRegex)
         return emailPredicate.evaluate(with: email)
     }
     
@@ -23,8 +22,7 @@ class Validation {
     
     // Checks if the password fulfills all of the requirements: at least 8 characters and at least one digit
     func isValidPassword(_ password: String) -> Bool {
-        let passRegex = "^(?=.*\\d)[A-Za-z0-9!@#$%^&*]{8,}$"
-        let passPredicate = NSPredicate(format: "SELF MATCHES %@", passRegex)
+        let passPredicate = NSPredicate(format: "SELF MATCHES %@", Constants.passRegex)
         return passPredicate.evaluate(with: password)
     }
     
@@ -33,15 +31,8 @@ class Validation {
         return pass == conPass
     }
     
-    
     // Checks if the name has at least 3 and at most 25 characters
     func isNameValid(_ name: String) -> Bool {
-        return name.count >= 3 && name.count <= 25
+        return name.count >= Constants.minNameLength && name.count <= Constants.maxNameLength
     }
-    
-    
 }
-
-
-
-
