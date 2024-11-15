@@ -18,16 +18,18 @@ struct LoginView: View {
     
     //MARK: BODY
     var body: some View {
-        ZStack{
-            Image(backgroundImage)
-                .resizable()
-                .scaledToFill()
-                .edgesIgnoringSafeArea(.all)
-            
-            hangoutzLogo
-            LoginSection(emailLogin: email, passwordLogin: password)
-            LoginOrCreateAccount()
-        }//ZStack
+        NavigationStack {
+            ZStack{
+                Image(backgroundImage)
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
+                
+                hangoutzLogo
+                LoginSection(emailLogin: email, passwordLogin: password, isVisiblePassword: false)
+                LoginOrCreateAccount()
+            }//ZStack
+        }//NavigationStack
         
     }//body
     
@@ -46,7 +48,7 @@ struct LoginView: View {
     }//hangoutzLogo
     
 
-}
+}//LoginView
 #Preview {
     LoginView()
 }
@@ -55,6 +57,7 @@ struct LoginView: View {
 struct LoginSection: View {
     @State var emailLogin: String
     @State var passwordLogin: String
+    @State var isVisiblePassword: Bool
     
     var body: some View {
         VStack{
@@ -73,18 +76,22 @@ struct LoginSection: View {
                 .padding(20)
             
             // Password SecureField
-            SecureField("Password", text: $passwordLogin)
-                .autocapitalization(.none)
-                .frame(width: 320, height: 25, alignment: .center)
-                .foregroundColor(.white)
-                .textContentType(.emailAddress)
-                .padding()
-                .foregroundColor(.white)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.white, lineWidth: 3)
-                )
-            
+            HStack {
+                SecureField("Password", text: $passwordLogin)
+                    .autocapitalization(.none)
+                    .frame(width: 320, height: 25, alignment: .center)
+                    .foregroundColor(.white)
+                    .textContentType(.emailAddress)
+                    .padding()
+                    .foregroundColor(.white)
+
+            }
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.white, lineWidth: 3)
+                  
+
+            )
         }//VStack
         .padding(.bottom, 80)
     }
@@ -104,7 +111,7 @@ struct LoginOrCreateAccount: View {
                 }
                 .padding()
                 .frame(width:310)
-                .background(Color.white.opacity(0.8))
+                .background(Color.loginButton)
                 .cornerRadius(10)
                 .foregroundColor(.black)
             }
@@ -116,18 +123,17 @@ struct LoginOrCreateAccount: View {
                 .foregroundColor(.white)
                 .padding(.top, 20)
             
-            // Create Account Button
-            Button(action: {
-                // Handle account creation here
-            }) {
-                Text("Create Account")
+            // Create Account NavigationLink
+            NavigationLink(destination: {/*TODO: Destination to createAccountView */}, label:{ Text("Create account")
+                    .padding(5)
+                    .font(.title3)
                     .bold()
-                    .underline()
-                    .foregroundColor(.white)
-            }
-            .padding(.top, 10)
+                .foregroundColor(.white)})
+
             
         }//VStack
         .padding(.bottom, 10)
     }
 }
+
+
