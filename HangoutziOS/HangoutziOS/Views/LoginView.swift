@@ -49,6 +49,7 @@ struct LoginView: View {
     
 
 }//LoginView
+
 #Preview {
     LoginView()
 }
@@ -62,7 +63,8 @@ struct LoginSection: View {
     var body: some View {
         VStack{
             // Email TextField
-            TextField("Email", text: $emailLogin)
+            TextField("", text: $emailLogin, prompt: Text("Username").foregroundColor(.white))
+
                 .autocapitalization(.none)
                 .frame(width: 320, height: 25, alignment: .center)
                 .foregroundColor(.white)
@@ -76,26 +78,23 @@ struct LoginSection: View {
                 .padding(20)
             
             // Password SecureField
-            HStack {
-                SecureField("Password", text: $passwordLogin)
+            SecureField("", text: $passwordLogin, prompt: Text("Password").foregroundColor(.white))
+
                     .autocapitalization(.none)
                     .frame(width: 320, height: 25, alignment: .center)
                     .foregroundColor(.white)
                     .textContentType(.emailAddress)
                     .padding()
                     .foregroundColor(.white)
-
-            }
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.white, lineWidth: 3)
-                  
-
-            )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color.white, lineWidth: 3)
+                        )
         }//VStack
         .padding(.bottom, 80)
     }
 }
+
 //MARK: LOGIN OR CREATE ACCOUNT
 struct LoginOrCreateAccount: View {
     var body: some View {
