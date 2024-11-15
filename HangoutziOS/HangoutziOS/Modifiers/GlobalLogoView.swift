@@ -13,6 +13,7 @@ struct GlobalLogoView: View {
                    .resizable()
                    .scaledToFit()
                    .frame(width: 215, height: 50)
+                   
            }
     }
 
