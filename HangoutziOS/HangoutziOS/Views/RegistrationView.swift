@@ -78,8 +78,14 @@ struct RegistrationView: View {
                 Button(action: {
                     //registration action here
                 }){
-                    
+                    Text("Create Account")
+                        .padding()
+                        .frame(width:310)
+                        .background(Color.white)
+                        .cornerRadius(20)
+                        .bold()
                 }
+                .padding(.top, 40)
                 
         
                 
