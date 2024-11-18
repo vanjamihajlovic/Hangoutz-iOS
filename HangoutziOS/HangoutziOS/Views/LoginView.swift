@@ -12,9 +12,8 @@ struct LoginView: View {
     //MARK: PROPERTIES
     let backgroundImage: String = "MainBackground"
     let logo: String = "Hangoutz"
-    @State var email: String = ""
-    @State var password: String = ""
-
+    var loginViewModel : LoginViewModel = LoginViewModel()
+  
     
     //MARK: BODY
     var body: some View {
@@ -26,11 +25,10 @@ struct LoginView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 hangoutzLogo
-                LoginSection(emailLogin: email, passwordLogin: password, isVisiblePassword: false)
+                LoginSection(emailLogin: loginViewModel.username , passwordLogin: loginViewModel.password, isVisiblePassword: false)
                 LoginOrCreateAccount()
             }//ZStack
         }//NavigationStack
-        
     }//body
     
     //MARK: HANGOUTZ LOGO
@@ -39,15 +37,13 @@ struct LoginView: View {
             Image(logo)
                 .resizable()
                 .scaledToFit()
-                //Dimension and distance from top of the screen used from Figma
+            //Dimension and distance from top of the screen used from Figma
                 .frame(width: 215, height: 50, alignment: .center)
                 .padding(.top, 100)
                 .padding(.trailing, 20)
             Spacer()
         }//VStack
     }//hangoutzLogo
-    
-
 }//LoginView
 
 #Preview {
@@ -64,7 +60,6 @@ struct LoginSection: View {
         VStack{
             // Email TextField
             TextField("", text: $emailLogin, prompt: Text("Username").foregroundColor(.white))
-
                 .autocapitalization(.none)
                 .frame(width: 320, height: 25, alignment: .center)
                 .foregroundColor(.white)
@@ -76,20 +71,18 @@ struct LoginSection: View {
                         .stroke(Color.white, lineWidth: 3)
                 )
                 .padding(20)
-            
             // Password SecureField
             SecureField("", text: $passwordLogin, prompt: Text("Password").foregroundColor(.white))
-
-                    .autocapitalization(.none)
-                    .frame(width: 320, height: 25, alignment: .center)
-                    .foregroundColor(.white)
-                    .textContentType(.emailAddress)
-                    .padding()
-                    .foregroundColor(.white)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.white, lineWidth: 3)
-                        )
+                .autocapitalization(.none)
+                .frame(width: 320, height: 25, alignment: .center)
+                .foregroundColor(.white)
+                .textContentType(.emailAddress)
+                .padding()
+                .foregroundColor(.white)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.white, lineWidth: 3)
+                )
         }//VStack
         .padding(.bottom, 80)
     }
@@ -115,24 +108,18 @@ struct LoginOrCreateAccount: View {
                 .foregroundColor(.black)
             }
             .padding(.horizontal, 40)
-            
             // "OR" text
             Text("OR")
                 .bold()
                 .foregroundColor(.white)
                 .padding(.top, 20)
-            
             // Create Account NavigationLink
             NavigationLink(destination: {/*TODO: Destination to createAccountView */}, label:{ Text("Create account")
                     .padding(5)
                     .font(.title3)
                     .bold()
                 .foregroundColor(.white)})
-
-            
         }//VStack
         .padding(.bottom, 10)
     }
 }
-
-

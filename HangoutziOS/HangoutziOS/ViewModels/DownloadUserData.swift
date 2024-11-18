@@ -15,11 +15,9 @@ class DownloadUserData: ObservableObject {
     init() {
         getUserData()
     }
-    
     func getUserData() {
-        
-        guard let url = URL(string: "https://zsjxwfjutstrybvltjov.supabase.co/rest/v1/users?select=*") else { return }
-        
+        //URL for all users in database
+        guard let url = URL(string: baseUrl) else { return }
         downloadData(fromURL: url) { (returnedData) in
             if let data = returnedData {
                 guard let newUsers = try? JSONDecoder().decode([userData].self, from: data) else { return }
@@ -31,9 +29,7 @@ class DownloadUserData: ObservableObject {
             }
         }
     }
-    
     func downloadData(fromURL url: URL, completionHandler: @escaping (_ data: Data?) -> ()) {
-        
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard
                 let data = data,
@@ -44,10 +40,7 @@ class DownloadUserData: ObservableObject {
                 completionHandler(nil)
                 return
             }
-            
             completionHandler(data)
-            
         }.resume()
     }
-
 }
