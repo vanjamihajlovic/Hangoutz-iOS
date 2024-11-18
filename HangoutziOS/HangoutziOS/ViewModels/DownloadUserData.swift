@@ -17,7 +17,7 @@ class DownloadUserData: ObservableObject {
     }
     func getUserData() {
         //URL for all users in database
-        guard let url = URL(string: baseUrl) else { return }
+        guard let url = URL(string: baseUrlLogin) else { return }
         downloadData(fromURL: url) { (returnedData) in
             if let data = returnedData {
                 guard let newUsers = try? JSONDecoder().decode([userData].self, from: data) else { return }

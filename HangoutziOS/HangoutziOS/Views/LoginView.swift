@@ -12,7 +12,7 @@ struct LoginView: View {
     //MARK: PROPERTIES
     let backgroundImage: String = "MainBackground"
     let logo: String = "Hangoutz"
-    var loginViewModel : LoginViewModel = LoginViewModel()
+    @ObservedObject var loginViewModel : LoginViewModel = LoginViewModel()
   
     
     //MARK: BODY
@@ -25,8 +25,8 @@ struct LoginView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 hangoutzLogo
-                LoginSection(emailLogin: loginViewModel.username , passwordLogin: loginViewModel.password, isVisiblePassword: false)
-                LoginOrCreateAccount()
+                LoginSection(loginViewModel:loginViewModel, isVisiblePassword: false)
+                LoginOrCreateAccount(loginViewModel: loginViewModel)
             }//ZStack
         }//NavigationStack
     }//body
@@ -52,14 +52,15 @@ struct LoginView: View {
 
 //MARK: EMAIL AND PASSWORD
 struct LoginSection: View {
-    @State var emailLogin: String
-    @State var passwordLogin: String
+    
+    @State var loginViewModel: LoginViewModel
+    //TODO: CREATE SHOW PASSWORD LOGIC ON CLICKED Image(systemName: "eye")
     @State var isVisiblePassword: Bool
     
     var body: some View {
         VStack{
             // Email TextField
-            TextField("", text: $emailLogin, prompt: Text("Username").foregroundColor(.white))
+            TextField("", text: $loginViewModel.username, prompt: Text("Username").foregroundColor(.white))
                 .autocapitalization(.none)
                 .frame(width: 320, height: 25, alignment: .center)
                 .foregroundColor(.white)
@@ -72,11 +73,11 @@ struct LoginSection: View {
                 )
                 .padding(20)
             // Password SecureField
-            SecureField("", text: $passwordLogin, prompt: Text("Password").foregroundColor(.white))
+            SecureField("", text: $loginViewModel.password, prompt: Text("Password").foregroundColor(.white))
                 .autocapitalization(.none)
                 .frame(width: 320, height: 25, alignment: .center)
                 .foregroundColor(.white)
-                .textContentType(.emailAddress)
+                .textContentType(.password)
                 .padding()
                 .foregroundColor(.white)
                 .overlay(
@@ -90,12 +91,28 @@ struct LoginSection: View {
 
 //MARK: LOGIN OR CREATE ACCOUNT
 struct LoginOrCreateAccount: View {
+    
+    //Object of class LoginViewModel
+    var loginViewModel : LoginViewModel
+    @State var showAlert: Bool = false
+    
     var body: some View {
         VStack{
             Spacer()
             // Login Button
             Button(action: {
+                
+               
                 // Handle login action here
+                if(loginViewModel.validateLogin(username: loginViewModel.username, password: loginViewModel.password))
+                {
+                    //Login user to event screen
+    
+                }
+                else {
+                    showAlert.toggle()
+                }
+               
             }) {
                 HStack {
                     Text("Login")
@@ -106,8 +123,13 @@ struct LoginOrCreateAccount: View {
                 .background(Color.loginButton)
                 .cornerRadius(10)
                 .foregroundColor(.black)
-            }
+                .alert(isPresented: $showAlert) {
+                    Alert(title: Text(loginViewModel.errorMessage))
+                }
+            }//LoginButton
             .padding(.horizontal, 40)
+            
+            
             // "OR" text
             Text("OR")
                 .bold()
