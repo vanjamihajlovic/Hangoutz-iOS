@@ -13,7 +13,7 @@ struct LoginView: View {
     let backgroundImage: String = "MainBackground"
     let logo: String = "Hangoutz"
     @ObservedObject var loginViewModel : LoginViewModel = LoginViewModel()
-  
+    @ObservedObject var userViewModel: UserViewModel = UserViewModel()
     
     //MARK: BODY
     var body: some View {
@@ -26,7 +26,7 @@ struct LoginView: View {
                 
                 hangoutzLogo
                 LoginSection(loginViewModel:loginViewModel, isVisiblePassword: false)
-                LoginOrCreateAccount(loginViewModel: loginViewModel)
+                LoginOrCreateAccount(loginViewModel: loginViewModel, userViewModel: userViewModel)
             }//ZStack
         }//NavigationStack
     }//body
@@ -94,6 +94,7 @@ struct LoginOrCreateAccount: View {
     
     //Object of class LoginViewModel
     var loginViewModel : LoginViewModel
+    var userViewModel: UserViewModel
     @State var showAlert: Bool = false
     
     var body: some View {
@@ -101,18 +102,26 @@ struct LoginOrCreateAccount: View {
             Spacer()
             // Login Button
             Button(action: {
-                
-               
-                // Handle login action here
-                if(loginViewModel.validateLogin(username: loginViewModel.username, password: loginViewModel.password))
+                // Handle validation logic
+                if(loginViewModel.validateLogin())
                 {
+                    print("Username: \(loginViewModel.username) \n Password: \(loginViewModel.password) \n")
                     //Login user to event screen
-    
+                    //loginViewModel.isLoggedIn.toggle()
+                    loginViewModel.createUrlLogin()
+                    userViewModel.fetchUsers()
+                    print("url passed to server: \(loginViewModel.url)")
+                    if(loginViewModel.isLoggedIn){
+                        NavigationLink(destination: {/*TODO: Destination to createAccountView */},label: {}
+                              )
+                    }
                 }
                 else {
                     showAlert.toggle()
+                    loginViewModel.username=""
+                    loginViewModel.password=""
                 }
-               
+                
             }) {
                 HStack {
                     Text("Login")
@@ -128,8 +137,6 @@ struct LoginOrCreateAccount: View {
                 }
             }//LoginButton
             .padding(.horizontal, 40)
-            
-            
             // "OR" text
             Text("OR")
                 .bold()

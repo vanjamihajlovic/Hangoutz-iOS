@@ -15,7 +15,9 @@ class DownloadUserData: ObservableObject {
     init() {
         getUserData()
     }
+    
     func getUserData() {
+        
         //URL for all users in database
         guard let url = URL(string: baseUrlLogin) else { return }
         downloadData(fromURL: url) { (returnedData) in
@@ -43,4 +45,4 @@ class DownloadUserData: ObservableObject {
             completionHandler(data)
         }.resume()
     }
-}
+}//DownloadUserData
