@@ -75,7 +75,7 @@ struct RegistrationView: View {
                                     )
                     if !registrationViewModel.isPasswordValid && registrationViewModel.allFieldsFilled {
                     Text("At least 8 characters,a digit")
-                    .foregroundColor(Color("ErrorColor"))
+                            .foregroundColor(Color.white)
                     .font(.system(size: 17))
                     .padding(.leading, 5)
                                     }
@@ -98,14 +98,14 @@ struct RegistrationView: View {
                                  
                     if !registrationViewModel.isPassword2Valid && registrationViewModel.allFieldsFilled{
                         Text("Passwords do not match.")
-                        .foregroundColor(Color("ErrorColor"))
+                            .foregroundColor(Color.white)
                         .font(.system(size: 17))
                         .padding(.leading, 5)
                                  }
                 }
                 if registrationViewModel.showGlobalError {
                     Text(registrationViewModel.globalErrorMessage)
-                    .foregroundColor(.red)
+                        .foregroundColor(.white)
                     .font(.system(size: 17))
                 }
                 
