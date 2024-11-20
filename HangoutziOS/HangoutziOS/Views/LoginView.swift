@@ -12,23 +12,37 @@ struct LoginView: View {
     //MARK: PROPERTIES
     let backgroundImage: String = "MainBackground"
     let logo: String = "Hangoutz"
+    //Path for navigation
+    @State private var path = NavigationPath()
     @ObservedObject var loginViewModel : LoginViewModel = LoginViewModel()
-    @ObservedObject var userViewModel: UserViewModel = UserViewModel()
+    @ObservedObject var userService: UserService = UserService()
+    //Used for navigation
+    @StateObject var router: Router = Router()
+    
     
     //MARK: BODY
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ZStack{
                 Image(backgroundImage)
                     .resizable()
                     .scaledToFill()
                     .edgesIgnoringSafeArea(.all)
-                
+                //SECTION: Title
                 hangoutzLogo
+                //SECTION: Login
                 LoginSection(loginViewModel:loginViewModel, isVisiblePassword: false)
-                LoginOrCreateAccount(loginViewModel: loginViewModel, userViewModel: userViewModel)
+                //SECTION: Create
+                CreateAccount(loginViewModel: loginViewModel, userService: userService,path: $path)
+            }.navigationDestination(for: String.self) { view in
+                if view == Router.Destination.eventScreen.rawValue {
+                    EventScreen()
+                }
+                
             }//ZStack
+            
         }//NavigationStack
+        
     }//body
     
     //MARK: HANGOUTZ LOGO
@@ -90,12 +104,14 @@ struct LoginSection: View {
 }
 
 //MARK: LOGIN OR CREATE ACCOUNT
-struct LoginOrCreateAccount: View {
+struct CreateAccount: View {
     
     //Object of class LoginViewModel
     var loginViewModel : LoginViewModel
-    var userViewModel: UserViewModel
+    var userService : UserService
     @State var showAlert: Bool = false
+    @Binding var path : NavigationPath
+    
     
     var body: some View {
         VStack{
@@ -105,16 +121,9 @@ struct LoginOrCreateAccount: View {
                 // Handle validation logic
                 if(loginViewModel.validateLogin())
                 {
-                    print("Username: \(loginViewModel.username) \n Password: \(loginViewModel.password) \n")
                     //Login user to event screen
-                    //loginViewModel.isLoggedIn.toggle()
                     loginViewModel.createUrlLogin()
-                    userViewModel.fetchUsers()
-                    print("url passed to server: \(loginViewModel.url)")
-                    if(loginViewModel.isLoggedIn){
-                        NavigationLink(destination: {/*TODO: Destination to createAccountView */},label: {}
-                              )
-                    }
+                    getUserFromSupabase()
                 }
                 else {
                     showAlert.toggle()
@@ -148,7 +157,24 @@ struct LoginOrCreateAccount: View {
                     .font(.title3)
                     .bold()
                 .foregroundColor(.white)})
+            
         }//VStack
         .padding(.bottom, 10)
     }
+    
+    func getUserFromSupabase() {
+        Task {
+            await userService.getUsers(from: loginViewModel.url)
+            
+            if(userService.users.first?.id != nil){
+                path.append("eventScreen")
+                loginViewModel.isLoggedIn.toggle()
+                print("Bool isLoggedin: \(loginViewModel.isLoggedIn)\n")
+                
+            }
+            else {
+                showAlert.toggle()
+                loginViewModel.errorMessage = "Invalid username or password"
+            }
+        }}
 }

@@ -17,6 +17,7 @@ class LoginViewModel: ObservableObject  {
     @Published var url: String = ""
     //Create object of class Validation
     var validation : Validation = Validation()
+    var userService: UserService = UserService()
     
     //MARK: HASH PASSWORD FUNCTION
     func hashPassword(password: String) -> String {
@@ -28,10 +29,11 @@ class LoginViewModel: ObservableObject  {
         return hashed.compactMap{ String(format: "%02x", $0) }.joined()
     }
     //MARK: CREATE URL
-    func createUrlLogin() {
+    func createUrlLogin()  {
         //Hash password for url
         let hashedPassword = hashPassword(password: password)
         url = SupabaseConfig.baseURL + "rest/v1/users?select=id,email,password_hash&email=eq.\(username)&password_hash=eq.\(hashedPassword)"
+      
     }//createBaseUrlLogin
     
     //MARK: VALIDATE USER
@@ -48,4 +50,18 @@ class LoginViewModel: ObservableObject  {
         }
         return true
     }
+ 
+//    func downloadData() {
+//        userService.getUsers(from: url) {[weak self] result in
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .success(let code):
+//                    self?.statusCode = code
+//                case .failure(let error):
+//                    self?.errorMessage = "Invalid username or password"
+//                }
+//            }
+//        }
+//    }
+  
 }//LoginViewModel
