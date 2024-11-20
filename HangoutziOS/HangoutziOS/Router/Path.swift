@@ -15,25 +15,20 @@ class Router: ObservableObject {
     //MARK: NavigationPath
     @State private var path = NavigationPath()
     
+    ///Enum for all the screens in app
     enum Destination: String, Hashable {
         
-        case loginView //= "/login"
+        case loginView
         case eventScreen
         
         var view: any View {
+            
             switch self {
-                
             case .loginView:
                 return LoginView()
             case .eventScreen:
                 return EventScreen()
             }
         }
-    
-//        var path: String {
-//            return rawValue
-//        }
     }
-    
-    
 }

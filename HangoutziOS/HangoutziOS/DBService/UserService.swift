@@ -13,7 +13,7 @@ class UserService : ObservableObject {
     
     init() {
     }
-    
+    ///Function that fetches data from Supabase. Returns an array of userData
     func getUsers(from urlString: String) async -> [userData] {
         guard let url = URL(string: urlString) else {
             print("Invalid URL.")
@@ -31,13 +31,14 @@ class UserService : ObservableObject {
                 self.users = newUsers
             }
             return newUsers
-            //                }
+          
         } else {
             return []
             print("No data returned.")
         }
     }
-    
+    ///Function used for downloading data. Returns an optional type Data that will later be decoded.
+    ///It is used only to GET data.
     func downloadData(fromURL url: URL) async -> Data? {
         
         var request = URLRequest(url: url)

@@ -9,7 +9,7 @@ import Foundation
 import CryptoKit
 
 class LoginViewModel: ObservableObject  {
-    
+    //MARK: PROPERTIES
     @Published var username: String = ""
     @Published var password: String = ""
     @Published var errorMessage: String = ""
@@ -20,23 +20,24 @@ class LoginViewModel: ObservableObject  {
     var userService: UserService = UserService()
     
     //MARK: HASH PASSWORD FUNCTION
+    ///Function that hashes the user password according to the SHA256 hash function
     func hashPassword(password: String) -> String {
-        //Covert password to data
         let data = Data(password.utf8)
-        //Hash the data using SHA256
         let hashed = SHA256.hash(data: data)
         //Convert the hashed data to a hexadecimal string
         return hashed.compactMap{ String(format: "%02x", $0) }.joined()
     }
     //MARK: CREATE URL
+    ///Creates a url from the base supabase url and embeds user email and hashed password to the URL request
     func createUrlLogin()  {
         //Hash password for url
         let hashedPassword = hashPassword(password: password)
         url = SupabaseConfig.baseURL + "rest/v1/users?select=id,email,password_hash&email=eq.\(username)&password_hash=eq.\(hashedPassword)"
-      
+        
     }//createBaseUrlLogin
     
     //MARK: VALIDATE USER
+    ///Function that returns true if the local valiation goes well, else returns false and doesn't send any data to the database.
     func validateLogin() -> Bool {
         if(validation.isEmpty(self.username) || validation.isEmpty(self.password)){
             //Empty fields error
@@ -44,24 +45,9 @@ class LoginViewModel: ObservableObject  {
             return false
         }
         else if(!validation.isValidEmail(self.username) || !validation.isValidPassword(self.password)) {
-            //Invalid username or password
             self.errorMessage = "Incorrect email or password"
             return false
         }
         return true
     }
- 
-//    func downloadData() {
-//        userService.getUsers(from: url) {[weak self] result in
-//            DispatchQueue.main.async {
-//                switch result {
-//                case .success(let code):
-//                    self?.statusCode = code
-//                case .failure(let error):
-//                    self?.errorMessage = "Invalid username or password"
-//                }
-//            }
-//        }
-//    }
-  
 }//LoginViewModel

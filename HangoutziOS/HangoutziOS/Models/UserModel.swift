@@ -11,7 +11,7 @@
 
 import Foundation
 
-// MARK: - userData
+///Structure that holds all fields from the database
 struct userData: Codable {
     let name: String?
     let avatar: String?

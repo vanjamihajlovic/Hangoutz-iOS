@@ -12,13 +12,14 @@ struct LoginView: View {
     //MARK: PROPERTIES
     let backgroundImage: String = "MainBackground"
     let logo: String = "Hangoutz"
-    //Path for navigation
+    
+    //Used for screen navigation
     @State private var path = NavigationPath()
-    @ObservedObject var loginViewModel : LoginViewModel = LoginViewModel()
-    @ObservedObject var userService: UserService = UserService()
-    //Used for navigation
     @StateObject var router: Router = Router()
     
+    //Class instances
+    @ObservedObject var loginViewModel : LoginViewModel = LoginViewModel()
+    @ObservedObject var userService: UserService = UserService()
     
     //MARK: BODY
     var body: some View {
@@ -32,17 +33,15 @@ struct LoginView: View {
                 hangoutzLogo
                 //SECTION: Login
                 LoginSection(loginViewModel:loginViewModel, isVisiblePassword: false)
-                //SECTION: Create
+                //SECTION: Create Account
                 CreateAccount(loginViewModel: loginViewModel, userService: userService,path: $path)
-            }.navigationDestination(for: String.self) { view in
+            }
+            .navigationDestination(for: String.self) { view in
                 if view == Router.Destination.eventScreen.rawValue {
                     EventScreen()
                 }
-                
             }//ZStack
-            
         }//NavigationStack
-        
     }//body
     
     //MARK: HANGOUTZ LOGO
@@ -106,12 +105,17 @@ struct LoginSection: View {
 //MARK: LOGIN OR CREATE ACCOUNT
 struct CreateAccount: View {
     
-    //Object of class LoginViewModel
+    //Objects
     var loginViewModel : LoginViewModel
     var userService : UserService
+    //Alert
     @State var showAlert: Bool = false
+    //Path
     @Binding var path : NavigationPath
-    
+    //App storage
+    @AppStorage("currentUserId") var currentUserId: String?
+    @AppStorage("currentUserEmail") var currentUserEmail: String?
+
     
     var body: some View {
         VStack{
@@ -121,16 +125,17 @@ struct CreateAccount: View {
                 // Handle validation logic
                 if(loginViewModel.validateLogin())
                 {
-                    //Login user to event screen
+                    //Create url for supabase
                     loginViewModel.createUrlLogin()
+                    //Get user from supabase
                     getUserFromSupabase()
                 }
                 else {
+                    //Show alert and empty textfields
                     showAlert.toggle()
                     loginViewModel.username=""
                     loginViewModel.password=""
                 }
-                
             }) {
                 HStack {
                     Text("Login")
@@ -162,14 +167,20 @@ struct CreateAccount: View {
         .padding(.bottom, 10)
     }
     
+    /// Async function that sends a request to the database.
+    /// If the sent user doesn't exist in the database it returns appropriate error message
     func getUserFromSupabase() {
         Task {
             await userService.getUsers(from: loginViewModel.url)
             
             if(userService.users.first?.id != nil){
+                
                 path.append("eventScreen")
                 loginViewModel.isLoggedIn.toggle()
                 print("Bool isLoggedin: \(loginViewModel.isLoggedIn)\n")
+                //Save data to @AppStorage
+                currentUserId = userService.users.first?.id
+                currentUserEmail = userService.users.first?.email
                 
             }
             else {
