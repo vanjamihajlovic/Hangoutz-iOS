@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Constants : String {
+enum HTTPConstants : String {
     case Get = "GET"
     case Put = "PUT"
     case Post = "POST"

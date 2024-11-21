@@ -36,9 +36,9 @@ class UserService : ObservableObject {
     func downloadData(fromURL url: URL) async -> Data? {
         
         var request = URLRequest(url: url)
-        request.httpMethod = Constants.Get.rawValue
-        request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: Constants.ApiKey.rawValue)
-        request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: Constants.Authorization.rawValue)
+        request.httpMethod = HTTPConstants.Get.rawValue
+        request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.ApiKey.rawValue)
+        request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.Authorization.rawValue)
         return await withCheckedContinuation { continuation in
             URLSession.shared.dataTask(with: request) { (data, response, error) in
                 guard
