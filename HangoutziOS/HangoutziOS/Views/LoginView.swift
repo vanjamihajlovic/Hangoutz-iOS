@@ -88,7 +88,6 @@ struct LoginSection: View {
     }
 }
 
-//MARK: LOGIN OR CREATE ACCOUNT
 struct CreateAccount: View {
     
     var loginViewModel : LoginViewModel

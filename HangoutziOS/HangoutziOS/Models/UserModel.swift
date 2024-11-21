@@ -19,7 +19,6 @@ struct userData: Codable {
         case passwordHash = "password_hash"
     }
 }
-
 typealias Welcome = [userData]
 
 
