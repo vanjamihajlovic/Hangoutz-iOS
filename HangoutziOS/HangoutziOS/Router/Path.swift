@@ -9,13 +9,10 @@ import Foundation
 import SwiftUICore
 import SwiftUI
 
-//Router.Destination.eventScreen.view
 class Router: ObservableObject {
     
-    //MARK: NavigationPath
     @State private var path = NavigationPath()
     
-    ///Enum for all the screens in app
     enum Destination: String, Hashable {
         
         case loginView

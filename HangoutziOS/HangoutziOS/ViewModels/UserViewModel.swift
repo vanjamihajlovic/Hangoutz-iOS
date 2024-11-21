@@ -12,8 +12,5 @@ class UserViewModel: ObservableObject {
     @Published var users: [userData] = []
     @Published var errorMessage: String? = nil
     @Published var isUserCreated: Bool = false
-    //Object of class UserService
     private let us = UserService()
-
-
 }
