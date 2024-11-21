@@ -9,12 +9,12 @@ import SwiftUI
 
 struct LoginView: View {
     
-    let backgroundImage: String = "MainBackground"
-    let logo: String = "Hangoutz"
     @State private var path = NavigationPath()
     @StateObject var router: Router = Router()
     @ObservedObject var loginViewModel : LoginViewModel = LoginViewModel()
     @ObservedObject var userService: UserService = UserService()
+    let backgroundImage: String = "MainBackground"
+    let logo: String = "Hangoutz"
     
     var body: some View {
         NavigationStack(path: $path) {
