@@ -60,7 +60,7 @@ struct LoginSection: View {
     
     var body: some View {
         VStack{
-            TextField("", text: $loginViewModel.username, prompt: Text("Username").foregroundColor(.white))
+            TextField("", text: $loginViewModel.username, prompt: Text("Email").foregroundColor(.white))
                 .autocapitalization(.none)
                 .frame(width: 320, height: 25, alignment: .center)
                 .foregroundColor(.white)
@@ -154,7 +154,7 @@ struct CreateAccount: View {
             }
             else {
                 showAlert.toggle()
-                loginViewModel.errorMessage = "Incorrect username or password"
+                loginViewModel.errorMessage = "Incorrect email or password"
             }
         }
     }
