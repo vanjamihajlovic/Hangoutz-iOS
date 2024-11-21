@@ -154,7 +154,7 @@ struct CreateAccount: View {
             }
             else {
                 showAlert.toggle()
-                loginViewModel.errorMessage = "Invalid username or password"
+                loginViewModel.errorMessage = "Incorrect username or password"
             }
         }
     }
