@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoginView: View {
     
-    @State private var path = NavigationPath()
+    @State var path = NavigationPath()
     @StateObject var router: Router = Router()
     @ObservedObject var loginViewModel : LoginViewModel = LoginViewModel()
     @ObservedObject var userService: UserService = UserService()
@@ -144,12 +144,14 @@ struct CreateAccount: View {
         Task {
             await userService.getUsers(from: loginViewModel.url)
             if(userService.users.first?.id != nil){
+                //Change back to eventScreen
                 path.append("eventScreen")
                 loginViewModel.isLoggedIn.toggle()
                 print("Bool isLoggedin: \(loginViewModel.isLoggedIn)\n")
                 //Save data to @AppStorage
-                currentUserId = userService.users.first?.id
-                currentUserEmail = userService.users.first?.email
+                currentUserId = userService.users.first?.id ?? nil
+                currentUserEmail = userService.users.first?.email ?? nil
+                print()
             }
             else {
                 showAlert.toggle()

@@ -11,7 +11,7 @@ struct EventScreen: View {
     
     @AppStorage("currentUserId") var currentUserId: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
-    
+        
     var body: some View {
         ZStack {
             Image.backgroundImage

@@ -17,6 +17,7 @@ class Router: ObservableObject {
         
         case loginView
         case eventScreen
+        case profileScreen
         
         var view: any View {
             
@@ -25,6 +26,8 @@ class Router: ObservableObject {
                 return LoginView()
             case .eventScreen:
                 return EventScreen()
+            case .profileScreen:
+                return ProfileScreen()
             }
         }
     }

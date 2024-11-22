@@ -13,12 +13,13 @@ class UserService : ObservableObject {
     
     init() {
     }
+    
     func getUsers(from urlString: String) async -> [userData] {
         guard let url = URL(string: urlString) else {
             print("Invalid URL.")
             return []
         }
-        let returnedData = await downloadData(fromURL: url)
+        let returnedData = await downloadData(fromURL: url, method: HTTPConstants.Get)
         if let data = returnedData {
             guard let newUsers = try? JSONDecoder().decode([userData].self, from: data) else {
                 print("Failed to decode user data.")
@@ -33,12 +34,18 @@ class UserService : ObservableObject {
         }
     }
     
-    func downloadData(fromURL url: URL) async -> Data? {
+    func downloadData(fromURL url: URL, method: HTTPConstants) async -> Data? {
         
         var request = URLRequest(url: url)
+<<<<<<< HEAD
         request.httpMethod = HTTPConstants.GET.rawValue
         request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
         request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
+=======
+        request.httpMethod = method.rawValue
+        request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.ApiKey.rawValue)
+        request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.Authorization.rawValue)
+>>>>>>> 91d854c (First commit on this branch. Implemented basic UI for testing. Created functions to get avatar. Next step is to investigate async image on swiftful thinking.)
         return await withCheckedContinuation { continuation in
             URLSession.shared.dataTask(with: request) { (data, response, error) in
                 guard
@@ -55,5 +62,33 @@ class UserService : ObservableObject {
             }.resume()
         }
     }
+    
+    //In order to get avatar from supabase, we need to GET user avatar in json format (ex. {"avatar" : "avatar.jpg"}). Just save the image name "avatar.jpg" and then make another GET request to the storage of supabase with the image name.
+    /*API Call for user avatar: https://zsjxwfjutstrybvltjov.supabase.co/rest/v1/users?select=avatar&id=eq.\(loggedInUser))
+     API Call for image in storage:
+     https://zsjxwfjutstrybvltjov.supabase.co/storage/v1/object/public/avatar/\(imageName)*/
+    
+    func getAvatar(from urlString: String) async -> [userData] {
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL.")
+            return []
+        }
+        let returnedData = await downloadData(fromURL: url, method: HTTPConstants.Get)
+        if let data = returnedData {
+            guard let newUsers = try? JSONDecoder().decode([userData].self, from: data) else {
+                print("Failed to decode user data.")
+                return []
+            }
+            await MainActor.run {
+                self.users = newUsers
+            }
+            return newUsers
+        } else {
+            return []
+        }
+    }
+    
 }
+
+
 
