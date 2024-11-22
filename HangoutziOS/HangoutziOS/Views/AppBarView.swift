@@ -2,18 +2,17 @@
 //  AppBarView.swift
 //  HangoutziOS
 //
-//  Created by User03 on 11/21/24.
+//  Created by strahinjamil on 11/21/24.
 //
 
 import SwiftUI
 
 struct AppBarView: View {
-    let appBarColor = Color("AppBarColor")
     
     var body: some View {
         VStack{
             HStack{
-                Text("Hangoutz")
+                Text(StringConstants.APP_NAME)
                     .foregroundColor(.white)
                     .font(.title2 )
                     .fontWeight(.bold)
@@ -22,10 +21,10 @@ struct AppBarView: View {
                 
                 Spacer()
             }
-            .background(Color(appBarColor))
+            .background(Color(Color.appBarColor))
             .frame(maxWidth:.infinity)
         }
-        .background(Color(appBarColor))
+        .background(Color.appBarColor)
     }
 }
 #Preview {

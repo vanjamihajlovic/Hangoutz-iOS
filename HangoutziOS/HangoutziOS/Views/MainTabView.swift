@@ -2,7 +2,7 @@
 //  MainTabView.swift
 //  HangoutziOS
 //
-//  Created by User03 on 11/21/24.
+//  Created by strahinjamil on 11/21/24.
 //
 
 import SwiftUI
@@ -11,7 +11,6 @@ struct MainTabView: View {
     @AppStorage("currentUserId") var currentUserId: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
     @State var currentTab = 0
-    let barColor = UIColor(named: "BottomBarColor")
     
     var body: some View {
         
@@ -38,11 +37,12 @@ struct MainTabView: View {
                 .onAppear(){
                         let tabBarAppearance = UITabBarAppearance()
                         tabBarAppearance.configureWithOpaqueBackground()
-                        tabBarAppearance.backgroundColor = barColor
+                        tabBarAppearance.backgroundColor = UIColor.barColor
                         tabBarAppearance.stackedLayoutAppearance.normal.iconColor = .white
                         tabBarAppearance.stackedLayoutAppearance.selected.iconColor = .lightGray
                             
                         UITabBar.appearance().standardAppearance = tabBarAppearance
+                        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
                 }
             }
             .navigationBarBackButtonHidden(true) 

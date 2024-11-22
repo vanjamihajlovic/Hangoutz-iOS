@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct EventScreen: View {
-    let backgroundImage: String = "MainBackground"
-   
+    
     var body: some View {
         ZStack {
-            Image(backgroundImage)
+            Image.backgroundImage
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)

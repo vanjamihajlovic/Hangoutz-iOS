@@ -115,7 +115,7 @@ struct CreateAccount: View {
             })
             {
                 HStack {
-                    Text(HTTPConstants.Login.rawValue)
+                    Text(HTTPConstants.LOGIN.rawValue)
                     Image(systemName: "door.right.hand.open")
                 }
                 .padding()

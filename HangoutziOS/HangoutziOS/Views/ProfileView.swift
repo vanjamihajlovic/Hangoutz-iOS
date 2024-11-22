@@ -2,17 +2,16 @@
 //  ProfileView.swift
 //  HangoutziOS
 //
-//  Created by User03 on 11/21/24.
+//  Created by strahinjamil on 11/21/24.
 //
 
 import SwiftUI
 
 struct ProfileView: View {
-    let backgroundImage: String = "MainBackground"
     
     var body: some View {
         ZStack {
-            Image(backgroundImage)
+            Image.backgroundImage
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
