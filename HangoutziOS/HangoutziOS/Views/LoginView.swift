@@ -62,7 +62,7 @@ struct LoginSection: View {
     
     var body: some View {
         VStack{
-            TextField("", text: $loginViewModel.username, prompt: Text("Username").foregroundColor(.white))
+            TextField("", text: $loginViewModel.username, prompt: Text("Email").foregroundColor(.white))
                 .autocapitalization(.none)
                 .frame(width: 320, height: 25, alignment: .center)
                 .foregroundColor(.white)
@@ -117,7 +117,7 @@ struct CreateAccount: View {
             })
             {
                 HStack {
-                    Text(Constants.Login.rawValue)
+                    Text(HTTPConstants.Login.rawValue)
                     Image(systemName: "door.right.hand.open")
                 }
                 .padding()
@@ -158,7 +158,7 @@ struct CreateAccount: View {
             }
             else {
                 showAlert.toggle()
-                loginViewModel.errorMessage = "Invalid username or password"
+                loginViewModel.errorMessage = "Incorrect email or password"
             }
         }
     }
