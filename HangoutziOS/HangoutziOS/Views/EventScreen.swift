@@ -9,6 +9,9 @@ import SwiftUI
 
 struct EventScreen: View {
     
+    @AppStorage("currentUserId") var currentUserId: String?
+    @AppStorage("currentUserEmail") var currentUserEmail: String?
+    
     var body: some View {
         ZStack {
             Image.backgroundImage
@@ -18,10 +21,17 @@ struct EventScreen: View {
             
             VStack{
                 AppBarView()
+                
                 Spacer()
+                
             }
-            
-            Text("Event Screen")
+            Group {
+                VStack{
+                    Text("Event Screen")
+                    Text("Logged in as user id: \(currentUserId)\n")
+                    Text("User email: \(currentUserEmail)")
+                }
+            }
                 .foregroundColor(.white)
         }
     }
