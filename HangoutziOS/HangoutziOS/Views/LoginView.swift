@@ -29,7 +29,7 @@ struct LoginView: View {
             }
             .navigationDestination(for: String.self) { view in
                 if view == Router.Destination.eventScreen.rawValue {
-                    EventScreen()
+                    MainTabView()
                 }
             }
         }
