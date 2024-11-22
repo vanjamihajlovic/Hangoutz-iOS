@@ -1,14 +1,14 @@
 //
-//  EventScreen.swift
+//  FriendsView.swift
 //  HangoutziOS
 //
-//  Created by Aleksa on 11/20/24.
+//  Created by strahinjamil on 11/21/24.
 //
 
 import SwiftUI
 
-struct EventScreen: View {
-    
+struct FriendsView: View {
+
     var body: some View {
         ZStack {
             Image.backgroundImage
@@ -21,12 +21,12 @@ struct EventScreen: View {
                 Spacer()
             }
             
-            Text("Event Screen")
+            Text("Friends screen")
                 .foregroundColor(.white)
         }
     }
 }
 
 #Preview {
-    EventScreen()
+    FriendsView()
 }

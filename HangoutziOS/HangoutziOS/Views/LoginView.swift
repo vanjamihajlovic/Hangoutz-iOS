@@ -29,7 +29,7 @@ struct LoginView: View {
             }
             .navigationDestination(for: String.self) { view in
                 if view == Router.Destination.eventScreen.rawValue {
-                    EventScreen()
+                    MainTabView()
                 }
             }
         }
@@ -114,7 +114,7 @@ struct CreateAccount: View {
             })
             {
                 HStack {
-                    Text(HTTPConstants.Login.rawValue)
+                    Text(HTTPConstants.LOGIN.rawValue)
                     Image(systemName: "door.right.hand.open")
                 }
                 .padding()

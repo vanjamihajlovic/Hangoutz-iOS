@@ -1,13 +1,13 @@
 //
-//  EventScreen.swift
+//  ProfileView.swift
 //  HangoutziOS
 //
-//  Created by Aleksa on 11/20/24.
+//  Created by strahinjamil on 11/21/24.
 //
 
 import SwiftUI
 
-struct EventScreen: View {
+struct ProfileView: View {
     
     var body: some View {
         ZStack {
@@ -21,12 +21,12 @@ struct EventScreen: View {
                 Spacer()
             }
             
-            Text("Event Screen")
+            Text("Profile Screen")
                 .foregroundColor(.white)
         }
     }
 }
 
 #Preview {
-    EventScreen()
+    ProfileView()
 }
