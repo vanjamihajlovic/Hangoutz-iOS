@@ -63,25 +63,25 @@ class UserService : ObservableObject {
      API Call for image in storage:
      https://zsjxwfjutstrybvltjov.supabase.co/storage/v1/object/public/avatar/\(imageName)*/
     
-    func getAvatar(from urlString: String) async -> [userData] {
-        guard let url = URL(string: urlString) else {
-            print("Invalid URL.")
-            return []
-        }
-        let returnedData = await downloadData(fromURL: url, method: HTTPConstants.GET)
-        if let data = returnedData {
-            guard let newUsers = try? JSONDecoder().decode([userData].self, from: data) else {
-                print("Failed to decode user data.")
-                return []
-            }
-            await MainActor.run {
-                self.users = newUsers
-            }
-            return newUsers
-        } else {
-            return []
-        }
-    }
+//    func getAvatar(from urlString: String) async -> [userData] {
+//        guard let url = URL(string: urlString) else {
+//            print("Invalid URL.")
+//            return []
+//        }
+//        let returnedData = await downloadData(fromURL: url, method: HTTPConstants.GET)
+//        if let data = returnedData {
+//            guard let newUsers = try? JSONDecoder().decode([userData].self, from: data) else {
+//                print("Failed to decode user data.")
+//                return []
+//            }
+//            await MainActor.run {
+//                self.users = newUsers
+//            }
+//            return newUsers
+//        } else {
+//            return []
+//        }
+//    }
     
 }
 

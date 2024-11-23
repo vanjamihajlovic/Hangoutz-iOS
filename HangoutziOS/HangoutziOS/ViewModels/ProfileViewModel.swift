@@ -13,7 +13,8 @@ import Foundation
 class ProfileViewModel: ObservableObject {
     @Published var urlGetAvatarJson: String = ""
     @Published var urlGetAvatarPhoto : String = ""
-    @Published var urlGetUser : String = ""
+    @Published var urlGetUserName : String = ""
+    @Published var urlGetUserEmail: String = ""
 
     func createUrlToGetAvatarJson(id: String){
         urlGetAvatarJson = SupabaseConfig.baseURL + "rest/v1/users?select=avatar&id=eq.\(id)"
@@ -21,7 +22,10 @@ class ProfileViewModel: ObservableObject {
     func createUrlToGetAvatarPhoto(imageName: String?) {
         urlGetAvatarPhoto = SupabaseConfig.baseURLStorage + "\(imageName ?? "error")"
     }
-    func createUrlGetUser(param: String, id: String)  {
-        urlGetUser = SupabaseConfig.baseURL + "rest/v1/users?select=\(param)&id=eq.\(id)"
+    func createUrlGetUserName(param: String, id: String)  {
+        urlGetUserName = SupabaseConfig.baseURL + "rest/v1/users?select=\(param)&id=eq.\(id)"
+    }
+    func createUrlGetUserEmail(param: String, id: String)  {
+        urlGetUserEmail = SupabaseConfig.baseURL + "rest/v1/users?select=\(param)&id=eq.\(id)"
     }
 }
