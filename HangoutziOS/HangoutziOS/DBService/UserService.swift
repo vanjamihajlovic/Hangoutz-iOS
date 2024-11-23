@@ -19,7 +19,7 @@ class UserService : ObservableObject {
             print("Invalid URL.")
             return []
         }
-        let returnedData = await downloadData(fromURL: url, method: HTTPConstants.Get)
+        let returnedData = await downloadData(fromURL: url, method: HTTPConstants.GET)
         if let data = returnedData {
             guard let newUsers = try? JSONDecoder().decode([userData].self, from: data) else {
                 print("Failed to decode user data.")
@@ -37,15 +37,10 @@ class UserService : ObservableObject {
     func downloadData(fromURL url: URL, method: HTTPConstants) async -> Data? {
         
         var request = URLRequest(url: url)
-<<<<<<< HEAD
         request.httpMethod = HTTPConstants.GET.rawValue
         request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
         request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
-=======
-        request.httpMethod = method.rawValue
-        request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.ApiKey.rawValue)
-        request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.Authorization.rawValue)
->>>>>>> 91d854c (First commit on this branch. Implemented basic UI for testing. Created functions to get avatar. Next step is to investigate async image on swiftful thinking.)
+
         return await withCheckedContinuation { continuation in
             URLSession.shared.dataTask(with: request) { (data, response, error) in
                 guard
@@ -73,7 +68,7 @@ class UserService : ObservableObject {
             print("Invalid URL.")
             return []
         }
-        let returnedData = await downloadData(fromURL: url, method: HTTPConstants.Get)
+        let returnedData = await downloadData(fromURL: url, method: HTTPConstants.GET)
         if let data = returnedData {
             guard let newUsers = try? JSONDecoder().decode([userData].self, from: data) else {
                 print("Failed to decode user data.")

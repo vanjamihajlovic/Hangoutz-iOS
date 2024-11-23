@@ -27,7 +27,7 @@ class Router: ObservableObject {
             case .eventScreen:
                 return EventScreen()
             case .profileScreen:
-                return ProfileScreen()
+                return ProfileView()
             }
         }
     }
