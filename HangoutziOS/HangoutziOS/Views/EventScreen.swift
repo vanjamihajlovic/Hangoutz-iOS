@@ -11,6 +11,7 @@ struct EventScreen: View {
     
     @AppStorage("currentUserId") var currentUserId: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
+    @AppStorage("currentUserName") var currentUserName: String?
         
     var body: some View {
         ZStack {
@@ -29,6 +30,7 @@ struct EventScreen: View {
                 VStack{
                     Text("Event Screen")
                     Text("Logged in as user id: \(currentUserId)\n")
+                    Text("User name: \(currentUserName)")
                     Text("User email: \(currentUserEmail)")
                 }
             }

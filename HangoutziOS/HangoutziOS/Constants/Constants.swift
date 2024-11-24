@@ -17,6 +17,7 @@ enum HTTPConstants : String {
     case BEARER = "Bearer "
     case AUTHORIZATION = "Authorization"
     case LOGIN = "Login"
+    case LOGOUT = "Logout"
 }
 
 class ValidationConstants {

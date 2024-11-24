@@ -97,6 +97,7 @@ struct CreateAccount: View {
     
     @AppStorage("currentUserId") var currentUserId: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
+    @AppStorage("currentUserName") var currentUserName: String?
     
     var body: some View {
         VStack{
@@ -151,6 +152,7 @@ struct CreateAccount: View {
                 //Save data to @AppStorage
                 currentUserId = userService.users.first?.id ?? nil
                 currentUserEmail = userService.users.first?.email ?? nil
+                currentUserName = userService.users.first?.email ?? nil
                 print()
             }
             else {

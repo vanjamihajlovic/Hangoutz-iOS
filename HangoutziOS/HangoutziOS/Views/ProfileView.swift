@@ -11,13 +11,14 @@ import SwiftUI
 struct ProfileView: View {
     
     @AppStorage("currentUserAvatar") var currentUserAvatar : String?
+    @AppStorage("currentUserName") var currentUserName: String?
+    @AppStorage("currentUserEmail") var currentUserEmail: String?
     var profileViewModel : ProfileViewModel = ProfileViewModel()
     var userService : UserService = UserService()
     //Nemanja
     let currentUserId : String = "dd2e34d5-f5b7-4573-bda2-4be6c1e7e840"
-     var userName: String = ""
-     var userEmail: String = ""
     let backgroundImage: String = "MainBackground"
+    //This can go to supabase config
     let avatarDefault: String = "https://zsjxwfjutstrybvltjov.supabase.co/storage/v1/object/public/avatar/avatar_default.png"
     
     
@@ -45,18 +46,32 @@ struct ProfileView: View {
                             )
                             .frame(width: 200, height: 200)
                     }, placeholder: {
-                            ProgressView()
-                        }
+                        ProgressView()
+                    }
                     ) // Replace with your image name
-                        
+                    
                 }
-                Text(userName).font(.title).foregroundColor(.white).padding(.top, 30)
-                Text(userEmail).font(.body).foregroundColor(.white)
+                Text(currentUserName ?? "").font(.title).foregroundColor(.white).padding(.top, 30)
+                Text(currentUserEmail ?? "").font(.body).foregroundColor(.white)
                 Spacer()
             }.padding(.top, 150)
             
+            Button(action: {}){
+                HStack {
+                    Text(HTTPConstants.LOGOUT.rawValue)
+                    Image(systemName: "door.right.hand.open")
+                }
+                .padding()
+                .frame(width:310)
+                .background(Color.loginButton)
+                .cornerRadius(20)
+                .foregroundColor(.black)
+                
+            }.padding(.top, 500)
+                
+            
         }
-        .onAppear{getProfilePicture()		}
+        .onAppear{getProfilePicture()}
     }
     func getProfilePicture()  {
         Task{
@@ -70,15 +85,15 @@ struct ProfileView: View {
             print("URL to get avatar photo from storage: \(profileViewModel.urlGetAvatarPhoto)")
             //            await userService.getAvatar(from: profileViewModel.urlGetAvatarPhoto)
             currentUserAvatar = profileViewModel.urlGetAvatarPhoto
-            //Username
-            profileViewModel.createUrlGetUserName(param: "name", id: currentUserId)
-            await userService.getUsers(from: profileViewModel.urlGetUserName)
+//            //Username
+//            profileViewModel.createUrlGetUserName(param: "name", id: currentUserId)
+//            await userService.getUsers(from: profileViewModel.urlGetUserName)
             
             
         }
     }
 }
-    
+
 #Preview {
     ProfileView()
     
