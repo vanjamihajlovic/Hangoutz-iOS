@@ -9,15 +9,14 @@ import SwiftUI
 
 struct RegistrationView: View {
     
-    @State private var path = NavigationPath()
-    @StateObject var router: Router = Router()
+    @Environment(\.presentationMode) var presentationMode
 
     @ObservedObject var registrationViewModel = RegistrationViewModel()
     @State private var showAlert = false
     @State private var alertMessage = ""
     
     var body: some View {
-        NavigationStack(path: $path){
+        NavigationStack(){
             ZStack {
                 VStack(spacing: 20){
                     GlobalLogoView()
@@ -122,16 +121,12 @@ struct RegistrationView: View {
                                     alertMessage = "Email already in use."
                                     showAlert.toggle()
                                 }else{
-                                    DispatchQueue.main.async {
-                                        path = NavigationPath()  // Briše sve vrednosti iz path-a
-                                        print("Path: \(path)")
-                                        path.append(Router.Destination.loginView.rawValue)  // Dodaje novu vrednost
-
-                                    }
+                                    presentationMode.wrappedValue.dismiss()
                                 }
                             }
                         }
-                    }){
+                    }
+                    ){
                         Text("Create Account")
                             .padding()
                             .foregroundColor(Color("ButtonFontColor"))
@@ -153,14 +148,10 @@ struct RegistrationView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
             .applyGlobalBackground()
-            .navigationDestination(for: String.self) { view in
-                if view == Router.Destination.loginView.rawValue {
-                    LoginView()
-                }
-            }
         }
     }
 }
+
 
 #Preview {
     RegistrationView()

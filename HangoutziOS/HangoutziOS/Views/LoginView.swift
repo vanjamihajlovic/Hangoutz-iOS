@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct LoginView: View {
-    
     @State private var path = NavigationPath()
     @StateObject var router: Router = Router()
     @ObservedObject var loginViewModel : LoginViewModel = LoginViewModel()
@@ -30,11 +29,12 @@ struct LoginView: View {
             .navigationDestination(for: String.self) { view in
                 if view == Router.Destination.eventScreen.rawValue {
                     EventScreen()
-                }else if view == Router.Destination.registrationScreen.rawValue {
-                    RegistrationView()
                 }
             }
         }
+//        .onAppear {
+//                    refreshLoginView()
+//                }
     }
     
     var hangoutzLogo: some View {
@@ -48,6 +48,7 @@ struct LoginView: View {
             Spacer()
         }
     }
+   
 }
 
 #Preview {
@@ -108,11 +109,12 @@ struct CreateAccount: View {
                 {
                     loginViewModel.createUrlLogin()
                     getUserFromSupabase()
+                    print("User id from @appstorage: \(currentUserId)")
+                    print("User email from @appstorage: \(currentUserEmail)")
                 }
                 else {
                     showAlert.toggle()
-                    loginViewModel.username = ""
-                    loginViewModel.password = ""
+                  
                 }
             })
             {
@@ -134,13 +136,17 @@ struct CreateAccount: View {
                 .bold()
                 .foregroundColor(.white)
                 .padding(.top, 20)
-            Button(action:{
-                path.append("registrationScreen")
-            }){Text("Create account")
-                    .padding(5)
-                    .font(.title3)
-                    .bold()
-                .foregroundColor(.white)}
+            NavigationLink(destination: {RegistrationView()}, label:{ Text("Create account")
+                             .padding(5)
+                             .font(.title3)
+                             .bold()
+                         .foregroundColor(.white)})//            Button(action:{
+//                path.append("registrationScreen")
+//            }){Text("Create account")
+//                    .padding(5)
+//                    .font(.title3)
+//                    .bold()
+//                .foregroundColor(.white)}
         }
         .padding(.bottom, 10)
     }
