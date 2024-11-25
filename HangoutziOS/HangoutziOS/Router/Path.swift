@@ -13,8 +13,8 @@ final class Router: ObservableObject {
     
     @State var path = NavigationPath()
     
-    //static let shared = Router()
-    // private init() {}
+    static let shared = Router()
+    private init() {}
     enum Destination: String, Hashable {
         
         case loginView

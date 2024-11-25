@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import PhotosUI
 
 struct ProfileView: View {
     
@@ -14,6 +14,7 @@ struct ProfileView: View {
     @AppStorage("currentUserName") var currentUserName: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
     @AppStorage("currentUserId") var currentUserId : String?
+    @State private var photosPickerItem : PhotosPickerItem?
     //    @State private var path = NavigationPath()
     var profileViewModel : ProfileViewModel = ProfileViewModel()
     var userService : UserService = UserService()
@@ -40,19 +41,21 @@ struct ProfileView: View {
             
             
             ZStack {
-                AsyncImage(url: URL(string: currentUserAvatar ?? "No avatar"), content: { Image in Image
-                        .resizable()
-                        .scaledToFit()
-                        .clipShape(Circle()) // Makes the image circular
-                        .overlay(
-                            Circle()
-                                .stroke(Color.white, lineWidth: 2) // Thin white border
-                        )
-                        .frame(width: 200, height: 200)
-                }, placeholder: {
-                    ProgressView()
+                PhotosPicker(selection: $photosPickerItem, matching: .images) {
+                    AsyncImage(url: URL(string: currentUserAvatar ?? "No avatar"), content: { Image in Image
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(Circle()) // Makes the image circular
+                            .overlay(
+                                Circle()
+                                    .stroke(Color.white, lineWidth: 2) // Thin white border
+                            )
+                            .frame(width: 200, height: 200)
+                    }, placeholder: {
+                        ProgressView()
+                    }
+                    )
                 }
-                )
                 Image("profilelines").resizable()
                     .scaledToFit()
             }
@@ -83,11 +86,19 @@ struct ProfileView: View {
             
         }
         .onAppear{getProfilePicture()}
-        //            .navigationDestination(for: String.self) { view in
-        //                if view == Router.Destination.loginView.rawValue {
-        //                    LoginView()
-        //                }
-        //            }
+//        .onChange(of: PhotosPickerItem){ _, _ in
+//            Task{
+//                if let photosPickerItem,
+//                   let data = try? await photosPickerItem.loadTransferable(type: Data.self){
+//                    if let image = UIImage(data: data){
+//                        // currentUserAvatar = image
+//                    }
+//                }
+//                photosPickerItem = nil
+//            }
+//            
+//        }
+        
         
     }
     func getProfilePicture()  {

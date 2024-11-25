@@ -9,32 +9,32 @@ import SwiftUI
 
 struct LoginView: View {
     
-    @State var path = NavigationPath()
-    @StateObject var router: Router = Router()
+    @AppStorage("isLoggedIn") var isLoggedIn : Bool?
+    
     @ObservedObject var loginViewModel : LoginViewModel = LoginViewModel()
     @ObservedObject var userService: UserService = UserService()
     let backgroundImage: String = "MainBackground"
     let logo: String = "Hangoutz"
     
     var body: some View {
-        NavigationStack(path: $path) {
-            ZStack{
-                Image(backgroundImage)
-                    .resizable()
-                    .scaledToFill()
-                    .edgesIgnoringSafeArea(.all)
-                hangoutzLogo
-                LoginSection(loginViewModel:loginViewModel, isVisiblePassword: false)
-                CreateAccount(loginViewModel: loginViewModel, userService: userService, path: $path)
-            }
-            .navigationDestination(for: String.self) { view in
-                if view == Router.Destination.mainTabView.rawValue {
-                    MainTabView()
+        NavigationStack() {
+            if isLoggedIn ?? false{
+                MainTabView()
+                    .navigationBarBackButtonHidden(true) 
+            }else{
+                ZStack{
+                    Image(backgroundImage)
+                        .resizable()
+                        .scaledToFill()
+                        .edgesIgnoringSafeArea(.all)
+                    hangoutzLogo
+                    LoginSection(loginViewModel:loginViewModel, isVisiblePassword: false)
+                    CreateAccount(loginViewModel: loginViewModel, userService: userService)
                 }
+                
             }
         }
     }
-    
     var hangoutzLogo: some View {
         VStack{
             Image(logo)
@@ -63,17 +63,17 @@ struct LoginSection: View {
             TextField("", text: $loginViewModel.username, prompt: Text("Email")
                 .foregroundColor(.white))
             .accessibilityIdentifier("userEmail")
-                .autocapitalization(.none)
-                .frame(width: 320, height: 25, alignment: .center)
-                .foregroundColor(.white)
-                .textContentType(.emailAddress)
-                .padding()
-                .foregroundColor(.white)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.white, lineWidth: 3)
-                )
-                .padding(20)
+            .autocapitalization(.none)
+            .frame(width: 320, height: 25, alignment: .center)
+            .foregroundColor(.white)
+            .textContentType(.emailAddress)
+            .padding()
+            .foregroundColor(.white)
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.white, lineWidth: 3)
+            )
+            .padding(20)
             SecureField("", text: $loginViewModel.password, prompt: Text("Password").foregroundColor(.white))
                 .accessibilityIdentifier("userPassword")
                 .autocapitalization(.none)
@@ -96,11 +96,11 @@ struct CreateAccount: View {
     var loginViewModel : LoginViewModel
     var userService : UserService
     @State var showAlert: Bool = false
-    @Binding var path : NavigationPath
     
     @AppStorage("currentUserId") var currentUserId: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
     @AppStorage("currentUserName") var currentUserName: String?
+    @AppStorage("isLoggedIn") var isLoggedIn = false
     
     var body: some View {
         VStack{
@@ -113,7 +113,7 @@ struct CreateAccount: View {
                 }
                 else {
                     showAlert.toggle()
-                
+                    
                 }
             })
             {
@@ -150,8 +150,8 @@ struct CreateAccount: View {
             await userService.getUsers(from: loginViewModel.url)
             if(userService.users.first?.id != nil){
                 //Change back to eventScreen
-                path.append("mainTabView")
                 loginViewModel.isLoggedIn.toggle()
+                isLoggedIn = loginViewModel.isLoggedIn
                 print("Bool isLoggedin: \(loginViewModel.isLoggedIn)\n")
                 //Save data to @AppStorage
                 currentUserId = userService.users.first?.id ?? nil
@@ -162,7 +162,7 @@ struct CreateAccount: View {
             else {
                 showAlert.toggle()
                 loginViewModel.errorMessage = "Incorrect email or password"
-            
+                
             }
         }
     }
