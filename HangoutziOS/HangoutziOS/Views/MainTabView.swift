@@ -14,38 +14,39 @@ struct MainTabView: View {
     
     var body: some View {
         
-        ZStack{
-            TabView(selection: $currentTab ) {
-                EventScreen()
-                    .tabItem {
-                        Image(systemName: "calendar")
-                    }
-                    .tag(0)
-                
-                FriendsView()
-                    .tabItem {
-                        Image(systemName: "person.2.fill")
-                    }
-                    .tag(1)
-                
-                ProfileView()
-                    .tabItem {
-                        Image(systemName: "gearshape")
-                    }
-                    .tag(2)
+            ZStack{
+                TabView(selection: $currentTab ) {
+                    EventScreen()
+                        .tabItem {
+                            Image(systemName: "calendar")
+                        }
+                        .tag(0)
+                    
+                    FriendsView()
+                        .tabItem {
+                            Image(systemName: "person.2.fill")
+                        }
+                        .tag(1)
+                    
+                    ProfileView()
+                        .tabItem {
+                            Image(systemName: "gearshape")
+                        }
+                        .tag(2)
+                }
+                .onAppear(){
+                    let tabBarAppearance = UITabBarAppearance()
+                    tabBarAppearance.configureWithOpaqueBackground()
+                    tabBarAppearance.backgroundColor = UIColor.barColor
+                    tabBarAppearance.stackedLayoutAppearance.normal.iconColor = .white
+                    tabBarAppearance.stackedLayoutAppearance.selected.iconColor = .lightGray
+                    
+                    UITabBar.appearance().standardAppearance = tabBarAppearance
+                    UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+                }
             }
-            .onAppear(){
-                let tabBarAppearance = UITabBarAppearance()
-                tabBarAppearance.configureWithOpaqueBackground()
-                tabBarAppearance.backgroundColor = UIColor.barColor
-                tabBarAppearance.stackedLayoutAppearance.normal.iconColor = .white
-                tabBarAppearance.stackedLayoutAppearance.selected.iconColor = .lightGray
-                
-                UITabBar.appearance().standardAppearance = tabBarAppearance
-                UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
-            }
-        }
-        .navigationBarBackButtonHidden(true) 
+            .navigationBarBackButtonHidden(true)
+         
     }
 }
 

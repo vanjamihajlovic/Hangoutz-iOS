@@ -25,10 +25,10 @@ struct LoginView: View {
                     .edgesIgnoringSafeArea(.all)
                 hangoutzLogo
                 LoginSection(loginViewModel:loginViewModel, isVisiblePassword: false)
-                CreateAccount(loginViewModel: loginViewModel, userService: userService,path: $path)
+                CreateAccount(loginViewModel: loginViewModel, userService: userService, path: $path)
             }
             .navigationDestination(for: String.self) { view in
-                if view == Router.Destination.eventScreen.rawValue {
+                if view == Router.Destination.mainTabView.rawValue {
                     MainTabView()
                 }
             }
@@ -60,7 +60,9 @@ struct LoginSection: View {
     
     var body: some View {
         VStack{
-            TextField("", text: $loginViewModel.username, prompt: Text("Email").foregroundColor(.white))
+            TextField("", text: $loginViewModel.username, prompt: Text("Email")
+                .foregroundColor(.white))
+            .accessibilityIdentifier("userEmail")
                 .autocapitalization(.none)
                 .frame(width: 320, height: 25, alignment: .center)
                 .foregroundColor(.white)
@@ -73,6 +75,7 @@ struct LoginSection: View {
                 )
                 .padding(20)
             SecureField("", text: $loginViewModel.password, prompt: Text("Password").foregroundColor(.white))
+                .accessibilityIdentifier("userPassword")
                 .autocapitalization(.none)
                 .frame(width: 320, height: 25, alignment: .center)
                 .foregroundColor(.white)
@@ -128,6 +131,7 @@ struct CreateAccount: View {
                 }
             }
             .padding(.horizontal, 40)
+            .accessibilityIdentifier("logout")
             Text("OR")
                 .bold()
                 .foregroundColor(.white)
@@ -146,13 +150,13 @@ struct CreateAccount: View {
             await userService.getUsers(from: loginViewModel.url)
             if(userService.users.first?.id != nil){
                 //Change back to eventScreen
-                path.append("eventScreen")
+                path.append("mainTabView")
                 loginViewModel.isLoggedIn.toggle()
                 print("Bool isLoggedin: \(loginViewModel.isLoggedIn)\n")
                 //Save data to @AppStorage
                 currentUserId = userService.users.first?.id ?? nil
                 currentUserEmail = userService.users.first?.email ?? nil
-                currentUserName = userService.users.first?.email ?? nil
+                currentUserName = userService.users.first?.name ?? nil
                 print()
             }
             else {
