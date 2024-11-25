@@ -8,15 +8,14 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var path = NavigationPath()
-    @StateObject var router: Router = Router()
+    
     @ObservedObject var loginViewModel : LoginViewModel = LoginViewModel()
     @ObservedObject var userService: UserService = UserService()
     let backgroundImage: String = "MainBackground"
     let logo: String = "Hangoutz"
     
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack() {
             ZStack{
                 Image(backgroundImage)
                     .resizable()
@@ -24,17 +23,11 @@ struct LoginView: View {
                     .edgesIgnoringSafeArea(.all)
                 hangoutzLogo
                 LoginSection(loginViewModel:loginViewModel, isVisiblePassword: false)
-                CreateAccount(loginViewModel: loginViewModel, userService: userService,path: $path)
-            }
-            .navigationDestination(for: String.self) { view in
-                if view == Router.Destination.eventScreen.rawValue {
-                    EventScreen()
-                }
-            }
+                CreateAccount(loginViewModel: loginViewModel, userService: userService)
+           }
+       
         }
-//        .onAppear {
-//                    refreshLoginView()
-//                }
+        
     }
     
     var hangoutzLogo: some View {
@@ -48,7 +41,7 @@ struct LoginView: View {
             Spacer()
         }
     }
-   
+    
 }
 
 #Preview {
@@ -96,7 +89,6 @@ struct CreateAccount: View {
     var loginViewModel : LoginViewModel
     var userService : UserService
     @State var showAlert: Bool = false
-    @Binding var path : NavigationPath
     
     @AppStorage("currentUserId") var currentUserId: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
@@ -114,7 +106,7 @@ struct CreateAccount: View {
                 }
                 else {
                     showAlert.toggle()
-                  
+                    
                 }
             })
             {
@@ -136,17 +128,17 @@ struct CreateAccount: View {
                 .bold()
                 .foregroundColor(.white)
                 .padding(.top, 20)
-            NavigationLink(destination: {RegistrationView()}, label:{ Text("Create account")
-                             .padding(5)
-                             .font(.title3)
-                             .bold()
-                         .foregroundColor(.white)})//            Button(action:{
-//                path.append("registrationScreen")
-//            }){Text("Create account")
-//                    .padding(5)
-//                    .font(.title3)
-//                    .bold()
-//                .foregroundColor(.white)}
+            NavigationLink(destination: {RegistrationView(/*path: $path*/)}, label:{ Text("Create account")
+                    .padding(5)
+                    .font(.title3)
+                    .bold()
+                .foregroundColor(.white)})//            Button(action:{
+            //                path.append("registrationScreen")
+            //            }){Text("Create account")
+            //                    .padding(5)
+            //                    .font(.title3)
+            //                    .bold()
+            //                .foregroundColor(.white)}
         }
         .padding(.bottom, 10)
     }
@@ -155,7 +147,6 @@ struct CreateAccount: View {
         Task {
             await userService.getUsers(from: loginViewModel.url)
             if(userService.users.first?.id != nil){
-                path.append("eventScreen")
                 loginViewModel.isLoggedIn.toggle()
                 print("Bool isLoggedin: \(loginViewModel.isLoggedIn)\n")
                 //Save data to @AppStorage

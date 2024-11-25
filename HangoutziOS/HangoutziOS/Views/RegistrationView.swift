@@ -7,16 +7,18 @@
 
 import SwiftUI
 
+
 struct RegistrationView: View {
     
-    @Environment(\.presentationMode) var presentationMode
-
+   // @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var registrationViewModel = RegistrationViewModel()
     @State private var showAlert = false
     @State private var alertMessage = ""
     
+
     var body: some View {
-        NavigationStack(){
+        NavigationStack(/*path: $path*/){
             ZStack {
                 VStack(spacing: 20){
                     GlobalLogoView()
@@ -26,6 +28,7 @@ struct RegistrationView: View {
                                   prompt: Text("Name")
                             .foregroundColor(.white)
                         )
+                        .accessibilityIdentifier("nameField")
                         .autocapitalization(.none)
                         .frame(width: 320, height: 25, alignment: .center)
                         .foregroundColor(.white)
@@ -47,6 +50,7 @@ struct RegistrationView: View {
                         TextField("", text: $registrationViewModel.emailRegistration, prompt: Text("Email")
                             .foregroundColor(.white)
                         )
+                        .accessibilityIdentifier("emailField")
                         .autocapitalization(.none)
                         .frame(width: 320, height: 25, alignment: .center)
                         .foregroundColor(.white)
@@ -68,6 +72,7 @@ struct RegistrationView: View {
                                     prompt: Text("Password")
                             .foregroundColor(.white)
                         )
+                        .accessibilityIdentifier("passwordField")
                         .textContentType(.password)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
@@ -90,6 +95,7 @@ struct RegistrationView: View {
                         SecureField("", text: $registrationViewModel.password2Registration, prompt: Text("Re-enter password")
                             .foregroundColor(.white)
                         )
+                        .accessibilityIdentifier("password2FieldField")
                         .autocapitalization(.none)
                         .textContentType(.password)
                         .frame(width: 320, height: 25, alignment: .center)
@@ -121,7 +127,10 @@ struct RegistrationView: View {
                                     alertMessage = "Email already in use."
                                     showAlert.toggle()
                                 }else{
-                                    presentationMode.wrappedValue.dismiss()
+                                   //NAVIGACIJA!!
+                                   // path.removeLast(path.count)
+                                   // presentationMode.wrappedValue.dismiss()
+                                    dismiss()
                                 }
                             }
                         }
@@ -135,6 +144,7 @@ struct RegistrationView: View {
                             .cornerRadius(20)
                             .bold()
                     }
+                    .accessibilityIdentifier("createButton")
                     .padding(.top, 40)
                     .alert(isPresented: $showAlert) {
                         Alert(

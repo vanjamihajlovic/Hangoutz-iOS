@@ -11,7 +11,7 @@ import SwiftUI
 
 class Router: ObservableObject {
     
-    @State private var path = NavigationPath()
+    @State  var path = NavigationPath()
     
     enum Destination: String, Hashable {
         
