@@ -5,9 +5,6 @@
 //  Created by Aleksa on 11/21/24.
 //
 
-/*API Call for user avatar: https://zsjxwfjutstrybvltjov.supabase.co/rest/v1/users?select=avatar&id=eq.\(loggedInUser))
- API Call for image in storage:
- https://zsjxwfjutstrybvltjov.supabase.co/storage/v1/object/public/avatar/\(imageName)*/
 import Foundation
 
 class ProfileViewModel: ObservableObject {
@@ -15,7 +12,7 @@ class ProfileViewModel: ObservableObject {
     @Published var urlGetAvatarPhoto : String = ""
     @Published var urlGetUserName : String = ""
     @Published var urlGetUserEmail: String = ""
-
+    
     func createUrlToGetAvatarJson(id: String){
         urlGetAvatarJson = SupabaseConfig.baseURL + "rest/v1/users?select=avatar&id=eq.\(id)"
     }

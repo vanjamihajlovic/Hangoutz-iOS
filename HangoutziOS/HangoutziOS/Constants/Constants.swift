@@ -29,4 +29,6 @@ class ValidationConstants {
 
 class StringConstants {
     static let APP_NAME = "Hangoutz"
+    static let LOGIN : String = "Login"
+    static let LOGOUT : String = "Logout"
 }

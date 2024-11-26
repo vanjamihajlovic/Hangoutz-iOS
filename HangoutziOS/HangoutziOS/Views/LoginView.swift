@@ -10,7 +10,6 @@ import SwiftUI
 struct LoginView: View {
     
     @AppStorage("isLoggedIn") var isLoggedIn : Bool?
-    
     @ObservedObject var loginViewModel : LoginViewModel = LoginViewModel()
     @ObservedObject var userService: UserService = UserService()
     let backgroundImage: String = "MainBackground"
@@ -20,7 +19,7 @@ struct LoginView: View {
         NavigationStack() {
             if isLoggedIn ?? false{
                 MainTabView()
-                    .navigationBarBackButtonHidden(true) 
+                    .navigationBarBackButtonHidden(true)
             }else{
                 ZStack{
                     Image(backgroundImage)
@@ -31,7 +30,6 @@ struct LoginView: View {
                     LoginSection(loginViewModel:loginViewModel, isVisiblePassword: false)
                     CreateAccount(loginViewModel: loginViewModel, userService: userService)
                 }
-                
             }
         }
     }
@@ -118,7 +116,7 @@ struct CreateAccount: View {
             })
             {
                 HStack {
-                    Text(HTTPConstants.LOGIN.rawValue)
+                    Text(StringConstants.LOGIN)
                     Image(systemName: "door.right.hand.open")
                 }
                 .padding()
@@ -131,7 +129,7 @@ struct CreateAccount: View {
                 }
             }
             .padding(.horizontal, 40)
-            .accessibilityIdentifier("logout")
+            .accessibilityIdentifier("login")
             Text("OR")
                 .bold()
                 .foregroundColor(.white)
@@ -144,20 +142,18 @@ struct CreateAccount: View {
         }
         .padding(.bottom, 10)
     }
-    
     func getUserFromSupabase() {
         Task {
             await userService.getUsers(from: loginViewModel.url)
             if(userService.users.first?.id != nil){
-                //Change back to eventScreen
-                loginViewModel.isLoggedIn.toggle()
+                loginViewModel.isLoggedIn = true
                 isLoggedIn = loginViewModel.isLoggedIn
                 print("Bool isLoggedin: \(loginViewModel.isLoggedIn)\n")
-                //Save data to @AppStorage
+                loginViewModel.username = ""
+                loginViewModel.password = ""
                 currentUserId = userService.users.first?.id ?? nil
                 currentUserEmail = userService.users.first?.email ?? nil
                 currentUserName = userService.users.first?.name ?? nil
-                print()
             }
             else {
                 showAlert.toggle()

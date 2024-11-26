@@ -12,7 +12,7 @@ struct EventScreen: View {
     @AppStorage("currentUserId") var currentUserId: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
     @AppStorage("currentUserName") var currentUserName: String?
-        
+    
     var body: some View {
         ZStack {
             Image.backgroundImage
@@ -22,7 +22,6 @@ struct EventScreen: View {
             
             VStack{
                 AppBarView()
-                
                 Spacer()
                 
             }
@@ -34,7 +33,7 @@ struct EventScreen: View {
                     Text("User email: \(currentUserEmail)")
                 }
             }
-                .foregroundColor(.white)
+            .foregroundColor(.white)
         }
     }
 }

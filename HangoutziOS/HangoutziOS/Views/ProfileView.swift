@@ -14,20 +14,13 @@ struct ProfileView: View {
     @AppStorage("currentUserName") var currentUserName: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
     @AppStorage("currentUserId") var currentUserId : String?
+    @AppStorage("isLoggedIn") var isLoggedIn : Bool?
     @State private var photosPickerItem : PhotosPickerItem?
-    //    @State private var path = NavigationPath()
     var profileViewModel : ProfileViewModel = ProfileViewModel()
     var userService : UserService = UserService()
-    //Nemanja
-    //    let currentUserId : String = "dd2e34d5-f5b7-4573-bda2-4be6c1e7e840"
     let backgroundImage: String = "MainBackground"
-    //This can go to supabase config
-    //   let avatarDefault: String = "https://zsjxwfjutstrybvltjov.supabase.co/storage/v1/object/public/avatar/avatar_default.png"
-    //
-    
     
     var body: some View {
-        //path: $path
         
         ZStack {
             Image(backgroundImage)
@@ -39,40 +32,42 @@ struct ProfileView: View {
                 Spacer()
             }
             
-            
             ZStack {
                 PhotosPicker(selection: $photosPickerItem, matching: .images) {
                     AsyncImage(url: URL(string: currentUserAvatar ?? "No avatar"), content: { Image in Image
                             .resizable()
                             .scaledToFit()
-                            .clipShape(Circle()) // Makes the image circular
+                            .clipShape(Circle())
                             .overlay(
                                 Circle()
-                                    .stroke(Color.white, lineWidth: 2) // Thin white border
+                                    .stroke(Color.white, lineWidth: 2)
+                                
                             )
                             .frame(width: 200, height: 200)
                     }, placeholder: {
                         ProgressView()
                     }
-                    )
+                    ).accessibilityIdentifier("profilePicture")
                 }
                 Image("profilelines").resizable()
                     .scaledToFit()
             }
-            .padding(.bottom, 300)
+            .padding(.bottom, 350)
             
             VStack{
-                Text(currentUserName ?? "").font(.title).foregroundColor(.white).padding(.top, 30)
+                Text(currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
+                    .accessibilityIdentifier("userName")
                 
                 
-                Text(currentUserEmail ?? "").font(.body).foregroundColor(.white)
+                Text(currentUserEmail ?? "").font(.custom("Inter", size: 24)).foregroundColor(.white)
+                    .accessibilityIdentifier("userEmail")
             }
             
-            //path.append("loginView")
             Button(action: {
+                isLoggedIn = false
             }){
                 HStack {
-                    Text(HTTPConstants.LOGOUT.rawValue)
+                    Text(StringConstants.LOGOUT)
                     Image(systemName: "door.right.hand.open")
                 }
                 .padding()
@@ -82,44 +77,17 @@ struct ProfileView: View {
                 .foregroundColor(.black)
                 
             }.padding(.top, 550)
-            
+                .accessibilityIdentifier("logout")
             
         }
         .onAppear{getProfilePicture()}
-//        .onChange(of: PhotosPickerItem){ _, _ in
-//            Task{
-//                if let photosPickerItem,
-//                   let data = try? await photosPickerItem.loadTransferable(type: Data.self){
-//                    if let image = UIImage(data: data){
-//                        // currentUserAvatar = image
-//                    }
-//                }
-//                photosPickerItem = nil
-//            }
-//            
-//        }
-        
-        
     }
     func getProfilePicture()  {
         Task{
             profileViewModel.createUrlToGetAvatarJson(id: currentUserId ?? "No id")
             await userService.getUsers(from: profileViewModel.urlGetAvatarJson)
-            
-            
-            print("Avatar JSON: \(profileViewModel.urlGetAvatarJson)")
-            print("User JSON: \(userService.users.first?.avatar)")
-            
-            
             profileViewModel.createUrlToGetAvatarPhoto(imageName: userService.users.first?.avatar ?? SupabaseConfig.avatarDefault)
-            print("URL to get avatar photo from storage: \(profileViewModel.urlGetAvatarPhoto)")
-            //            await userService.getAvatar(from: profileViewModel.urlGetAvatarPhoto)
             currentUserAvatar = profileViewModel.urlGetAvatarPhoto
-            
-            //            //Username
-            //            profileViewModel.createUrlGetUserName(param: "name", id: currentUserId)
-            //            await userService.getUsers(from: profileViewModel.urlGetUserName)
-            
             
         }
     }
