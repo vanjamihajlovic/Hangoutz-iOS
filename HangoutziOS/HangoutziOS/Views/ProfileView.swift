@@ -41,13 +41,13 @@ struct ProfileView: View {
                             .overlay(
                                 Circle()
                                     .stroke(Color.white, lineWidth: 2)
-                                
                             )
                             .frame(width: 200, height: 200)
                     }, placeholder: {
                         ProgressView()
                     }
-                    ).accessibilityIdentifier("profilePicture")
+                    )
+                    .accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
                 }
                 Image("profilelines").resizable()
                     .scaledToFit()
@@ -56,13 +56,10 @@ struct ProfileView: View {
             
             VStack{
                 Text(currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
-                    .accessibilityIdentifier("userName")
-                
-                
+                    .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
                 Text(currentUserEmail ?? "").font(.custom("Inter", size: 24)).foregroundColor(.white)
-                    .accessibilityIdentifier("userEmail")
+                    .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_EMAIL)
             }
-            
             Button(action: {
                 isLoggedIn = false
             }){
@@ -75,10 +72,8 @@ struct ProfileView: View {
                 .background(Color.loginButton)
                 .cornerRadius(20)
                 .foregroundColor(.black)
-                
             }.padding(.top, 550)
-                .accessibilityIdentifier("logout")
-            
+                .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGOUT)
         }
         .onAppear{getProfilePicture()}
     }
@@ -88,7 +83,6 @@ struct ProfileView: View {
             await userService.getUsers(from: profileViewModel.urlGetAvatarJson)
             profileViewModel.createUrlToGetAvatarPhoto(imageName: userService.users.first?.avatar ?? SupabaseConfig.avatarDefault)
             currentUserAvatar = profileViewModel.urlGetAvatarPhoto
-            
         }
     }
 }

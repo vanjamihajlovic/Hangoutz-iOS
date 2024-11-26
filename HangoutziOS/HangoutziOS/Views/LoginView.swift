@@ -60,7 +60,7 @@ struct LoginSection: View {
         VStack{
             TextField("", text: $loginViewModel.username, prompt: Text("Email")
                 .foregroundColor(.white))
-            .accessibilityIdentifier("userEmail")
+            .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
             .autocapitalization(.none)
             .frame(width: 320, height: 25, alignment: .center)
             .foregroundColor(.white)
@@ -73,7 +73,7 @@ struct LoginSection: View {
             )
             .padding(20)
             SecureField("", text: $loginViewModel.password, prompt: Text("Password").foregroundColor(.white))
-                .accessibilityIdentifier("userPassword")
+                .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_PASSWORD)
                 .autocapitalization(.none)
                 .frame(width: 320, height: 25, alignment: .center)
                 .foregroundColor(.white)
@@ -129,12 +129,12 @@ struct CreateAccount: View {
                 }
             }
             .padding(.horizontal, 40)
-            .accessibilityIdentifier("login")
+            .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGIN)
             Text("OR")
                 .bold()
                 .foregroundColor(.white)
                 .padding(.top, 20)
-            NavigationLink(destination: {/*TODO: Destination to createAccountView */}, label:{ Text("Create account")
+            NavigationLink(destination: {/*TODO: Destination to createAccountView */}, label:{ Text(StringConstants.CREATE_ACCOUNT)
                     .padding(5)
                     .font(.title3)
                     .bold()
