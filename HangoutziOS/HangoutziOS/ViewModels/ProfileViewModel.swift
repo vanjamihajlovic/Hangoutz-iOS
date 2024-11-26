@@ -14,7 +14,7 @@ class ProfileViewModel: ObservableObject {
     @Published var urlGetUserEmail: String = ""
     
     func createUrlToGetAvatarJson(id: String){
-        urlGetAvatarJson = SupabaseConfig.baseURL + "rest/v1/users?select=avatar&id=eq.\(id)"
+        urlGetAvatarJson = SupabaseConfig.baseURL + SupabaseConstants.SELECT_AVATAR + "\(id)"
     }
     func createUrlToGetAvatarPhoto(imageName: String?) {
         urlGetAvatarPhoto = SupabaseConfig.baseURLStorage + "\(imageName ?? "error")"
