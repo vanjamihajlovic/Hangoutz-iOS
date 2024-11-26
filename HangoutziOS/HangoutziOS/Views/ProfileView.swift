@@ -1,32 +1,99 @@
 //
-//  ProfileView.swift
+//  ProfileScreen.swift
 //  HangoutziOS
 //
-//  Created by strahinjamil on 11/21/24.
+//  Created by Aleksa on 11/21/24.
 //
 
 import SwiftUI
+import PhotosUI
 
 struct ProfileView: View {
     
+    @AppStorage("currentUserAvatar") var currentUserAvatar : String?
+    @AppStorage("currentUserName") var currentUserName: String?
+    @AppStorage("currentUserEmail") var currentUserEmail: String?
+    @AppStorage("currentUserId") var currentUserId : String?
+    @AppStorage("isLoggedIn") var isLoggedIn : Bool?
+    @State private var photosPickerItem : PhotosPickerItem?
+    var profileViewModel : ProfileViewModel = ProfileViewModel()
+    var userService : UserService = UserService()
+    let backgroundImage: String = "MainBackground"
+    
     var body: some View {
+        
         ZStack {
-            Image.backgroundImage
+            Image(backgroundImage)
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
-            
             VStack{
                 AppBarView()
                 Spacer()
             }
             
-            Text("Profile Screen")
-                .foregroundColor(.white)
+            ZStack {
+                PhotosPicker(selection: $photosPickerItem, matching: .images) {
+                    AsyncImage(url: URL(string: currentUserAvatar ?? "No avatar"), content: { Image in Image
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(Color.white, lineWidth: 2)
+                                
+                            )
+                            .frame(width: 200, height: 200)
+                    }, placeholder: {
+                        ProgressView()
+                    }
+                    ).accessibilityIdentifier("profilePicture")
+                }
+                Image("profilelines").resizable()
+                    .scaledToFit()
+            }
+            .padding(.bottom, 350)
+            
+            VStack{
+                Text(currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
+                    .accessibilityIdentifier("userName")
+                
+                
+                Text(currentUserEmail ?? "").font(.custom("Inter", size: 24)).foregroundColor(.white)
+                    .accessibilityIdentifier("userEmail")
+            }
+            
+            Button(action: {
+                isLoggedIn = false
+            }){
+                HStack {
+                    Text(StringConstants.LOGOUT)
+                    Image(systemName: "door.right.hand.open")
+                }
+                .padding()
+                .frame(width:310)
+                .background(Color.loginButton)
+                .cornerRadius(20)
+                .foregroundColor(.black)
+                
+            }.padding(.top, 550)
+                .accessibilityIdentifier("logout")
+            
+        }
+        .onAppear{getProfilePicture()}
+    }
+    func getProfilePicture()  {
+        Task{
+            profileViewModel.createUrlToGetAvatarJson(id: currentUserId ?? "No id")
+            await userService.getUsers(from: profileViewModel.urlGetAvatarJson)
+            profileViewModel.createUrlToGetAvatarPhoto(imageName: userService.users.first?.avatar ?? SupabaseConfig.avatarDefault)
+            currentUserAvatar = profileViewModel.urlGetAvatarPhoto
+            
         }
     }
 }
 
 #Preview {
     ProfileView()
+    
 }

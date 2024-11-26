@@ -1,3 +1,4 @@
+
 //
 //  Constants.swift
 //  HangoutziOS
@@ -17,6 +18,7 @@ enum HTTPConstants : String {
     case BEARER = "Bearer "
     case AUTHORIZATION = "Authorization"
     case LOGIN = "Login"
+    case LOGOUT = "Logout"
 }
 
 class ValidationConstants {
@@ -28,4 +30,6 @@ class ValidationConstants {
 
 class StringConstants {
     static let APP_NAME = "Hangoutz"
+    static let LOGIN : String = "Login"
+    static let LOGOUT : String = "Logout"
 }
