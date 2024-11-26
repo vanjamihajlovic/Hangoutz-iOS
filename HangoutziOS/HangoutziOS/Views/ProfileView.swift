@@ -33,6 +33,8 @@ struct ProfileView: View {
             }
             
             ZStack {
+                Image("profilelines").resizable()
+                    .scaledToFit()
                 PhotosPicker(selection: $photosPickerItem, matching: .images) {
                     AsyncImage(url: URL(string: currentUserAvatar ?? "No avatar"), content: { Image in Image
                             .resizable()
@@ -40,22 +42,29 @@ struct ProfileView: View {
                             .clipShape(Circle())
                             .overlay(
                                 Circle()
-                                    .stroke(Color.white, lineWidth: 2)
+                                    .stroke(Color.white, lineWidth: 2).padding(-5)
                             )
-                            .frame(width: 200, height: 200)
+                            .frame(width: 165, height: 165)
                     }, placeholder: {
                         ProgressView()
                     }
                     ).accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
                 }
-                Image("profilelines").resizable()
-                    .scaledToFit()
+               
             }
             .padding(.bottom, 350)
             
             VStack{
-                Text(currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
-                    .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
+                HStack {
+                    Text(currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
+                        .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
+                    Image(systemName: "applepencil")
+                        .resizable()
+                        .frame(width: 25, height: 25).foregroundColor(.white)
+                        .padding(.top,20)
+                        .bold()
+                        .accessibilityIdentifier(AccessibilityIdentifierConstants.PEN)
+                }
                 Text(currentUserEmail ?? "").font(.custom("Inter", size: 24)).foregroundColor(.white)
                     .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_EMAIL)
             }
