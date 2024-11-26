@@ -13,12 +13,13 @@ class UserService : ObservableObject {
     
     init() {
     }
+    
     func getUsers(from urlString: String) async -> [userData] {
         guard let url = URL(string: urlString) else {
             print("Invalid URL.")
             return []
         }
-        let returnedData = await downloadData(fromURL: url)
+        let returnedData = await downloadData(fromURL: url, method: HTTPConstants.GET)
         if let data = returnedData {
             guard let newUsers = try? JSONDecoder().decode([userData].self, from: data) else {
                 print("Failed to decode user data.")
@@ -33,12 +34,13 @@ class UserService : ObservableObject {
         }
     }
     
-    func downloadData(fromURL url: URL) async -> Data? {
+    func downloadData(fromURL url: URL, method: HTTPConstants) async -> Data? {
         
         var request = URLRequest(url: url)
         request.httpMethod = HTTPConstants.GET.rawValue
         request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
         request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
+        
         return await withCheckedContinuation { continuation in
             URLSession.shared.dataTask(with: request) { (data, response, error) in
                 guard
@@ -56,4 +58,6 @@ class UserService : ObservableObject {
         }
     }
 }
+
+
 

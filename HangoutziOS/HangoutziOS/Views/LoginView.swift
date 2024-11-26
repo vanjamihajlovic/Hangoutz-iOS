@@ -9,32 +9,30 @@ import SwiftUI
 
 struct LoginView: View {
     
-    @State private var path = NavigationPath()
-    @StateObject var router: Router = Router()
+    @AppStorage("isLoggedIn") var isLoggedIn : Bool?
     @ObservedObject var loginViewModel : LoginViewModel = LoginViewModel()
     @ObservedObject var userService: UserService = UserService()
     let backgroundImage: String = "MainBackground"
     let logo: String = "Hangoutz"
     
     var body: some View {
-        NavigationStack(path: $path) {
-            ZStack{
-                Image(backgroundImage)
-                    .resizable()
-                    .scaledToFill()
-                    .edgesIgnoringSafeArea(.all)
-                hangoutzLogo
-                LoginSection(loginViewModel:loginViewModel, isVisiblePassword: false)
-                CreateAccount(loginViewModel: loginViewModel, userService: userService,path: $path)
-            }
-            .navigationDestination(for: String.self) { view in
-                if view == Router.Destination.eventScreen.rawValue {
-                    MainTabView()
+        NavigationStack() {
+            if isLoggedIn ?? false{
+                MainTabView()
+                    .navigationBarBackButtonHidden(true)
+            }else{
+                ZStack{
+                    Image(backgroundImage)
+                        .resizable()
+                        .scaledToFill()
+                        .edgesIgnoringSafeArea(.all)
+                    hangoutzLogo
+                    LoginSection(loginViewModel:loginViewModel, isVisiblePassword: false)
+                    CreateAccount(loginViewModel: loginViewModel, userService: userService)
                 }
             }
         }
     }
-    
     var hangoutzLogo: some View {
         VStack{
             Image(logo)
@@ -60,19 +58,22 @@ struct LoginSection: View {
     
     var body: some View {
         VStack{
-            TextField("", text: $loginViewModel.username, prompt: Text("Email").foregroundColor(.white))
-                .autocapitalization(.none)
-                .frame(width: 320, height: 25, alignment: .center)
-                .foregroundColor(.white)
-                .textContentType(.emailAddress)
-                .padding()
-                .foregroundColor(.white)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.white, lineWidth: 3)
-                )
-                .padding(20)
+            TextField("", text: $loginViewModel.username, prompt: Text("Email")
+                .foregroundColor(.white))
+            .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
+            .autocapitalization(.none)
+            .frame(width: 320, height: 25, alignment: .center)
+            .foregroundColor(.white)
+            .textContentType(.emailAddress)
+            .padding()
+            .foregroundColor(.white)
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.white, lineWidth: 3)
+            )
+            .padding(20)
             SecureField("", text: $loginViewModel.password, prompt: Text("Password").foregroundColor(.white))
+                .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_PASSWORD)
                 .autocapitalization(.none)
                 .frame(width: 320, height: 25, alignment: .center)
                 .foregroundColor(.white)
@@ -93,10 +94,11 @@ struct CreateAccount: View {
     var loginViewModel : LoginViewModel
     var userService : UserService
     @State var showAlert: Bool = false
-    @Binding var path : NavigationPath
     
     @AppStorage("currentUserId") var currentUserId: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
+    @AppStorage("currentUserName") var currentUserName: String?
+    @AppStorage("isLoggedIn") var isLoggedIn = false
     
     var body: some View {
         VStack{
@@ -109,12 +111,12 @@ struct CreateAccount: View {
                 }
                 else {
                     showAlert.toggle()
-                
+                    
                 }
             })
             {
                 HStack {
-                    Text(HTTPConstants.LOGIN.rawValue)
+                    Text(StringConstants.LOGIN)
                     Image(systemName: "door.right.hand.open")
                 }
                 .padding()
@@ -127,11 +129,12 @@ struct CreateAccount: View {
                 }
             }
             .padding(.horizontal, 40)
+            .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGIN)
             Text("OR")
                 .bold()
                 .foregroundColor(.white)
                 .padding(.top, 20)
-            NavigationLink(destination: {/*TODO: Destination to createAccountView */}, label:{ Text("Create account")
+            NavigationLink(destination: {/*TODO: Destination to createAccountView */}, label:{ Text(StringConstants.CREATE_ACCOUNT)
                     .padding(5)
                     .font(.title3)
                     .bold()
@@ -139,22 +142,23 @@ struct CreateAccount: View {
         }
         .padding(.bottom, 10)
     }
-    
     func getUserFromSupabase() {
         Task {
             await userService.getUsers(from: loginViewModel.url)
             if(userService.users.first?.id != nil){
-                path.append("eventScreen")
-                loginViewModel.isLoggedIn.toggle()
+                loginViewModel.isLoggedIn = true
+                isLoggedIn = loginViewModel.isLoggedIn
                 print("Bool isLoggedin: \(loginViewModel.isLoggedIn)\n")
-                //Save data to @AppStorage
-                currentUserId = userService.users.first?.id
-                currentUserEmail = userService.users.first?.email
+                loginViewModel.username = ""
+                loginViewModel.password = ""
+                currentUserId = userService.users.first?.id ?? nil
+                currentUserEmail = userService.users.first?.email ?? nil
+                currentUserName = userService.users.first?.name ?? nil
             }
             else {
                 showAlert.toggle()
                 loginViewModel.errorMessage = "Incorrect email or password"
-            
+                
             }
         }
     }

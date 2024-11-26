@@ -1,4 +1,5 @@
 #Hangoutz project
+supabaseConfig
 supabaseConfig.swift
 developmentConfig.xcconfig
 # Xcode

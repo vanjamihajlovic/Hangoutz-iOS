@@ -16,7 +16,6 @@ enum HTTPConstants : String {
     case API_KEY = "apikey"
     case BEARER = "Bearer "
     case AUTHORIZATION = "Authorization"
-    case LOGIN = "Login"
 }
 
 class ValidationConstants {
@@ -28,4 +27,21 @@ class ValidationConstants {
 
 class StringConstants {
     static let APP_NAME = "Hangoutz"
+    static let LOGIN : String = "Login"
+    static let LOGOUT : String = "Logout"
+    static let CREATE_ACCOUNT : String = "Create account"
+}
+
+class SupabaseConstants {
+    static let SELECT_AVATAR : String = "rest/v1/users?select=avatar&id=eq."
+}
+
+class AccessibilityIdentifierConstants {
+    static let USER_NAME : String = "userName"
+    static let USER_PASSWORD : String = "userPassword"
+    static let USER_EMAIL : String = "userEmail"
+    static let LOGIN : String = "login"
+    static let LOGOUT : String = "logout"
+    static let PROFILE_PICTURE : String = "profilePicture"
+
 }
