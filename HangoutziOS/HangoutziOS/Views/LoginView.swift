@@ -135,7 +135,7 @@ struct CreateAccount: View {
                 .bold()
                 .foregroundColor(.white)
                 .padding(.top, 20)
-            NavigationLink(destination: {/*TODO: Destination to createAccountView */}, label:{ Text(StringConstants.CREATE_ACCOUNT)
+            NavigationLink(destination: {RegistrationView()}, label:{ Text(StringConstants.CREATE_ACCOUNT)
                     .padding(5)
                     .font(.title3)
                     .bold()
@@ -159,7 +159,6 @@ struct CreateAccount: View {
             else {
                 showAlert.toggle()
                 loginViewModel.errorMessage = "Incorrect email or password"
-                
             }
         }
     }
