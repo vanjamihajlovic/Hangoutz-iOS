@@ -14,7 +14,7 @@ struct MainTabView: View {
     
     var body: some View {
         
-        ZStack{
+            ZStack{
                 TabView(selection: $currentTab ) {
                     EventScreen()
                         .tabItem {
@@ -35,19 +35,20 @@ struct MainTabView: View {
                         .tag(2)
                 }
                 .onAppear(){
-                        let tabBarAppearance = UITabBarAppearance()
-                        tabBarAppearance.configureWithOpaqueBackground()
-                        tabBarAppearance.backgroundColor = UIColor.barColor
-                        tabBarAppearance.stackedLayoutAppearance.normal.iconColor = .white
-                        tabBarAppearance.stackedLayoutAppearance.selected.iconColor = .lightGray
-                            
-                        UITabBar.appearance().standardAppearance = tabBarAppearance
-                        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+                    let tabBarAppearance = UITabBarAppearance()
+                    tabBarAppearance.configureWithOpaqueBackground()
+                    tabBarAppearance.backgroundColor = UIColor.barColor
+                    tabBarAppearance.stackedLayoutAppearance.normal.iconColor = .white
+                    tabBarAppearance.stackedLayoutAppearance.selected.iconColor = .lightGray
+                    
+                    UITabBar.appearance().standardAppearance = tabBarAppearance
+                    UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
                 }
             }
-            .navigationBarBackButtonHidden(true) 
-        }
+            .navigationBarBackButtonHidden(true)
+         
     }
+}
 
 
 #Preview {

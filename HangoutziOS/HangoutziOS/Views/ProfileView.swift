@@ -16,7 +16,8 @@ struct ProfileView: View {
     @AppStorage("currentUserId") var currentUserId : String?
     @AppStorage("isLoggedIn") var isLoggedIn : Bool?
     @State private var photosPickerItem : PhotosPickerItem?
-    var profileViewModel : ProfileViewModel = ProfileViewModel()
+    @State var newUserName : String = ""
+    @StateObject var profileViewModel : ProfileViewModel = ProfileViewModel()
     var userService : UserService = UserService()
     let backgroundImage: String = "MainBackground"
     
@@ -33,30 +34,70 @@ struct ProfileView: View {
             }
             
             ZStack {
+                Image("profilelines").resizable()
+                    .scaledToFill()
                 PhotosPicker(selection: $photosPickerItem, matching: .images) {
                     AsyncImage(url: URL(string: currentUserAvatar ?? "No avatar"), content: { Image in Image
                             .resizable()
-                            .scaledToFit()
+                            .scaledToFill()
                             .clipShape(Circle())
                             .overlay(
                                 Circle()
-                                    .stroke(Color.white, lineWidth: 2)
+                                    .stroke(Color.white, lineWidth: 2).padding(-5)
                             )
-                            .frame(width: 200, height: 200)
+                            .frame(width: 160, height: 160)
                     }, placeholder: {
                         ProgressView()
                     }
-                    )
-                    .accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
+                    ).accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
                 }
-                Image("profilelines").resizable()
-                    .scaledToFit()
+                
             }
             .padding(.bottom, 350)
             
             VStack{
-                Text(currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
-                    .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
+                HStack {
+                    if(profileViewModel.isEditing){
+                        TextField(currentUserName ?? "", text: $newUserName)
+                            .frame(width: 150)
+                            .font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20)
+                            .disableAutocorrection(true)
+                            .textInputAutocapitalization(.never)
+                            .padding(10)
+                        
+                    }
+                    else{
+                        Text(currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
+                            .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
+                    }
+           
+                    if(profileViewModel.isEditing) {
+                        Image(systemName: "checkmark")
+                            .resizable()
+                            .frame(width: 25, height: 25).foregroundColor(profileViewModel.checkUsername(param: newUserName) ? Color.white : Color.gray)
+                            .padding(.top, 20)
+                            .bold()
+                            .onTapGesture {
+                                profileViewModel.isEditing.toggle()
+                                if(profileViewModel.checkUsername(param: newUserName)) {
+                                    currentUserName = newUserName
+                                }
+                            }
+                        
+                    }
+                    else{
+                        Image(systemName: "pencil")
+                            .resizable()
+                            .frame(width: 25, height: 25).foregroundColor(.white)
+                            .padding(.top,20)
+                            .bold()
+                            .onTapGesture {
+                                profileViewModel.isEditing.toggle()
+                                
+                            }
+                            .accessibilityIdentifier(AccessibilityIdentifierConstants.PEN)
+                    }
+                }
                 Text(currentUserEmail ?? "").font(.custom("Inter", size: 24)).foregroundColor(.white)
                     .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_EMAIL)
             }
