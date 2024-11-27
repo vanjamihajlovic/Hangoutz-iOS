@@ -58,9 +58,3 @@ class UserService : ObservableObject {
         }
     }
 }
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> Development

@@ -104,6 +104,8 @@ struct CreateAccount: View {
         VStack{
             Spacer()
             Button(action: {
+                loginViewModel.username =  loginViewModel.username.trimmingCharacters(in: .whitespacesAndNewlines)
+                loginViewModel.password = loginViewModel.password.trimmingCharacters(in: .whitespacesAndNewlines)
                 if(loginViewModel.validateLogin())
                 {
                     loginViewModel.createUrlLogin()
