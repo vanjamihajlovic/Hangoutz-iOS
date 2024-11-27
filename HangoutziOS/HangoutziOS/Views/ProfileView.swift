@@ -24,7 +24,7 @@ struct ProfileView: View {
     var body: some View {
         
         ZStack {
-            Image(backgroundImage)
+            Image.backgroundImage
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
@@ -34,7 +34,7 @@ struct ProfileView: View {
             }
             
             ZStack {
-                Image("profilelines").resizable()
+                Image.profilelines.resizable()
                     .scaledToFill()
                 PhotosPicker(selection: $photosPickerItem, matching: .images) {
                     AsyncImage(url: URL(string: currentUserAvatar ?? "No avatar"), content: { Image in Image
@@ -64,9 +64,9 @@ struct ProfileView: View {
                             .disableAutocorrection(true)
                             .textInputAutocapitalization(.never)
                             .padding(10)
-                        Image(systemName: "checkmark")
+                        Image.checkmark
                             .resizable()
-                            .frame(width: 25, height: 25).foregroundColor(profileViewModel.checkUsername(param: newUserName) ? Color.white : Color.gray)
+                            .frame(width: 40, height: 30).foregroundColor(profileViewModel.checkUsername(param: newUserName) ? Color.white : Color.gray)
                             .padding(.top, 20)
                             .bold()
                             .onTapGesture {
@@ -81,7 +81,7 @@ struct ProfileView: View {
                     else{
                         Text(currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
-                        Image(systemName: "pencil")
+                        Image.profilePicturePen
                             .resizable()
                             .frame(width: 25, height: 25).foregroundColor(.white)
                             .padding(.top,20)
@@ -102,7 +102,7 @@ struct ProfileView: View {
             }){
                 HStack {
                     Text(StringConstants.LOGOUT)
-                    Image(systemName: "door.right.hand.open")
+                    Image.doorRightHandOpen
                 }
                 .padding()
                 .frame(width:310)
