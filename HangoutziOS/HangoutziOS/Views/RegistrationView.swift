@@ -10,7 +10,6 @@ import SwiftUI
 
 struct RegistrationView: View {
     
-   // @Environment(\.presentationMode) var presentationMode
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var registrationViewModel = RegistrationViewModel()
     @State private var showAlert = false
@@ -18,7 +17,7 @@ struct RegistrationView: View {
     
 
     var body: some View {
-        NavigationStack(/*path: $path*/){
+        NavigationStack(){
             ZStack {
                 VStack(spacing: 20){
                     GlobalLogoView()
@@ -126,10 +125,7 @@ struct RegistrationView: View {
                                 if result == 409 {
                                     alertMessage = "Email already in use."
                                     showAlert.toggle()
-                                }else{
-                                   //NAVIGACIJA!!
-                                   // path.removeLast(path.count)
-                                   // presentationMode.wrappedValue.dismiss()
+                                } else {
                                     dismiss()
                                 }
                             }
