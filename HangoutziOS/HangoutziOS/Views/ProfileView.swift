@@ -32,7 +32,6 @@ struct ProfileView: View {
                 AppBarView()
                 Spacer()
             }
-            
             ZStack {
                 Image.profilelines.resizable()
                     .scaledToFill()
@@ -75,6 +74,8 @@ struct ProfileView: View {
                                     profileViewModel.isEditing.toggle()
                                     currentUserName = newUserName
                                     print("CurrentUserName is : \(currentUserName)")
+                                    profileViewModel.createUrlToUpdateName(id: currentUserId)
+                                    userService.updateName(url: profileViewModel.urlToUpdateName, userId: currentUserId ?? "", newName: currentUserName ?? "")
                                 }
                             }
                     }
@@ -126,5 +127,4 @@ struct ProfileView: View {
 
 #Preview {
     ProfileView()
-    
 }

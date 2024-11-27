@@ -13,6 +13,7 @@ class ProfileViewModel: ObservableObject {
     @Published var urlGetUserName : String = ""
     @Published var urlGetUserEmail: String = ""
     @Published var isEditing : Bool = false
+    @Published var urlToUpdateName : String = ""
     
     func createUrlToGetAvatarJson(id: String){
         urlGetAvatarJson = SupabaseConfig.baseURL + SupabaseConstants.SELECT_AVATAR + "\(id)"
@@ -30,5 +31,8 @@ class ProfileViewModel: ObservableObject {
         if(param.count >= 3 && param.count <= 25)
         {return true}
         else {return false}
+    }
+    func createUrlToUpdateName(id: String?){
+        urlToUpdateName = SupabaseConfig.baseURL + "rest/v1/users?id=eq.\(id ?? "")"
     }
 }
