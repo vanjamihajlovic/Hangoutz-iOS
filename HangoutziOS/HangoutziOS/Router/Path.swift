@@ -19,6 +19,7 @@ final class Router: ObservableObject {
         
         case loginView
         case eventScreen
+        case registrationScreen
         case profileScreen
         case mainTabView
         
@@ -29,6 +30,8 @@ final class Router: ObservableObject {
                 return LoginView()
             case .eventScreen:
                 return EventScreen()
+            case .registrationScreen:
+                return RegistrationView()
             case .mainTabView:
                 return MainTabView()
             case .profileScreen:

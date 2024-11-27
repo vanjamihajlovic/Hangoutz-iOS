@@ -7,6 +7,8 @@
 
 import Foundation
 
+
+// MARK: - userData
 struct userData: Codable {
     let name: String?
     let avatar: String?
@@ -19,6 +21,6 @@ struct userData: Codable {
         case passwordHash = "password_hash"
     }
 }
-typealias Welcome = [userData]
 
+typealias Welcome = [userData]
 
