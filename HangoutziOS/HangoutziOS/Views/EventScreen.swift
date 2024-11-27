@@ -8,17 +8,33 @@
 import SwiftUI
 
 struct EventScreen: View {
+    
     @AppStorage("currentUserId") var currentUserId: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
+    @AppStorage("currentUserName") var currentUserName: String?
     
     var body: some View {
         ZStack {
+            Image.backgroundImage
+                .resizable()
+                .scaledToFill()
+                .edgesIgnoringSafeArea(.all)
+            
             VStack{
-                Text("Event screen").font(.title).padding(30)
-                Text("Logged in as user id: \(currentUserId)\n")
-                Text("User email: \(currentUserEmail)")
+                AppBarView()
+                Spacer()
+                
             }
-        }.navigationBarBackButtonHidden(true) 
+            Group {
+                VStack{
+                    Text("Event Screen")
+                    Text("Logged in as user id: \(currentUserId)\n")
+                    Text("User name: \(currentUserName)")
+                    Text("User email: \(currentUserEmail)")
+                }
+            }
+            .foregroundColor(.white)
+        }
     }
 }
 

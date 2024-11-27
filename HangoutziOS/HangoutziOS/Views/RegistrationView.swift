@@ -95,7 +95,7 @@ struct RegistrationView: View {
                         SecureField("", text: $registrationViewModel.password2Registration, prompt: Text("Re-enter password")
                             .foregroundColor(.white)
                         )
-                        .accessibilityIdentifier("password2FieldField")
+                        .accessibilityIdentifier("confirmPasswordField")
                         .autocapitalization(.none)
                         .textContentType(.password)
                         .frame(width: 320, height: 25, alignment: .center)
@@ -144,7 +144,7 @@ struct RegistrationView: View {
                             .cornerRadius(20)
                             .bold()
                     }
-                    .accessibilityIdentifier("createButton")
+                    .accessibilityIdentifier("createAccountButton")
                     .padding(.top, 40)
                     .alert(isPresented: $showAlert) {
                         Alert(

@@ -25,7 +25,7 @@ class LoginViewModel: ObservableObject  {
     }
     func createUrlLogin()  {
         let hashedPassword = hashPassword(password: password)
-        url = SupabaseConfig.baseURL + "rest/v1/users?select=id,email,password_hash&email=eq.\(username)&password_hash=eq.\(hashedPassword)"
+        url = SupabaseConfig.baseURL + "rest/v1/users?select=id,email,name,password_hash&email=eq.\(username)&password_hash=eq.\(hashedPassword)"
     }
     func validateLogin() -> Bool {
         if(validation.isEmpty(self.username) || validation.isEmpty(self.password)){
