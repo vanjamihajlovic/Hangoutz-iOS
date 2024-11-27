@@ -14,7 +14,7 @@ struct MainTabView: View {
     
     var body: some View {
         
-        ZStack{
+            ZStack{
                 TabView(selection: $currentTab ) {
                     EventScreen()
                         .tabItem {
@@ -57,9 +57,10 @@ struct MainTabView: View {
                         UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
                 }
             }
-            .navigationBarBackButtonHidden(true) 
-        }
+            .navigationBarBackButtonHidden(true)
+         
     }
+}
 
 #Preview {
     MainTabView()

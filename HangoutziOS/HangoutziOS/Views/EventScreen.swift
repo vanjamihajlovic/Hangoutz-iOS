@@ -13,6 +13,10 @@ struct EventScreen: View {
     
     let colors: [Color] = [Color.firstEventCard, Color.secondEventCard, Color.thirdEventCard]
     
+    @AppStorage("currentUserId") var currentUserId: String?
+    @AppStorage("currentUserEmail") var currentUserEmail: String?
+    @AppStorage("currentUserName") var currentUserName: String?
+    
     var body: some View {
         ZStack {
             Image.backgroundImage
@@ -23,6 +27,7 @@ struct EventScreen: View {
             VStack {
                 AppBarView()
                 Spacer()
+                
             }
         
             ScrollView{

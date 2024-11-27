@@ -9,14 +9,19 @@ import Foundation
 import SwiftUICore
 import SwiftUI
 
-class Router: ObservableObject {
+final class Router: ObservableObject {
     
-    @State private var path = NavigationPath()
+    @State var path = NavigationPath()
     
+    static let shared = Router()
+    private init() {}
     enum Destination: String, Hashable {
         
         case loginView
         case eventScreen
+        case registrationScreen
+        case profileScreen
+        case mainTabView
         
         var view: any View {
             
@@ -25,6 +30,12 @@ class Router: ObservableObject {
                 return LoginView()
             case .eventScreen:
                 return EventScreen()
+            case .registrationScreen:
+                return RegistrationView()
+            case .mainTabView:
+                return MainTabView()
+            case .profileScreen:
+                return ProfileView()
             }
         }
     }
