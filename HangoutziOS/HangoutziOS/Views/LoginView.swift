@@ -104,6 +104,8 @@ struct CreateAccount: View {
         VStack{
             Spacer()
             Button(action: {
+                loginViewModel.username =  loginViewModel.username.trimmingCharacters(in: .whitespacesAndNewlines)
+                loginViewModel.password = loginViewModel.password.trimmingCharacters(in: .whitespacesAndNewlines)
                 if(loginViewModel.validateLogin())
                 {
                     loginViewModel.createUrlLogin()
@@ -111,7 +113,6 @@ struct CreateAccount: View {
                 }
                 else {
                     showAlert.toggle()
-                    
                 }
             })
             {
@@ -134,7 +135,7 @@ struct CreateAccount: View {
                 .bold()
                 .foregroundColor(.white)
                 .padding(.top, 20)
-            NavigationLink(destination: {RegistrationView()}, label:{ Text(StringConstants.CREATE_ACCOUNT)
+            NavigationLink(destination: {/*TODO: Destination to createAccountView */}, label:{ Text(StringConstants.CREATE_ACCOUNT)
                     .padding(5)
                     .font(.title3)
                     .bold()
