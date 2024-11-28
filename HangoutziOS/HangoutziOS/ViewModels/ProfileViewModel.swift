@@ -6,15 +6,19 @@
 //
 
 import Foundation
+import SwiftUI
 
 class ProfileViewModel: ObservableObject {
+    @AppStorage("currentUserAvatar") var currentUserAvatar : String?
+    @AppStorage("currentUserId") var currentUserId : String?
     @Published var urlGetAvatarJson: String = ""
     @Published var urlGetAvatarPhoto : String = ""
     @Published var urlGetUserName : String = ""
     @Published var urlGetUserEmail: String = ""
     @Published var isEditing : Bool = false
     @Published var urlToUpdateName : String = ""
-    
+    var userService : UserService = UserService()
+
     func createUrlToGetAvatarJson(id: String){
         urlGetAvatarJson = SupabaseConfig.baseURL + SupabaseConstants.SELECT_AVATAR + "\(id)"
     }

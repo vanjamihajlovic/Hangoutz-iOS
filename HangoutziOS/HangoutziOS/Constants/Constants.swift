@@ -44,6 +44,4 @@ class AccessibilityIdentifierConstants {
     static let LOGOUT : String = "logout"
     static let PROFILE_PICTURE : String = "profilePicture"
     static let PEN : String = "pen"
-
-
 }

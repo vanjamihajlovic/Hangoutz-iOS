@@ -11,8 +11,9 @@ import PhotosUI
 struct ProfileView: View {
     
     @StateObject var profileViewModel : ProfileViewModel = ProfileViewModel()
-    @State private var photosPickerItem : PhotosPickerItem?
+    @StateObject private var photoPickerViewModel = PhotoPickerViewModel()
     @State var newUserName : String = ""
+    @State var photoPickerIsPressed : Bool = false
     @AppStorage("currentUserAvatar") var currentUserAvatar : String?
     @AppStorage("currentUserName") var currentUserName: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
@@ -35,7 +36,19 @@ struct ProfileView: View {
             ZStack {
                 Image.profilelines.resizable()
                     .scaledToFill()
-                PhotosPicker(selection: $photosPickerItem, matching: .images) {
+                
+                if let image = photoPickerViewModel.selectedImage {
+                               Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle()
+                                .stroke(Color.white, lineWidth: 2).padding(-5)
+                        )
+                        .frame(width: 160, height: 160)
+                           }
+                PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images) {
                     AsyncImage(url: URL(string: currentUserAvatar ?? "No avatar"), content: { Image in Image
                             .resizable()
                             .scaledToFill()
