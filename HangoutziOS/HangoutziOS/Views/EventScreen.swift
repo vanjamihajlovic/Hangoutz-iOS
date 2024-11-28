@@ -9,10 +9,6 @@ import SwiftUI
 
 struct EventScreen: View {
     @ObservedObject var eventViewModel = EventViewModel.shared
-    @StateObject var eventService = EventService.shared
-    
-    //let colors: [Color] = [Color.firstEventCard, Color.secondEventCard, Color.thirdEventCard]
-    
     @AppStorage("currentUserId") var currentUserId: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
     @AppStorage("currentUserName") var currentUserName: String?
@@ -59,7 +55,6 @@ struct EventScreen: View {
 struct EventCard : View {
     let event: eventModelDTO
     let color : Color
-    @ObservedObject var userService : UserService = UserService()
     @ObservedObject var userViewModel : UserViewModel = UserViewModel()
     @ObservedObject var eventViewModel = EventViewModel.shared
     @StateObject var eventService = EventService.shared
