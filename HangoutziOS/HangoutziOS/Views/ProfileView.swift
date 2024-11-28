@@ -14,11 +14,13 @@ struct ProfileView: View {
     @StateObject private var photoPickerViewModel = PhotoPickerViewModel()
     @State var newUserName : String = ""
     @State var photoPickerIsPressed : Bool = false
+    @State private var uploadStatus: String = ""
     @AppStorage("currentUserAvatar") var currentUserAvatar : String?
     @AppStorage("currentUserName") var currentUserName: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
     @AppStorage("currentUserId") var currentUserId : String?
     @AppStorage("isLoggedIn") var isLoggedIn : Bool?
+    @State var currentImage : UIImage?
     var userService : UserService = UserService()
     let backgroundImage: String = "MainBackground"
     
@@ -29,6 +31,7 @@ struct ProfileView: View {
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
+            /*TODO: REMOVE VStack, because app bar will be only defined in maintabview*/
             VStack{
                 AppBarView()
                 Spacer()
@@ -37,8 +40,8 @@ struct ProfileView: View {
                 Image.profilelines.resizable()
                     .scaledToFill()
                 
-                if let image = photoPickerViewModel.selectedImage {
-                               Image(uiImage: image)
+                if let currentImage = photoPickerViewModel.selectedImage {
+                    Image(uiImage: currentImage)
                         .resizable()
                         .scaledToFill()
                         .clipShape(Circle())
@@ -47,7 +50,9 @@ struct ProfileView: View {
                                 .stroke(Color.white, lineWidth: 2).padding(-5)
                         )
                         .frame(width: 160, height: 160)
-                           }
+                    
+                }
+
                 PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images) {
                     AsyncImage(url: URL(string: currentUserAvatar ?? "No avatar"), content: { Image in Image
                             .resizable()
@@ -86,6 +91,7 @@ struct ProfileView: View {
                                 if(profileViewModel.checkUsername(param: newUserName)) {
                                     profileViewModel.isEditing.toggle()
                                     currentUserName = newUserName.trimmingCharacters(in: .whitespaces)
+                                    newUserName = newUserName.trimmingCharacters(in: .whitespaces)
                                     print("CurrentUserName is : \(currentUserName)")
                                     profileViewModel.createUrlToUpdateName(id: currentUserId)
                                     userService.updateName(url: profileViewModel.urlToUpdateName, userId: currentUserId ?? "", newName: currentUserName ?? "")
@@ -136,6 +142,20 @@ struct ProfileView: View {
             currentUserAvatar = profileViewModel.urlGetAvatarPhoto
         }
     }
+    
+//    func uploadImage(image: UIImage) {
+//        userService.uploadImageToSupabase(image: image, fileName: "sample.jpg") { result in
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .success(let filePath):
+//                    uploadStatus = "Upload successful: \(filePath)"
+//                case .failure(let error):
+//                    uploadStatus = "Error: \(error.localizedDescription)"
+//                }
+//                
+//            }
+//        }
+//    }
 }
 
 #Preview {

@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import UIKit
 
 class UserService : ObservableObject {
     
@@ -139,5 +140,43 @@ class UserService : ObservableObject {
             }
         }.resume()
     }
+    func uploadImageToSupabase(image: UIImage, fileName: String, completion: @escaping (Result<String, Error>) -> Void) {
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            completion(.failure(NSError(domain: "InvalidImage", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid image data."])))
+            return
+        }
+        let bucketName = "avatar"                     // Replace with your Supabase bucket name
+        
+        let uploadURL = SupabaseConfig.baseURLStorage + "\(fileName)"
+        guard let url = URL(string: uploadURL) else {
+            completion(.failure(NSError(domain: "InvalidURL", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to construct upload URL."])))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPConstants.POST.rawValue
+        request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
+        request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
+        request.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
+        
+        let uploadTask = URLSession.shared.uploadTask(with: request, from: imageData) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
+                let errorMessage = "Failed to upload image. HTTP Status Code: \(statusCode)"
+                completion(.failure(NSError(domain: "UploadFailed", code: statusCode, userInfo: [NSLocalizedDescriptionKey: errorMessage])))
+                return
+            }
+            // Return the file path on success
+            let filePath = "\(bucketName)/\(fileName)"
+            completion(.success(filePath))
+        }
+        
+        uploadTask.resume()
+    }
+    
 }
 
