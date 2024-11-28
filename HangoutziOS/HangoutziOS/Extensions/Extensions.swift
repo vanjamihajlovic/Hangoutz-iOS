@@ -29,32 +29,33 @@ extension Date {
     
     func justTime() -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
+        formatter.dateFormat = DateConstants.JUST_TIME
         return formatter.string(from:self)
     }
     
     func formattedWithOrdinal() -> String {
             let formatter = DateFormatter()
-            formatter.dateFormat = "MMMM d"
+        formatter.dateFormat = DateConstants.MONTH_DAY
             let dayWithSuffix = dayWithOrdinal()
             return formatter.string(from: self).replacingOccurrences(of: String(Calendar.current.component(.day, from: self)), with: dayWithSuffix)
-        }
+    }
     
     private func dayWithOrdinal() -> String {
         let day = Calendar.current.component(.day, from: self)
+        
         switch day {
         case 11...13:
-            return "\(day)th"
+            return "\(day)" + DateConstants.TH_SUFFIX
         default:
             switch day % 10 {
             case 1:
-                return "\(day)st"
+                return "\(day)" + DateConstants.ST_SUFFIX
             case 2:
-                return "\(day)nd"
+                return "\(day)" + DateConstants.ND_SUFFIX
             case 3:
-                return "\(day)rd"
+                return "\(day)" + DateConstants.RD_SUFFIX
             default:
-                return "\(day)th"
+                return "\(day)" + DateConstants.TH_SUFFIX
             }
         }
     }

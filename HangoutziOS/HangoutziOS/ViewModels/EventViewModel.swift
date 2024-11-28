@@ -10,7 +10,7 @@ import SwiftUICore
 
 class EventViewModel : ObservableObject {
     @Published var url: String = ""
-    @Published var url2: String = ""
+    @Published var urlCount: String = ""
     @ObservedObject var eventService = EventService.shared
     @Published var events: [eventModelDTO] = []
     @Published var count: Int = 0
@@ -20,11 +20,11 @@ class EventViewModel : ObservableObject {
     }
     
     func createUrlEventNonfiltered() async {
-        url = SupabaseConfig.baseURL + "rest/v1/events?select=*,users(avatar)&order=date"
+        url = SupabaseConfig.baseURL + SupabaseConstants.SELECT_EVENTS
     }
     
     func createUrlPeopleGoingCount(idEvent: String) async {
-        url2 = SupabaseConfig.baseURL + "rest/v1/invites?select=count&event_status=eq.accepted&event_id=eq.\(idEvent)"
+        urlCount = SupabaseConfig.baseURL + SupabaseConstants.SELECT_PEOPLE_COUNT + idEvent
     }
     
     func getEvents() async {
@@ -33,9 +33,17 @@ class EventViewModel : ObservableObject {
         }
     }
     
+    func createDateTimeString(event: eventModelDTO) -> String {
+       return (event.date?.formattedWithOrdinal() ?? "") + " @ " + (event.date?.justTime() ?? "")
+    }
+    
+    func createEventPlaceString(event: eventModelDTO) -> String {
+        return ("@ " + (event.place ?? "No Place"))
+    }
+    
     func getCount() async {
         Task{
-            await count = 1 + (eventService.getCount(from: url2) ?? 0) 
+            await count = 1 + (eventService.getCount(from: urlCount) ?? 0)
         }
     }
     

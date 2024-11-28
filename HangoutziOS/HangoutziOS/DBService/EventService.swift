@@ -56,7 +56,6 @@ class EventService : ObservableObject {
             print("Decoded events count: \(newEvents.count)")
             await MainActor.run {
                 self.events = newEvents
-                //print("Events updated: \(self.events.count)")
             }
             return newEvents
         } else {
@@ -65,7 +64,6 @@ class EventService : ObservableObject {
     }
     
     func downloadData(fromURL url: URL) async -> Data? {
-        
         var request = URLRequest(url: url)
         request.httpMethod = HTTPConstants.GET.rawValue
         request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)

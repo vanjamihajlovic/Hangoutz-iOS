@@ -11,7 +11,7 @@ struct EventScreen: View {
     @ObservedObject var eventViewModel = EventViewModel.shared
     @StateObject var eventService = EventService.shared
     
-    let colors: [Color] = [Color.firstEventCard, Color.secondEventCard, Color.thirdEventCard]
+    //let colors: [Color] = [Color.firstEventCard, Color.secondEventCard, Color.thirdEventCard]
     
     @AppStorage("currentUserId") var currentUserId: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
@@ -34,9 +34,8 @@ struct EventScreen: View {
                 VStack{
                     ForEach(eventViewModel.events.indices, id: \.self){ index in
                         let event = eventViewModel.events[index]
-                        let color = colors[index % colors.count]
+                        let color = ColorConstants.eventCardColors[index % ColorConstants.eventCardColors.count]
                         
-                       
                         EventCard(event:event,color:color)
                     }
                 }
@@ -66,8 +65,9 @@ struct EventCard : View {
     @StateObject var eventService = EventService.shared
     
     var body: some View {
-    
-        let dateTimeString = (event.date?.formattedWithOrdinal() ?? "") + " @ " + (event.date?.justTime() ?? "")
+        let dateTimeString = eventViewModel.createDateTimeString(event: event)
+        let eventPlaceString = eventViewModel.createEventPlaceString(event: event)
+        
         ZStack {
             HStack(){
                 
@@ -103,7 +103,7 @@ struct EventCard : View {
                             .truncationMode(.tail)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .accessibilityIdentifier("cardTitle")
-                        Text("@ " + (event.place ?? "No Place"))
+                        Text(eventPlaceString)
                             .bold()
                             .font(.title3)
                             .foregroundColor(.white)
