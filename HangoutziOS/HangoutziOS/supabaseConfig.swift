@@ -6,9 +6,6 @@
 //
 //  File is included in .gitignore, should never be pushed to repository!
 
-
-
-
 import Foundation
 ///Structure that holds all the neccessary credentials for API calls
 struct SupabaseConfig {
