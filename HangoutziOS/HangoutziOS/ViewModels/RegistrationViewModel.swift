@@ -30,6 +30,23 @@ class RegistrationViewModel: ObservableObject {
     
     private let validation = Validation()
     
+    func resetFields() {
+            nameRegistration = ""
+            emailRegistration = ""
+            passwordRegistration = ""
+            password2Registration = ""
+            hashedPassword = ""
+            url = ""
+            
+            isNameValid = true
+            isEmailValid = true
+            isPasswordValid = true
+            isPassword2Valid = true
+            showGlobalError = false
+            globalErrorMessage = ""
+            allFieldsFilled = true
+        }
+    
     func createJsonObject() -> Data? {
         let jsonObject: [String: Any] = [
             "name": nameRegistration,
@@ -75,8 +92,7 @@ class RegistrationViewModel: ObservableObject {
         }
         return 500
     }
-    
-   
+
 
     func validateFields() -> Bool{
         allFieldsFilled = true
@@ -92,13 +108,7 @@ class RegistrationViewModel: ObservableObject {
                 isEmailValid = !validation.isEmpty(emailRegistration) && validation.isValidEmail(emailRegistration)
                 isPasswordValid = !validation.isEmpty(passwordRegistration) && validation.isValidPassword(passwordRegistration)
                 isPassword2Valid = !validation.isEmpty(password2Registration) && validation.isConfirmPasswordEqual(pass: passwordRegistration, conPass: password2Registration)
-                
-//
-//        isNameValid = validation.isNameValid(nameRegistration)
-//        isEmailValid = validation.isValidEmail(emailRegistration)
-//        isPasswordValid = validation.isValidPassword(passwordRegistration)
-//        isPassword2Valid = validation.isConfirmPasswordEqual(pass: passwordRegistration, conPass: password2Registration)
-//        
+                      
         if !isNameValid || !isEmailValid || !isPasswordValid || !isPassword2Valid {
             hasValidationErrors = true
         }
