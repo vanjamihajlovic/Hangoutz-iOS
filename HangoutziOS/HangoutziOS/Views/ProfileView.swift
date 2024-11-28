@@ -85,7 +85,7 @@ struct ProfileView: View {
                                 
                                 if(profileViewModel.checkUsername(param: newUserName)) {
                                     profileViewModel.isEditing.toggle()
-                                    currentUserName = newUserName
+                                    currentUserName = newUserName.trimmingCharacters(in: .whitespaces)
                                     print("CurrentUserName is : \(currentUserName)")
                                     profileViewModel.createUrlToUpdateName(id: currentUserId)
                                     userService.updateName(url: profileViewModel.urlToUpdateName, userId: currentUserId ?? "", newName: currentUserName ?? "")
