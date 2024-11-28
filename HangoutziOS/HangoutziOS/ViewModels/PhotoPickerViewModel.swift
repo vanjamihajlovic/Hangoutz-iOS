@@ -11,7 +11,12 @@ import PhotosUI
 @MainActor
 final class PhotoPickerViewModel: ObservableObject {
     
+    @AppStorage("currentUserEmail") var currentUserEmail: String?
     @Published private(set) var selectedImage: UIImage? = nil
+    @State private var isUploading = false
+      @State private var uploadStatus: String = ""
+    var userService : UserService = UserService()
+    
     @Published var imageSelection: PhotosPickerItem? = nil {
         didSet {
             setImage(from: imageSelection)

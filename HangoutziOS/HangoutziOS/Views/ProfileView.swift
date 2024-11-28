@@ -15,6 +15,7 @@ struct ProfileView: View {
     @State var newUserName : String = ""
     @State var photoPickerIsPressed : Bool = false
     @State private var uploadStatus: String = ""
+    @State private var isUploading = false
     @AppStorage("currentUserAvatar") var currentUserAvatar : String?
     @AppStorage("currentUserName") var currentUserName: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
@@ -41,20 +42,8 @@ struct ProfileView: View {
                     .scaledToFill()
                 
                 if let currentImage = photoPickerViewModel.selectedImage {
-                    Image(uiImage: currentImage)
-                        .resizable()
-                        .scaledToFill()
-                        .clipShape(Circle())
-                        .overlay(
-                            Circle()
-                                .stroke(Color.white, lineWidth: 2).padding(-5)
-                        )
-                        .frame(width: 160, height: 160)
-                    
-                }
-
-                PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images) {
-                    AsyncImage(url: URL(string: currentUserAvatar ?? "No avatar"), content: { Image in Image
+                    PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images){
+                        Image(uiImage: currentImage)
                             .resizable()
                             .scaledToFill()
                             .clipShape(Circle())
@@ -63,12 +52,26 @@ struct ProfileView: View {
                                     .stroke(Color.white, lineWidth: 2).padding(-5)
                             )
                             .frame(width: 160, height: 160)
-                    }, placeholder: {
-                        ProgressView()
+                            .onAppear{userService.uploadImageToSupabase(image: currentImage, fileName: "\(currentUserEmail ?? "No image")")}
                     }
-                    ).accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
                 }
-                
+                else {
+                    PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images) {
+                        AsyncImage(url: URL(string: currentUserAvatar ?? "No avatar"), content: { Image in Image
+                                .resizable()
+                                .scaledToFill()
+                                .clipShape(Circle())
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.white, lineWidth: 2).padding(-5)
+                                )
+                                .frame(width: 160, height: 160)
+                        }, placeholder: {
+                            ProgressView()
+                        }
+                        ).accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
+                    }
+                }
             }
             .padding(.bottom, 350)
             
@@ -142,20 +145,6 @@ struct ProfileView: View {
             currentUserAvatar = profileViewModel.urlGetAvatarPhoto
         }
     }
-    
-//    func uploadImage(image: UIImage) {
-//        userService.uploadImageToSupabase(image: image, fileName: "sample.jpg") { result in
-//            DispatchQueue.main.async {
-//                switch result {
-//                case .success(let filePath):
-//                    uploadStatus = "Upload successful: \(filePath)"
-//                case .failure(let error):
-//                    uploadStatus = "Error: \(error.localizedDescription)"
-//                }
-//                
-//            }
-//        }
-//    }
 }
 
 #Preview {
