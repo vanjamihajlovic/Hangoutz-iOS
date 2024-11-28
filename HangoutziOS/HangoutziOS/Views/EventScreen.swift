@@ -20,11 +20,11 @@ struct EventScreen: View {
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
             
-            VStack{
-                AppBarView()
-                Spacer()
-                
-            }
+//            VStack{
+//               //AppBarView()
+//                Spacer()
+//                
+//            }
             Group {
                 VStack{
                     Text("Event Screen")
