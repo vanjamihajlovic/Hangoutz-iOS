@@ -10,21 +10,21 @@ import PhotosUI
 
 struct ProfileView: View {
     
+    @StateObject var profileViewModel : ProfileViewModel = ProfileViewModel()
+    @State private var photosPickerItem : PhotosPickerItem?
+    @State var newUserName : String = ""
     @AppStorage("currentUserAvatar") var currentUserAvatar : String?
     @AppStorage("currentUserName") var currentUserName: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
     @AppStorage("currentUserId") var currentUserId : String?
     @AppStorage("isLoggedIn") var isLoggedIn : Bool?
-    @State private var photosPickerItem : PhotosPickerItem?
-    @State var newUserName : String = ""
-    @StateObject var profileViewModel : ProfileViewModel = ProfileViewModel()
     var userService : UserService = UserService()
     let backgroundImage: String = "MainBackground"
     
     var body: some View {
         
         ZStack {
-            Image(backgroundImage)
+            Image.backgroundImage
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
@@ -34,7 +34,7 @@ struct ProfileView: View {
             }
             
             ZStack {
-                Image("profilelines").resizable()
+                Image.profilelines.resizable()
                     .scaledToFill()
                 PhotosPicker(selection: $photosPickerItem, matching: .images) {
                     AsyncImage(url: URL(string: currentUserAvatar ?? "No avatar"), content: { Image in Image
@@ -64,29 +64,24 @@ struct ProfileView: View {
                             .disableAutocorrection(true)
                             .textInputAutocapitalization(.never)
                             .padding(10)
-                        
+                        Image.checkmark
+                            .resizable()
+                            .frame(width: 40, height: 30).foregroundColor(profileViewModel.checkUsername(param: newUserName) ? Color.white : Color.gray)
+                            .padding(.top, 20)
+                            .bold()
+                            .onTapGesture {
+                                
+                                if(profileViewModel.checkUsername(param: newUserName)) {
+                                    profileViewModel.isEditing.toggle()
+                                    currentUserName = newUserName
+                                    print("CurrentUserName is : \(currentUserName)")
+                                }
+                            }
                     }
                     else{
                         Text(currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
-                    }
-           
-                    if(profileViewModel.isEditing) {
-                        Image(systemName: "checkmark")
-                            .resizable()
-                            .frame(width: 25, height: 25).foregroundColor(profileViewModel.checkUsername(param: newUserName) ? Color.white : Color.gray)
-                            .padding(.top, 20)
-                            .bold()
-                            .onTapGesture {
-                                profileViewModel.isEditing.toggle()
-                                if(profileViewModel.checkUsername(param: newUserName)) {
-                                    currentUserName = newUserName
-                                }
-                            }
-                        
-                    }
-                    else{
-                        Image(systemName: "pencil")
+                        Image.profilePicturePen
                             .resizable()
                             .frame(width: 25, height: 25).foregroundColor(.white)
                             .padding(.top,20)
@@ -97,6 +92,7 @@ struct ProfileView: View {
                             }
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.PEN)
                     }
+                    
                 }
                 Text(currentUserEmail ?? "").font(.custom("Inter", size: 24)).foregroundColor(.white)
                     .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_EMAIL)
@@ -106,7 +102,7 @@ struct ProfileView: View {
             }){
                 HStack {
                     Text(StringConstants.LOGOUT)
-                    Image(systemName: "door.right.hand.open")
+                    Image.doorRightHandOpen
                 }
                 .padding()
                 .frame(width:310)
@@ -130,5 +126,4 @@ struct ProfileView: View {
 
 #Preview {
     ProfileView()
-    
 }

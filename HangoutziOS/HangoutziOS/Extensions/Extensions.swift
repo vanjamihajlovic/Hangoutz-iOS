@@ -22,7 +22,11 @@ extension UIColor {
 }
 
 extension Image {
-   static let backgroundImage = Image("MainBackground")
+    static let backgroundImage = Image("MainBackground")
+    static let profilePicturePen = Image("penProfileScreen")
+    static let checkmark = Image(systemName: "person.fill.checkmark")
+    static let doorRightHandOpen = Image(systemName: "door.right.hand.open")
+    static let profilelines = Image("profilelines")
 }
 
 extension Date {
@@ -48,11 +52,11 @@ extension Date {
             return "\(day)" + DateConstants.TH_SUFFIX
         default:
             switch day % 10 {
-            case 1:
+            case DaySuffix.DAY_1:
                 return "\(day)" + DateConstants.ST_SUFFIX
-            case 2:
+            case DaySuffix.DAY_2:
                 return "\(day)" + DateConstants.ND_SUFFIX
-            case 3:
+            case DaySuffix.DAY_3:
                 return "\(day)" + DateConstants.RD_SUFFIX
             default:
                 return "\(day)" + DateConstants.TH_SUFFIX

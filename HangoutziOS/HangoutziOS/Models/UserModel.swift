@@ -6,7 +6,6 @@
 //
 
 import Foundation
-
 struct userData: Codable, Identifiable {
 
         let name: String?
@@ -23,4 +22,5 @@ struct userData: Codable, Identifiable {
     }
     
     typealias Welcome = [userData]
+
 

@@ -19,6 +19,12 @@ enum HTTPConstants : String {
     case AUTHORIZATION = "Authorization"
 }
 
+enum DaySuffix {
+    static let DAY_1 = 1
+    static let DAY_2 = 2
+    static let DAY_3 = 3
+}
+
 class DateConstants {
     static let JUST_TIME = "HH:mm"
     static let MONTH_DAY = "MMMM d"
