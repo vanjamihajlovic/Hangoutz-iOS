@@ -23,8 +23,6 @@ struct MainTabView: View {
                         .tag(0)
                         .accessibilityIdentifier("eventIcon")
                     
-                        
-                    
                     FriendsView()
                         .tabItem {
                             Label("Friends", systemImage: "person.2.fill")

@@ -15,6 +15,9 @@ extension Color {
    static let secondEventCardColor = Color("SecondEventCard")
    static let thirdEventCardColor = Color("ThirdEventCard")
    static let shadowColor = Color("ShadowColor")
+   static let filterBarPrimaryColor = Color("FilterBarPrimaryColor")
+   static let filterBarAccentColor = Color("FilterBarAccentColor")
+   static let filterBarSelectedTextColor = Color("FilterBarSelectedTextColor")
 }
 
 extension UIColor {

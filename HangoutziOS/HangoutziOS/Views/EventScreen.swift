@@ -22,10 +22,11 @@ struct EventScreen: View {
             
             VStack {
                 AppBarView()
+                FilterBarView()
+                    .padding(.top, 10)
                 Spacer()
-                
             }
-        
+          
             ScrollView{
                 VStack{
                     ForEach(eventViewModel.events.indices, id: \.self){ index in
