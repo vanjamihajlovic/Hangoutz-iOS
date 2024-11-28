@@ -10,7 +10,7 @@ import SwiftUICore
 import SwiftUI
 
 extension Color {
-   static let appBarColor = Color("AppBarColor")
+    static let appBarColor = Color("AppBarColor")
 }
 
 extension UIColor {
@@ -18,5 +18,9 @@ extension UIColor {
 }
 
 extension Image {
-   static let backgroundImage = Image("MainBackground")
+    static let backgroundImage = Image("MainBackground")
+    static let profilePicturePen = Image("penProfileScreen")
+    static let checkmark = Image(systemName: "person.fill.checkmark")
+    static let doorRightHandOpen = Image(systemName: "door.right.hand.open")
+    static let profilelines = Image("profilelines")
 }
