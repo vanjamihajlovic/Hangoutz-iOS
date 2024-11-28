@@ -140,37 +140,72 @@ class UserService : ObservableObject {
             }
         }.resume()
     }
-        func uploadImageToSupabase(image: UIImage, fileName: String) {
-            guard let imageData = image.jpegData(compressionQuality: 0.8) else {
-                print("Error, no image detected")
-                return
-            }
-            let uploadURL = SupabaseConfig.storageURL + "\(fileName)"
-            guard let url = URL(string: uploadURL) else {
-                print("Wrong URL")
-                return
-            }
-            var request = URLRequest(url: url)
-            request.httpMethod = HTTPConstants.POST.rawValue
-            request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
-            request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
-            request.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
-            request.httpBody = imageData
-    
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                if let error = error {
-                    print("Error: \(error.localizedDescription)")
-                    return
-                }
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    print("Invalid response")
-                    return
-                }
-                if (200...299).contains(httpResponse.statusCode) {
-                    print("Photo successfully uploaded!")
-                } else {
-                    print("Failed to upload photo. Status code: \(httpResponse.statusCode)")
-                }
-            }.resume()
+    func updateAvatar(url: String, userId: String, newAvatar: String) {
+        guard let url = URL(string: url) else {
+            print("Invalid URL")
+            return
         }
+        let jsonData: [String: Any] = [
+            "avatar": newAvatar
+        ]
+        guard let data = try? JSONSerialization.data(withJSONObject: jsonData) else {
+            print("Failed to convert JSON to Data")
+            return
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPConstants.PATCH.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
+        request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
+        request.httpBody = data
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            if (200...299).contains(httpResponse.statusCode) {
+                print("Avatar name successfully updated!")
+            } else {
+                print("Failed to update Avatar name. Status code: \(httpResponse.statusCode)")
+            }
+        }.resume()
+    }
+    func uploadImageToSupabase(image: UIImage, fileName: String) {
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            print("Error, no image detected")
+            return
+        }
+        let uploadURL = SupabaseConfig.storageURL + "\(fileName)"
+        guard let url = URL(string: uploadURL) else {
+            print("Wrong URL")
+            return
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPConstants.POST.rawValue
+        request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
+        request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
+        request.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
+        request.httpBody = imageData
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            if (200...299).contains(httpResponse.statusCode) {
+                print("Photo successfully uploaded!")
+            } else {
+                print("Failed to upload photo. Status code: \(httpResponse.statusCode)")
+            }
+        }.resume()
+    }
 }

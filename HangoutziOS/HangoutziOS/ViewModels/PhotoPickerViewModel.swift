@@ -14,7 +14,7 @@ final class PhotoPickerViewModel: ObservableObject {
     @AppStorage("currentUserEmail") var currentUserEmail: String?
     @Published private(set) var selectedImage: UIImage? = nil
     @State private var isUploading = false
-      @State private var uploadStatus: String = ""
+    @State private var uploadStatus: String = ""
     var userService : UserService = UserService()
     
     @Published var imageSelection: PhotosPickerItem? = nil {
@@ -32,9 +32,7 @@ final class PhotoPickerViewModel: ObservableObject {
                 guard let data, let uiImage = UIImage(data: data) else {
                     throw URLError(.badServerResponse)
                 }
-                
                 selectedImage = uiImage
-                print("Name of selected image: \(selectedImage)")
             } catch {
                 print(error)
             }

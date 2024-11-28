@@ -52,7 +52,12 @@ struct ProfileView: View {
                                     .stroke(Color.white, lineWidth: 2).padding(-5)
                             )
                             .frame(width: 160, height: 160)
-                            .onAppear{userService.uploadImageToSupabase(image: currentImage, fileName: "\(currentUserEmail ?? "No image")")}
+                            .onAppear{
+                                let photoName = profileViewModel.randomAlphanumericString(10)
+                                profileViewModel.createUrlToUpdateAvatar(id: currentUserId ?? "")
+                                userService.updateAvatar(url: profileViewModel.urlToUpdateAvatar, userId: currentUserId ?? "", newAvatar: photoName)
+                                userService.uploadImageToSupabase(image: currentImage, fileName: photoName)
+                            }
                     }
                 }
                 else {
@@ -90,7 +95,6 @@ struct ProfileView: View {
                             .padding(.top, 20)
                             .bold()
                             .onTapGesture {
-                                
                                 if(profileViewModel.checkUsername(param: newUserName)) {
                                     profileViewModel.isEditing.toggle()
                                     currentUserName = newUserName.trimmingCharacters(in: .whitespaces)
@@ -115,7 +119,6 @@ struct ProfileView: View {
                             }
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.PEN)
                     }
-                    
                 }
                 Text(currentUserEmail ?? "").font(.custom("Inter", size: 24)).foregroundColor(.white)
                     .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_EMAIL)
