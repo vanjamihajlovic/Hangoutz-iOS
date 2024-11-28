@@ -74,6 +74,7 @@ struct ProfileView: View {
                                 if(profileViewModel.checkUsername(param: newUserName)) {
                                     profileViewModel.isEditing.toggle()
                                     currentUserName = newUserName.trimmingCharacters(in: .whitespaces)
+                                    newUserName = newUserName.trimmingCharacters(in: .whitespaces)
                                     print("CurrentUserName is : \(currentUserName)")
                                 }
                             }
