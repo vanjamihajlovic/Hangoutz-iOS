@@ -30,6 +30,23 @@ class RegistrationViewModel: ObservableObject {
     
     private let validation = Validation()
     
+    func resetFields() {
+            nameRegistration = ""
+            emailRegistration = ""
+            passwordRegistration = ""
+            password2Registration = ""
+            hashedPassword = ""
+            url = ""
+            
+            isNameValid = true
+            isEmailValid = true
+            isPasswordValid = true
+            isPassword2Valid = true
+            showGlobalError = false
+            globalErrorMessage = ""
+            allFieldsFilled = true
+        }
+    
     func createJsonObject() -> Data? {
         let jsonObject: [String: Any] = [
             "name": nameRegistration,
@@ -75,8 +92,6 @@ class RegistrationViewModel: ObservableObject {
         }
         return 500
     }
-    
-   
 
     func validateFields() -> Bool{
         allFieldsFilled = true
