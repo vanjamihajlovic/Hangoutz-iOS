@@ -12,8 +12,8 @@ import PhotosUI
 final class PhotoPickerViewModel: ObservableObject {
     
     @Published private(set) var selectedImage: UIImage? = nil
-    @State private var isUploading = false
-    @State private var uploadStatus: String = ""
+    @Published private var isUploading = false
+    @Published private var uploadStatus: String = ""
     var userService : UserService = UserService()
     
     @Published var imageSelection: PhotosPickerItem? = nil {

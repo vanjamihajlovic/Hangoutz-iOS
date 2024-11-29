@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - userData
 struct userData: Codable {
     let name: String?
     let avatar: String?
