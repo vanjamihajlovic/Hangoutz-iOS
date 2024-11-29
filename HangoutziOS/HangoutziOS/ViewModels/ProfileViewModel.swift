@@ -9,8 +9,12 @@ import Foundation
 import SwiftUI
 
 class ProfileViewModel: ObservableObject {
+    
     @AppStorage("currentUserAvatar") var currentUserAvatar : String?
     @AppStorage("currentUserId") var currentUserId : String?
+    @AppStorage("currentUserName") var currentUserName: String?
+    @AppStorage("currentUserEmail") var currentUserEmail: String?
+    @AppStorage("isLoggedIn") var isLoggedIn : Bool?
     @Published var urlGetAvatarJson: String = ""
     @Published var urlGetAvatarPhoto : String = ""
     @Published var urlGetUserName : String = ""

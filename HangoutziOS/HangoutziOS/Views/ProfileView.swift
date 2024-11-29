@@ -14,11 +14,6 @@ struct ProfileView: View {
     @StateObject private var photoPickerViewModel = PhotoPickerViewModel()
     @State var newUserName : String = ""
     @State var photoPickerIsPressed : Bool = false
-    @AppStorage("currentUserAvatar") var currentUserAvatar : String?
-    @AppStorage("currentUserName") var currentUserName: String?
-    @AppStorage("currentUserEmail") var currentUserEmail: String?
-    @AppStorage("currentUserId") var currentUserId : String?
-    @AppStorage("isLoggedIn") var isLoggedIn : Bool?
     @State var currentImage : UIImage?
     var userService : UserService = UserService()
     let backgroundImage: String = "MainBackground"
@@ -59,7 +54,7 @@ struct ProfileView: View {
                 }
                 else {
                     PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images) {
-                        AsyncImage(url: URL(string: currentUserAvatar ?? "No avatar"), content: { Image in Image
+                        AsyncImage(url: URL(string: profileViewModel.currentUserAvatar ?? "No avatar"), content: { Image in Image
                                 .resizable()
                                 .scaledToFill()
                                 .clipShape(Circle())
@@ -80,13 +75,12 @@ struct ProfileView: View {
             VStack{
                 HStack {
                     if(profileViewModel.isEditing){
-                        TextField(currentUserName ?? "", text: $newUserName)
+                        TextField(profileViewModel.currentUserName ?? "", text: $newUserName)
                             .frame(width: 150)
                             .font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20)
                             .disableAutocorrection(true)
                             .textInputAutocapitalization(.never)
                             .padding(10)
-                        
                         Image.checkmark
                             .resizable()
                             .frame(width: 40, height: 30).foregroundColor(profileViewModel.checkUsername(param: newUserName) ? Color.white : Color.gray)
@@ -97,14 +91,12 @@ struct ProfileView: View {
                                 if(profileViewModel.checkUsername(param: newUserName)) {
                                     profileViewModel.isEditing.toggle()
                                     updateUserName()
-                                    
                                 }
                             }
                     }
                     else{
-                        Text(currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
+                        Text(profileViewModel.currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
                             .lineLimit(1)
-                        
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.NAME_LABEL)
                         Image.profilePicturePen
                             .resizable()
@@ -119,11 +111,11 @@ struct ProfileView: View {
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.PEN)
                     }
                 }
-                Text(currentUserEmail ?? "").font(.custom("Inter", size: 24)).foregroundColor(.white)
+                Text(profileViewModel.currentUserEmail ?? "").font(.custom("Inter", size: 24)).foregroundColor(.white)
                     .accessibilityIdentifier(AccessibilityIdentifierConstants.EMAIL_LABEL)
             }
             Button(action: {
-                isLoggedIn = false
+                profileViewModel.isLoggedIn = false
             }){
                 HStack {
                     Text(StringConstants.LOGOUT)
@@ -141,24 +133,24 @@ struct ProfileView: View {
     }
     func getProfilePicture()  {
         Task{
-            profileViewModel.createUrlToGetAvatarJson(id: currentUserId ?? "No id")
+            profileViewModel.createUrlToGetAvatarJson(id: profileViewModel.currentUserId ?? "No id")
             await userService.getUsers(from: profileViewModel.urlGetAvatarJson)
             profileViewModel.createUrlToGetAvatarPhoto(imageName: userService.users.first?.avatar ?? SupabaseConfig.avatarDefault)
-            currentUserAvatar = profileViewModel.urlGetAvatarPhoto
+            profileViewModel.currentUserAvatar = profileViewModel.urlGetAvatarPhoto
         }
     }
     func uploadProfilePicture(imageToUpload: UIImage) {
         let photoName = profileViewModel.randomAlphanumericString(10)
-        profileViewModel.createUrlToUpdateAvatar(id: currentUserId ?? "")
-        userService.updateAvatar(url: profileViewModel.urlToUpdateAvatar, userId: currentUserId ?? "", newAvatar: photoName)
+        profileViewModel.createUrlToUpdateAvatar(id: profileViewModel.currentUserId ?? "")
+        userService.updateAvatar(url: profileViewModel.urlToUpdateAvatar, userId: profileViewModel.currentUserId ?? "", newAvatar: photoName)
         userService.uploadImageToSupabase(image: imageToUpload, fileName: photoName)
     }
     func updateUserName() {
-        currentUserName = newUserName.trimmingCharacters(in: .whitespaces)
+        profileViewModel.currentUserName = newUserName.trimmingCharacters(in: .whitespaces)
         newUserName = newUserName.trimmingCharacters(in: .whitespaces)
-        print("CurrentUserName is : \(currentUserName)")
-        profileViewModel.createUrlToUpdateName(id: currentUserId)
-        userService.updateName(url: profileViewModel.urlToUpdateName, userId: currentUserId ?? "", newName: currentUserName ?? "")
+        print("CurrentUserName is : \(profileViewModel.currentUserName)")
+        profileViewModel.createUrlToUpdateName(id: profileViewModel.currentUserId)
+        userService.updateName(url: profileViewModel.urlToUpdateName, userId: profileViewModel.currentUserId ?? "", newName: profileViewModel.currentUserName ?? "")
     }
 }
 
