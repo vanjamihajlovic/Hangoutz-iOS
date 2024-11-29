@@ -60,12 +60,10 @@ class UserService : ObservableObject {
     func uploadData(fromURL url: URL, name : String, email: String, password: String ) async -> Data? {
         let body: [String: Any] = ["data": ["name": name, "email": email, "password": password]]
         let jsonData = try? JSONSerialization.data(withJSONObject: body)
-        
         var request = URLRequest(url: url)
         request.httpMethod = HTTPConstants.POST.rawValue
         request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
         request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
-        //make body
         return await withCheckedContinuation { continuation in
             URLSession.shared.dataTask(with: request) { (data, response, error) in
                 guard
@@ -88,7 +86,6 @@ class UserService : ObservableObject {
         request.httpMethod = HTTPConstants.GET.rawValue
         request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
         request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
-        
         return await withCheckedContinuation { continuation in
             URLSession.shared.dataTask(with: request) { (data, response, error) in
                 guard
@@ -123,7 +120,6 @@ class UserService : ObservableObject {
         request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
         request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
         request.httpBody = data
-        
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Error: \(error.localizedDescription)")
@@ -158,7 +154,6 @@ class UserService : ObservableObject {
         request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
         request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
         request.httpBody = data
-        
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Error: \(error.localizedDescription)")
@@ -191,7 +186,6 @@ class UserService : ObservableObject {
         request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
         request.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
         request.httpBody = imageData
-        
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Error: \(error.localizedDescription)")

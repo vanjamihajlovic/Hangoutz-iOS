@@ -14,8 +14,6 @@ struct ProfileView: View {
     @StateObject private var photoPickerViewModel = PhotoPickerViewModel()
     @State var newUserName : String = ""
     @State var photoPickerIsPressed : Bool = false
-    @State private var uploadStatus: String = ""
-    @State private var isUploading = false
     @AppStorage("currentUserAvatar") var currentUserAvatar : String?
     @AppStorage("currentUserName") var currentUserName: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
@@ -32,7 +30,7 @@ struct ProfileView: View {
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
-            /*TODO: REMOVE VStack, because app bar will be only defined in maintabview*/
+            /*TODO: AFTER PR REMOVE VStack, because app bar will only be defined in maintabview*/
             VStack{
                 AppBarView()
                 Spacer()
@@ -52,11 +50,9 @@ struct ProfileView: View {
                                     .stroke(Color.white, lineWidth: 2).padding(-5)
                             )
                             .frame(width: 160, height: 160)
+                            .accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
                             .onAppear{
-                                let photoName = profileViewModel.randomAlphanumericString(10)
-                                profileViewModel.createUrlToUpdateAvatar(id: currentUserId ?? "")
-                                userService.updateAvatar(url: profileViewModel.urlToUpdateAvatar, userId: currentUserId ?? "", newAvatar: photoName)
-                                userService.uploadImageToSupabase(image: currentImage, fileName: photoName)
+                                uploadProfilePicture(imageToUpload: currentImage)
                             }
                     }
                 }
@@ -89,29 +85,29 @@ struct ProfileView: View {
                             .disableAutocorrection(true)
                             .textInputAutocapitalization(.never)
                             .padding(10)
+                        
                         Image.checkmark
                             .resizable()
                             .frame(width: 40, height: 30).foregroundColor(profileViewModel.checkUsername(param: newUserName) ? Color.white : Color.gray)
                             .padding(.top, 20)
                             .bold()
+                            .accessibilityIdentifier(AccessibilityIdentifierConstants.CHECKMARK)
                             .onTapGesture {
                                 if(profileViewModel.checkUsername(param: newUserName)) {
                                     profileViewModel.isEditing.toggle()
-                                    currentUserName = newUserName.trimmingCharacters(in: .whitespaces)
-                                    newUserName = newUserName.trimmingCharacters(in: .whitespaces)
-                                    print("CurrentUserName is : \(currentUserName)")
-                                    profileViewModel.createUrlToUpdateName(id: currentUserId)
-                                    userService.updateName(url: profileViewModel.urlToUpdateName, userId: currentUserId ?? "", newName: currentUserName ?? "")
+                                    updateUserName()
                                 }
                             }
                     }
                     else{
                         Text(currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
-                            .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
+                            .lineLimit(1)
+                            .accessibilityIdentifier(AccessibilityIdentifierConstants.NAME_LABEL)
                         Image.profilePicturePen
                             .resizable()
                             .frame(width: 25, height: 25).foregroundColor(.white)
                             .padding(.top,20)
+                            .padding(.trailing, 12)
                             .bold()
                             .onTapGesture {
                                 profileViewModel.isEditing.toggle()
@@ -121,7 +117,7 @@ struct ProfileView: View {
                     }
                 }
                 Text(currentUserEmail ?? "").font(.custom("Inter", size: 24)).foregroundColor(.white)
-                    .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_EMAIL)
+                    .accessibilityIdentifier(AccessibilityIdentifierConstants.EMAIL_LABEL)
             }
             Button(action: {
                 isLoggedIn = false
@@ -147,6 +143,19 @@ struct ProfileView: View {
             profileViewModel.createUrlToGetAvatarPhoto(imageName: userService.users.first?.avatar ?? SupabaseConfig.avatarDefault)
             currentUserAvatar = profileViewModel.urlGetAvatarPhoto
         }
+    }
+    func uploadProfilePicture(imageToUpload: UIImage) {
+        let photoName = profileViewModel.randomAlphanumericString(10)
+        profileViewModel.createUrlToUpdateAvatar(id: currentUserId ?? "")
+        userService.updateAvatar(url: profileViewModel.urlToUpdateAvatar, userId: currentUserId ?? "", newAvatar: photoName)
+        userService.uploadImageToSupabase(image: imageToUpload, fileName: photoName)
+    }
+    func updateUserName() {
+        currentUserName = newUserName.trimmingCharacters(in: .whitespaces)
+        newUserName = newUserName.trimmingCharacters(in: .whitespaces)
+        print("CurrentUserName is : \(currentUserName)")
+        profileViewModel.createUrlToUpdateName(id: currentUserId)
+        userService.updateName(url: profileViewModel.urlToUpdateName, userId: currentUserId ?? "", newName: currentUserName ?? "")
     }
 }
 
