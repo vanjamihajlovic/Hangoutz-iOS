@@ -30,18 +30,10 @@ struct FriendsView: View {
                     .background(Color("SearchBarColor"))
                     .cornerRadius(20)
                     .padding(.horizontal, 16)
-                    .overlay(
-                        HStack {
-                            Spacer()
-                            Image(systemName: "magnifyingglass")
-                                .foregroundColor(.gray)
-                                .padding(.trailing, 25)
-                        }
-                    )
                     .padding(.top, 30)
 
                 ScrollView {
-                    VStack(spacing: 10) {
+                    VStack(spacing: 15) {
                         ForEach(filteredFriends, id: \.self) { friend in
                             HStack {
                                 Circle()
@@ -54,10 +46,11 @@ struct FriendsView: View {
                                     .foregroundColor(.black)
                                     .bold()
                                     .padding(.leading, 10)
-
+                                   
                                 Spacer()
                             }
-                            .padding()
+                            
+                            .padding(10)
                             .background(Color("FriendsColor"))
                             .cornerRadius(22)
                             .padding(.horizontal, 16)
