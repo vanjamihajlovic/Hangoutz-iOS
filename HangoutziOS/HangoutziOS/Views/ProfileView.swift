@@ -81,11 +81,13 @@ struct ProfileView: View {
                     }
                     else{
                         Text(currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
+                            .lineLimit(1)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
                         Image.profilePicturePen
                             .resizable()
                             .frame(width: 25, height: 25).foregroundColor(.white)
-                            .padding(.top,20)
+                            .padding(.top, 20)
+                            .padding(.trailing, 12)
                             .bold()
                             .onTapGesture {
                                 profileViewModel.isEditing.toggle()
