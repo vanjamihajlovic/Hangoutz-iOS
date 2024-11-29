@@ -35,9 +35,10 @@ struct ProfileView: View {
                 AppBarView()
                 Spacer()
             }
+            
             ZStack {
+                
                 Image.profilelines.resizable()
-                    .scaledToFill()
                 
                 if let currentImage = photoPickerViewModel.selectedImage {
                     PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images){
@@ -73,9 +74,9 @@ struct ProfileView: View {
                         ).accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
                     }
                 }
+                Spacer()
             }
             .padding(.bottom, 350)
-            
             VStack{
                 HStack {
                     if(profileViewModel.isEditing){
@@ -96,20 +97,20 @@ struct ProfileView: View {
                                 if(profileViewModel.checkUsername(param: newUserName)) {
                                     profileViewModel.isEditing.toggle()
                                     updateUserName()
-
+                                    
                                 }
                             }
                     }
                     else{
                         Text(currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
                             .lineLimit(1)
-
+                        
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.NAME_LABEL)
                         Image.profilePicturePen
                             .resizable()
                             .frame(width: 25, height: 25).foregroundColor(.white)
                             .padding(.top,20)
-                            .padding(.trailing, 12)
+                            .padding(.trailing, 5)
                             .bold()
                             .onTapGesture {
                                 profileViewModel.isEditing.toggle()
