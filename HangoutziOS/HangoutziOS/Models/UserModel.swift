@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 // MARK: - userData
 struct userData: Codable {
     let name: String?
@@ -23,4 +22,3 @@ struct userData: Codable {
 }
 
 typealias Welcome = [userData]
-

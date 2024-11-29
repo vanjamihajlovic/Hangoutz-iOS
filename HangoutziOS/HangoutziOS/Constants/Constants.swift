@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUICore
 
 enum HTTPConstants : String {
     case GET = "GET"
@@ -16,6 +17,22 @@ enum HTTPConstants : String {
     case API_KEY = "apikey"
     case BEARER = "Bearer "
     case AUTHORIZATION = "Authorization"
+}
+
+enum DaySuffix {
+    static let DAY_1 = 1
+    static let DAY_2 = 2
+    static let DAY_3 = 3
+}
+
+class DateConstants {
+    static let JUST_TIME = "HH:mm"
+    static let MONTH_DAY = "MMMM d"
+    static let TH_SUFFIX = "th"
+    static let ST_SUFFIX = "st"
+    static let ND_SUFFIX = "nd"
+    static let RD_SUFFIX = "rd"
+    
 }
 
 class ValidationConstants {
@@ -34,6 +51,8 @@ class StringConstants {
 
 class SupabaseConstants {
     static let SELECT_AVATAR : String = "rest/v1/users?select=avatar&id=eq."
+    static let SELECT_EVENTS : String = "rest/v1/events?select=*,users(avatar)&order=date"
+    static let SELECT_PEOPLE_COUNT : String = "rest/v1/invites?select=count&event_status=eq.accepted&event_id=eq."
 }
 
 class AccessibilityIdentifierConstants {
@@ -47,4 +66,8 @@ class AccessibilityIdentifierConstants {
     static let CHECKMARK : String = "checkmark"
     static let EMAIL_LABEL : String = "emailLabel"
     static let NAME_LABEL : String = "nameLabel"
+}
+
+class ColorConstants {
+   static let eventCardColors: [Color] = [Color.firstEventCard, Color.secondEventCard, Color.thirdEventCard]
 }

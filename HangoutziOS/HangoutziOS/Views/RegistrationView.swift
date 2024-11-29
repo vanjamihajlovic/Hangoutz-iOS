@@ -79,12 +79,16 @@ struct RegistrationView: View {
                         .frame(width: 320, height: 25, alignment: .center)
                         .foregroundColor(.white)
                         .padding()
+                        .onChange(of: registrationViewModel.passwordRegistration) { newValue in
+                                registrationViewModel.passwordRegistration = newValue.replacingOccurrences(of: " ", with: "")
+                            }
                         .overlay(
                             RoundedRectangle(cornerRadius: 20)
                                 .stroke(registrationViewModel.isPasswordValid ? Color.white : Color("ErrorColor"), lineWidth: 3)
                         )
+                        
                         if !registrationViewModel.isPasswordValid && registrationViewModel.allFieldsFilled {
-                            Text("At least 8 characters,a digit")
+                            Text("At least 8 characters and digit")
                                 .foregroundColor(Color.white)
                                 .font(.system(size: 17))
                                 .padding(.leading, 5)
@@ -100,6 +104,9 @@ struct RegistrationView: View {
                         .frame(width: 320, height: 25, alignment: .center)
                         .foregroundColor(.white)
                         .padding()
+                        .onChange(of: registrationViewModel.password2Registration) { newValue in
+                               registrationViewModel.password2Registration = newValue.replacingOccurrences(of: " ", with: "")
+                           }
                         .overlay(
                             RoundedRectangle(cornerRadius: 20)
                                 .stroke(registrationViewModel.isPassword2Valid ? Color.white : Color("ErrorColor"), lineWidth: 3)
@@ -119,6 +126,9 @@ struct RegistrationView: View {
                     }
                     
                     Button(action: {
+                        registrationViewModel.nameRegistration = registrationViewModel.nameRegistration.trimmingCharacters(in: .whitespaces)
+                                registrationViewModel.emailRegistration = registrationViewModel.emailRegistration.trimmingCharacters(in: .whitespaces)
+
                         if registrationViewModel.validateFields(){
                             Task{
                                 let result = await registrationViewModel.registerUser()
@@ -154,6 +164,9 @@ struct RegistrationView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
             .applyGlobalBackground()
+            .onAppear {
+              registrationViewModel.resetFields() 
+             }
         }
     }
 }

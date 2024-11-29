@@ -96,12 +96,14 @@ struct ProfileView: View {
                                 if(profileViewModel.checkUsername(param: newUserName)) {
                                     profileViewModel.isEditing.toggle()
                                     updateUserName()
+
                                 }
                             }
                     }
                     else{
                         Text(currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
                             .lineLimit(1)
+
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.NAME_LABEL)
                         Image.profilePicturePen
                             .resizable()

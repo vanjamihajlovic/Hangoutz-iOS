@@ -159,7 +159,6 @@ struct CreateAccount: View {
             else {
                 showAlert.toggle()
                 loginViewModel.errorMessage = "Incorrect email or password"
-                
             }
         }
     }
