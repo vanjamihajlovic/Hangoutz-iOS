@@ -92,6 +92,9 @@ class RegistrationViewModel: ObservableObject {
         }
         return 500
     }
+    
+    
+    
 
     func validateFields() -> Bool{
         allFieldsFilled = true
