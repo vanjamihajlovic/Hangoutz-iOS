@@ -164,7 +164,10 @@ struct RegistrationView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
             .applyGlobalBackground()
-            
+
+            .onAppear {
+              registrationViewModel.resetFields() 
+             }
         }
     }
 }

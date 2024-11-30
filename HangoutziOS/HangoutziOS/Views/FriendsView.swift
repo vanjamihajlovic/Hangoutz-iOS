@@ -7,6 +7,8 @@
 import SwiftUI
 
 struct FriendsView: View {
+    @AppStorage("currentUserId") var currentUserId: String?
+    @ObservedObject var friendViewModel = FriendsViewModel()
     @State private var searchText = ""
     @State private var friends: [String] = [
         "Bojan Rajin",
@@ -19,6 +21,7 @@ struct FriendsView: View {
     ]
 
     var body: some View {
+//        print (friendViewModel.getFriends())
         ZStack {
             VStack(spacing: 20) {
                 TextField("", text: $searchText,
@@ -74,6 +77,11 @@ struct FriendsView: View {
                             .padding()
                     }
                 }
+            }
+        }
+        .onAppear(){
+            Task{
+                await print (friendViewModel.getFriends())
             }
         }
         .applyGlobalBackground()

@@ -27,6 +27,7 @@ class ProfileViewModel: ObservableObject {
         urlGetUserEmail = SupabaseConfig.baseURL + "rest/v1/users?select=\(param)&id=eq.\(id)"
     }
     func checkUsername(param: String) -> Bool {
+       let param = param.trimmingCharacters(in: .whitespacesAndNewlines)
         if(param.count >= 3 && param.count <= 25)
         {return true}
         else {return false}
