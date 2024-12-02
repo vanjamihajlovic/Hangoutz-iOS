@@ -115,7 +115,6 @@ struct FriendsView: View {
         .onAppear(){
             Task {
                 await friendViewModel.getFriends()
-                print("Friends: \(friendViewModel.friends)")
             }
         }
         .applyGlobalBackground()
