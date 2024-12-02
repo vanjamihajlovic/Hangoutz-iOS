@@ -11,19 +11,15 @@ struct FriendsView: View {
 
     var body: some View {
         ZStack {
-            Image.backgroundImage
-                .resizable()
-                .scaledToFill()
-                .edgesIgnoringSafeArea(.all)
-            
+    
             VStack{
-                AppBarView()
                 Spacer()
             }
             
             Text("Friends screen")
                 .foregroundColor(.white)
         }
+        .applyGlobalBackground()
     }
 }
 

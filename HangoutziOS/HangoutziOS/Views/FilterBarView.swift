@@ -2,14 +2,17 @@
 //  FilterBarView.swift
 //  HangoutziOS
 //
-//  Created by User03 on 11/28/24.
+//  Created by strahinjamil on 11/28/24.
 //
 
 import SwiftUI
 
 struct FilterBarView: View {
-    @State private var selectedTab: Tab = .going
-    let badgeCount = 4
+    @State var selectedTab: Tab = .going
+    @State private var selectedTabIndex: Int = 0
+    @ObservedObject var eventViewModel = EventViewModel.shared
+    @State var badgeCount = 0
+    
     
     enum Tab: String, CaseIterable {
         case going = "GOING"
@@ -37,8 +40,8 @@ struct FilterBarView: View {
                         .onTapGesture {
                             withAnimation{
                                 selectedTab = tab
+                                performApiLogic(for:tab)
                             }
-                            
                         }
                     
                     if tab == .invited, badgeCount > 0 {
@@ -51,7 +54,7 @@ struct FilterBarView: View {
                                 .font(.caption)
                                 .bold()
                         }
-                        .offset(x: 40, y: -10) // Adjust for the badge position
+                        .offset(x: 40, y: -10)
                     }
                 }
             }
@@ -62,9 +65,50 @@ struct FilterBarView: View {
                         .fill(Color.filterBarPrimaryColor.opacity(0.5))
                 )
                 .padding(.horizontal, 16)
+//                .gesture(
+//                    DragGesture()
+//                        .onEnded { gesture in
+//                            if gesture.translation.width < -50 {
+//                                if selectedTabIndex < Tab.allCases.count - 1 {
+//                                    withAnimation {
+//                                        selectedTabIndex += 1
+//                                        performApiLogic(for: Tab.allCases[selectedTabIndex])
+//                                    }
+//                                }
+//                            } else if gesture.translation.width > 50 {
+//                                if selectedTabIndex > 0 {
+//                                    withAnimation {
+//                                        selectedTabIndex -= 1
+//                                        performApiLogic(for: Tab.allCases[selectedTabIndex])
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    )
     }
+    
+    private func performApiLogic(for tab: Tab) {
+        switch tab {
+        case .going:
+            Task{
+                await eventViewModel.createUrlEventFilteredGoing()
+                await eventViewModel.getEvents()
+            }
+        case .invited:
+            Task{
+                await eventViewModel.createUrlEventFilteredInvited()
+                await eventViewModel.getEvents()
+            }
+        case .mine:
+            Task{
+                await eventViewModel.createUrlEventMine()
+                await eventViewModel.getEvents()
+            }
+        }
+    }
+    
 }
 
-#Preview {
-    FilterBarView()
-}
+//#Preview {
+//    FilterBarView()
+//}
