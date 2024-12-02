@@ -61,10 +61,12 @@ class AccessibilityIdentifierConstants {
     static let USER_PASSWORD : String = "userPassword"
     static let USER_EMAIL : String = "userEmail"
     static let LOGIN : String = "login"
-    static let LOGOUT : String = "logout"
-    static let PROFILE_PICTURE : String = "profilePicture"
-    static let PEN : String = "pen"
-
+    static let LOGOUT : String = "logoutButton"
+    static let PROFILE_PICTURE : String = "image"
+    static let PEN : String = "pencil"
+    static let CHECKMARK : String = "checkmark"
+    static let EMAIL_LABEL : String = "emailLabel"
+    static let NAME_LABEL : String = "nameLabel"
 }
 
 class ColorConstants {
