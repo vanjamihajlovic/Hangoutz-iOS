@@ -100,10 +100,9 @@ struct EventView: View {
     }
     
     private func handleSwipe(value: DragGesture.Value) {
-        let minHorizontalSwipe: CGFloat = 50
         let allTabs = Tab.allCases
         
-        if value.translation.width < minHorizontalSwipe {
+        if value.translation.width < UIConstants.MIN_HORIZONTAL_SWIPE {
             if let currentIndex = allTabs.firstIndex(of: selectedTab),
                currentIndex < allTabs.count - 1 {
                 withAnimation {
@@ -111,7 +110,7 @@ struct EventView: View {
                     eventViewModel.performApiLogic(for: selectedTab)
                 }
             }
-        } else if value.translation.width > minHorizontalSwipe {
+        } else if value.translation.width > UIConstants.MIN_HORIZONTAL_SWIPE {
             if let currentIndex = allTabs.firstIndex(of: selectedTab),
                currentIndex > 0 {
                 withAnimation {
