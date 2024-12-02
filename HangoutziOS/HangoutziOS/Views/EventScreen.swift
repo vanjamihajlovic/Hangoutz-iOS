@@ -64,31 +64,32 @@ struct EventCard : View {
         let eventPlaceString = eventViewModel.createEventPlaceString(event: event)
         
         ZStack {
-            HStack(){
-                
-                if let avatarImage = event.users?.avatar {
-                    AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage), content: { Image in Image
-                                                .resizable()
-                                                .scaledToFit()
-                                                .clipShape(Circle())
-                                                .overlay(
-                                                    Circle()
-                                                        .stroke(Color.white, lineWidth: 2)
-                                                )
-                                                .frame(width: 90, height: 90)
-                                                .padding(.bottom,20)
-                                                .padding(.trailing, 10)
-                                        }, placeholder: {
-                                            ProgressView()
-                                        }
-                                        )
-                    .accessibilityIdentifier("cardImage")
-                } else {
-                    Circle()
-                        .fill(Color.white.opacity(0.5))
-                        .frame(width: 80, height: 80)
-                        .padding(.bottom,20)
-                }
+            NavigationLink(destination: DetailsView()) {
+                HStack(){
+                    
+                    if let avatarImage = event.users?.avatar {
+                        AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage), content: { Image in Image
+                                .resizable()
+                                .scaledToFit()
+                                .clipShape(Circle())
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.white, lineWidth: 2)
+                                )
+                                .frame(width: 90, height: 90)
+                                .padding(.bottom,20)
+                                .padding(.trailing, 10)
+                        }, placeholder: {
+                            ProgressView()
+                        }
+                        )
+                        .accessibilityIdentifier("cardImage")
+                    } else {
+                        Circle()
+                            .fill(Color.white.opacity(0.5))
+                            .frame(width: 80, height: 80)
+                            .padding(.bottom,20)
+                    }
                     VStack(alignment: .leading, spacing: 5) {
                         Text(event.title ?? "No Title")
                             .foregroundColor(.white)
@@ -112,7 +113,7 @@ struct EventCard : View {
                             .lineLimit(1)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .accessibilityIdentifier("cardTime")
-
+                        
                     }
                     .padding(.bottom, 20)
                     //.padding(.trailing, -5)
@@ -121,6 +122,9 @@ struct EventCard : View {
                     Spacer()
                     
                 }
+            }.onTapGesture {
+                DetailsView()
+            }
                 
                 HStack{
                     Spacer()
