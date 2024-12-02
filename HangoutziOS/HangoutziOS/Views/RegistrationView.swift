@@ -38,7 +38,7 @@ struct RegistrationView: View {
                         )
                         
                         if !registrationViewModel.isNameValid && registrationViewModel.allFieldsFilled {
-                            Text("Name must be between 3 and 25 characters.")
+                            Text("Name must be 3-25 characters")
                                 .foregroundColor(Color.white)
                                 .font(.system(size: 17))
                                 .padding(.leading, 5)
@@ -59,7 +59,7 @@ struct RegistrationView: View {
                                 .stroke(registrationViewModel.isEmailValid ? Color.white : Color("ErrorColor"), lineWidth: 3)
                         )
                         if !registrationViewModel.isEmailValid && registrationViewModel.allFieldsFilled{
-                            Text("Enter a valid email address.")
+                            Text("Email must be in correct format")
                                 .foregroundColor(Color.white)
                                 .font(.system(size: 17))
                                 .padding(.leading, 5)
@@ -88,7 +88,8 @@ struct RegistrationView: View {
                         )
                         
                         if !registrationViewModel.isPasswordValid && registrationViewModel.allFieldsFilled {
-                            Text("At least 8 characters and digit")
+                            Text("Password must contain at least one number and be minimum 8 characters long")
+                                .frame(width: 330, height: 55, alignment: .topLeading)
                                 .foregroundColor(Color.white)
                                 .font(.system(size: 17))
                                 .padding(.leading, 5)
@@ -113,7 +114,7 @@ struct RegistrationView: View {
                         )
                         
                         if !registrationViewModel.isPassword2Valid && registrationViewModel.allFieldsFilled{
-                            Text("Passwords do not match.")
+                            Text("Password must match")
                                 .foregroundColor(Color.white)
                                 .font(.system(size: 17))
                                 .padding(.leading, 5)
@@ -133,7 +134,7 @@ struct RegistrationView: View {
                             Task{
                                 let result = await registrationViewModel.registerUser()
                                 if result == 409 {
-                                    alertMessage = "Email already in use."
+                                    alertMessage = "Email already in use"
                                     showAlert.toggle()
                                 } else {
                                     dismiss()

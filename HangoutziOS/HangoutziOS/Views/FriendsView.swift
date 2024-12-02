@@ -7,92 +7,118 @@
 import SwiftUI
 
 struct FriendsView: View {
+    
     @AppStorage("currentUserId") var currentUserId: String?
     @ObservedObject var friendViewModel = FriendsViewModel()
     @State private var searchText = ""
-    @State private var friends: [String] = [
-        "Bojan Rajin",
-        "Nikola Grujic",
-        "Mirjana Lakic",
-        "Jelisaveta BG",
-        "Ivana Korpak",
-        "Srki",
-        "Mladen"
-    ]
-
+    var sortedFriends: [Friend] {
+        friendViewModel.friends.sorted {
+            let firstWord1 = $0.name.components(separatedBy: " ").first ?? $0.name
+            let firstWord2 = $1.name.components(separatedBy: " ").first ?? $1.name
+            return firstWord1.localizedCompare(firstWord2) == .orderedAscending
+        }
+    }
+    
     var body: some View {
-//        print (friendViewModel.getFriends())
         ZStack {
             VStack(spacing: 20) {
                 TextField("", text: $searchText,
                           prompt:
                             Text("Search...")
-                            .foregroundColor(Color.gray)
-                    )
-                    .padding(12)
-                    .background(Color("SearchBarColor"))
-                    .cornerRadius(20)
-                    .padding(.horizontal, 16)
-                    .padding(.top, 30)
-
-                ScrollView {
-                    VStack(spacing: 15) {
-                        ForEach(filteredFriends, id: \.self) { friend in
-                            HStack {
-                                Circle()
-                                    .strokeBorder(Color.orange, lineWidth: 3)
-                                    .background(Circle().fill(Color.white))
-                                    .frame(width: 40, height: 40)
-
-                                Text(friend)
-                                    .font(.system(size: 18))
-                                    .foregroundColor(.black)
-                                    .bold()
-                                    .padding(.leading, 10)
-                                   
-                                Spacer()
-                            }
+                    .foregroundColor(Color.gray)
+                )
+                .accessibilityIdentifier("FriendsSearchField")
+                .padding(12)
+                .background(Color("SearchBarColor"))
+                .cornerRadius(20)
+                .padding(.horizontal, 16)
+                .padding(.top, 30)
+                
+                List {
+                    ForEach(sortedFriends) { friend in
+                        HStack {
                             
-                            .padding(10)
-                            .background(Color("FriendsColor"))
-                            .cornerRadius(22)
-                            .padding(.horizontal, 16)
-                        }
-                    }
-                }
-                .padding(.top, 10)
-            }
+                            if let avatarImage = friend.avatar {
+                                AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
+                                    content:{ Image in
+                                        Image
+                                        .resizable()
+                                        .scaledToFill()
+                                        .clipShape(Circle())
+                                        .overlay(
+                                            Circle()
+                                            .stroke(Color("FriendAddButton"), lineWidth: 4)
+                                        )
+                                        .frame(width: 50, height: 50)
+                                        .clipShape(Circle())
+                                }, placeholder: {
+                                    Image("DefaultImage")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipShape(Circle())
+                                        .overlay(
+                                            Circle()
+                                            .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                        )
+                                        .frame(width: 50, height: 50)
+                                        .accessibilityIdentifier("FriendImagePlaceholder")
+                                }
+                                )
+                                .accessibilityIdentifier("FriendImage")
+                            } else {
+                                Image("DefaultImage")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipShape(Circle())
+                                    .overlay(
+                                        Circle()
+                                        .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                    )
+                                    .frame(width: 50, height: 50)
+                                    .accessibilityIdentifier("DefaultFriendImage")
 
+                            }
+                            Text(friend.name)
+                                .accessibilityIdentifier("FriendName")
+                                .font(.headline)
+                                .foregroundColor(Color("FriendFontColor"))
+                        }
+                        .accessibilityIdentifier("FriendListItem")
+                        .listRowBackground(
+                            Rectangle()
+                                .fill(Color("FriendsColor"))
+                                .frame(width: 360, height: 65)
+                                .cornerRadius(25)
+                        )
+                        .padding(.vertical, 8)
+                    }
+                    .listRowSeparator(.hidden)
+                }
+                .scrollContentBackground(.hidden)
+            }
+            
             VStack {
                 Spacer()
                 HStack {
                     Spacer()
                     Button(action: {}) {
-                        Image(systemName: "plus")
-                            .foregroundColor(.white)
-                            .frame(width: 60, height: 60)
-                            .background(Color.orange)
-                            .clipShape(Circle())
-                            .shadow(radius: 5)
+                        Image("AddButtonImage")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 70, height: 70)
                             .padding()
                     }
+                    .accessibilityIdentifier("AddFriendButton")
                 }
             }
         }
         .onAppear(){
-            Task{
-                await print (friendViewModel.getFriends())
+            Task {
+                await friendViewModel.getFriends()
+                print("Friends: \(friendViewModel.friends)")
             }
         }
         .applyGlobalBackground()
-    }
-
-    var filteredFriends: [String] {
-        if searchText.isEmpty {
-            return friends
-        } else {
-            return friends.filter { $0.lowercased().contains(searchText.lowercased()) }
-        }
     }
 }
 

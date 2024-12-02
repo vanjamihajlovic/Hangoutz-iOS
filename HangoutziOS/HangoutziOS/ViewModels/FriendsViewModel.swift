@@ -7,21 +7,53 @@
 
 import Foundation
 import SwiftUICore
+import SwiftUI
 
 class FriendsViewModel : ObservableObject {
-//    
-//    ListOfFriends: Codable, Identifiable {
-//        let id = UUID() // Automatski generisan ID za grupu
-//        let users: FriendModel
-//    }
-
-    @Published var friends: [FriendModel] = []
+    @Published var friends: [Friend] = []
     @Published var url: String = ""
-    @ObservedObject var friendsService = FriendsService.shared
+    @AppStorage("currentUserId") var currentUserId: String?
+    
+    @State var testFriends = [
+        Friend(name: "John Doe", avatar: nil),
+        Friend(name: "Jane Doe", avatar: nil)
+    ]
+
+
+    let friendsService = FriendsService()
+
+//    func getFriends() async {
+//        url = SupabaseConfig.baseURL + SupabaseConstants.GET_FIRENDS_VIA_ID + currentUserId! 
+//        Task {
+//            await friends = friendsService.getFriends(from: url)
+//            print("url: \(url)")
+//        }
+//    }
+    func testFunction() {
+            // Test lista prijatelja
+            friends = [
+                Friend(name: "John Doe", avatar: nil),
+                Friend(name: "Jane Doe", avatar: "avatar1.jpg"),
+                Friend(name: "Alex Smith", avatar: nil),
+                Friend(name: "Sarah Lee", avatar: "avatar3.jpg")
+            ]
+        }
     
     func getFriends() async {
-        Task {
-            await friends = friendsService.getFriends(from : "https://zsjxwfjutstrybvltjov.supabase.co/rest/v1/friends?select=users!friend_id(name,avatar)&user_id=eq.0d1e1ace-d426-4734-876c-701784de75bb")
+        guard let userId = currentUserId else {
+            print("Current user ID is nil.")
+            return
         }
+
+        url = SupabaseConfig.baseURL + SupabaseConstants.GET_FIRENDS_VIA_ID + userId
+        
+        let fetchedFriends = await friendsService.getFriends(from: url)
+
+        await MainActor.run {
+            self.friends = fetchedFriends
+        }
+        
+        print("url: \(url)")
     }
+
 }

@@ -7,14 +7,13 @@
 
 import Foundation
 
-    struct FriendModel: Codable {
-        let users: Friend
-    }
+struct APIResponse: Codable{
+    let users: Friend
+}
 
-    struct Friend: Codable {
-        let name: String
-        let avatar: String?
-    }
-
-
+struct Friend: Codable, Identifiable {
+    let id: String = UUID().uuidString // Dodajemo identifikator i ovde
+    let name: String
+    let avatar: String?
+}
 
