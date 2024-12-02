@@ -14,10 +14,13 @@ struct ProfileView: View {
     @StateObject private var photoPickerViewModel = PhotoPickerViewModel()
     @State var newUserName : String = ""
     @State var currentImage : UIImage?
+    @State var selectedImageCamera : UIImage?
     @State var showSheet: Bool = false
     @State var showCamera: Bool = false
     var userService : UserService = UserService()
     let backgroundImage: String = "MainBackground"
+    @State private var selectedImage: UIImage?
+    
     
     var body: some View {
         
@@ -37,6 +40,62 @@ struct ProfileView: View {
                 Image.profilelines.resizable()
                 
                 if let currentImage = photoPickerViewModel.selectedImage {
+                    Button(action: {showSheet.toggle()
+                    }
+                    ) { Image(uiImage: currentImage)
+                            .resizable()
+                            .scaledToFill()
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(Color.white, lineWidth: 2).padding(-5)
+                            )
+                            .frame(width: 160, height: 160)
+                            .accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
+                            .onAppear{
+                                 uploadProfilePicture(imageToUpload: currentImage)
+                                showSheet = false
+                                
+                            }
+                    }.sheet(isPresented: $showSheet) {
+                        HStack {
+                            PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images) {
+                                VStack{
+                                    Text("Gallery").padding()
+                                    Image(systemName: "photo")
+                                        .font(.title)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.black, lineWidth: 1).padding(-10)
+                                        )
+                                }
+                                .padding(30)
+                            }
+                            .foregroundColor(Color.black)
+                            
+                            Button(action: {
+                                showCamera.toggle()
+                            }){
+                                VStack{
+                                    Text("Camera").padding()
+                                    Image(systemName: "camera")
+                                        .font(.title)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.black, lineWidth: 1).padding(-10)
+                                        )
+                                }
+                                .padding(30)
+                            }.foregroundColor(Color.black)
+                                .fullScreenCover(isPresented: self.$showCamera) {
+                                    accessCameraView(selectedImage: self.$selectedImageCamera)
+                                        .background(.black)
+                                }
+                        }
+                        .presentationDetents([.fraction(0.2)])
+                    }
+                }
+                else if let currentImage = selectedImageCamera{
                     Button(action: {showSheet.toggle()
                     }
                     ) { Image(uiImage: currentImage)
@@ -85,7 +144,7 @@ struct ProfileView: View {
                                 .padding(30)
                             }.foregroundColor(Color.black)
                                 .fullScreenCover(isPresented: self.$showCamera) {
-                                    accessCameraView(selectedImage: $currentImage)
+                                    accessCameraView(selectedImage: self.$selectedImageCamera)
                                         .background(.black)
                                 }
                         }
@@ -140,7 +199,7 @@ struct ProfileView: View {
                                 .padding(30)
                             }.foregroundColor(Color.black)
                                 .fullScreenCover(isPresented: self.$showCamera) {
-                                    accessCameraView(selectedImage: $currentImage)
+                                    accessCameraView(selectedImage: self.$selectedImageCamera)
                                         .background(.black)
                                 }
                         }
