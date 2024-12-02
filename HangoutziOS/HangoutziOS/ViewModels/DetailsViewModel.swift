@@ -16,10 +16,10 @@ class DetailsViewModel: ObservableObject  {
     @Published var place : String = ""
     
     enum FieldsCategory: String {
-        case title = "Title"
+        case title = "Title*"
         case description = "Description"
         case city = "City"
         case street = "Street"
-        case place = "Place"
+        case place = "Place*"
     }
 }

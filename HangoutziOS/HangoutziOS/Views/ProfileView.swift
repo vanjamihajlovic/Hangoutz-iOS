@@ -132,8 +132,11 @@ struct ProfileView: View {
         Task{
             profileViewModel.createUrlToGetAvatarJson(id: profileViewModel.currentUserId ?? "No id")
             await userService.getUsers(from: profileViewModel.urlGetAvatarJson)
+            print("URL to get avatar json: \(profileViewModel.urlGetAvatarJson)")
             profileViewModel.createUrlToGetAvatarPhoto(imageName: userService.users.first?.avatar ?? SupabaseConfig.avatarDefault)
             profileViewModel.currentUserAvatar = profileViewModel.urlGetAvatarPhoto
+            print("URL to get from storage: \(profileViewModel.urlGetAvatarPhoto)")
+
         }
     }
     func uploadProfilePicture(imageToUpload: UIImage) {
