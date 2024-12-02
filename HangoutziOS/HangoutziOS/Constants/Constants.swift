@@ -47,6 +47,7 @@ class StringConstants {
     static let LOGIN : String = "Login"
     static let LOGOUT : String = "Logout"
     static let CREATE_ACCOUNT : String = "Create account"
+    static let LEAVE_EVENT : String = "Leave event"
 }
 
 class SupabaseConstants {

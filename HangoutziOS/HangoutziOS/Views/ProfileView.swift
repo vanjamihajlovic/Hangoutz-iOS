@@ -21,10 +21,7 @@ struct ProfileView: View {
     var body: some View {
         
         ZStack {
-            Image.backgroundImage
-                .resizable()
-                .scaledToFill()
-                .edgesIgnoringSafeArea(.all)
+            
             /*TODO: AFTER PR REMOVE VStack, because app bar will only be defined in maintabview*/
             VStack{
                 AppBarView()
@@ -106,7 +103,6 @@ struct ProfileView: View {
                             .bold()
                             .onTapGesture {
                                 profileViewModel.isEditing.toggle()
-                                
                             }
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.PEN)
                     }
@@ -129,6 +125,7 @@ struct ProfileView: View {
             }.padding(.top, 550)
                 .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGOUT)
         }
+        .applyGlobalBackground()
         .onAppear{getProfilePicture()}
     }
     func getProfilePicture()  {
