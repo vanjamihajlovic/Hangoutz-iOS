@@ -26,7 +26,7 @@ struct FriendsView: View {
                             Text("Search...")
                     .foregroundColor(Color.gray)
                 )
-                .accessibilityIdentifier("FriendsSearchField")
+                .accessibilityIdentifier("friendsSearchField")
                 .padding(12)
                 .background(Color("SearchBarColor"))
                 .cornerRadius(20)
@@ -60,10 +60,10 @@ struct FriendsView: View {
                                             .stroke(Color("FriendAddButton"), lineWidth: 2)
                                         )
                                         .frame(width: 50, height: 50)
-                                        .accessibilityIdentifier("FriendImagePlaceholder")
+                                        .accessibilityIdentifier("friendImagePlaceholder")
                                 }
                                 )
-                                .accessibilityIdentifier("FriendImage")
+                                .accessibilityIdentifier("friendImage")
                             } else {
                                 Image("DefaultImage")
                                     .resizable()
@@ -74,15 +74,15 @@ struct FriendsView: View {
                                         .stroke(Color("FriendAddButton"), lineWidth: 2)
                                     )
                                     .frame(width: 50, height: 50)
-                                    .accessibilityIdentifier("DefaultFriendImage")
+                                    .accessibilityIdentifier("defaultFriendImage")
 
                             }
                             Text(friend.name)
-                                .accessibilityIdentifier("FriendName")
+                                .accessibilityIdentifier("friendName")
                                 .font(.headline)
                                 .foregroundColor(Color("FriendFontColor"))
                         }
-                        .accessibilityIdentifier("FriendListItem")
+                        .accessibilityIdentifier("friendListItem")
                         .listRowBackground(
                             Rectangle()
                                 .fill(Color("FriendsColor"))
@@ -107,7 +107,7 @@ struct FriendsView: View {
                             .frame(width: 70, height: 70)
                             .padding()
                     }
-                    .accessibilityIdentifier("AddFriendButton")
+                    .accessibilityIdentifier("dddFriendButton")
                 }
             }
         }

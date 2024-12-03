@@ -12,7 +12,7 @@ struct APIResponse: Codable{
 }
 
 struct Friend: Codable, Identifiable {
-    let id: String = UUID().uuidString // Dodajemo identifikator i ovde
+    let id: String = UUID().uuidString 
     let name: String
     let avatar: String?
 }
