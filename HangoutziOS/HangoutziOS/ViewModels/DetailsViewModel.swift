@@ -17,6 +17,7 @@ class DetailsViewModel: ObservableObject  {
     @Published var street : String = ""
     @Published var place : String = ""
     @Published var urlToGetAcceptedUsers : String = ""
+    @Published var urlGetAvatarPhoto : String = ""
 
     enum FieldsCategory: String {
         case title = "Title*"

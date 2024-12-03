@@ -13,7 +13,6 @@ struct DetailsView: View {
     @ObservedObject var userService = UserService()
     @State private var selectedDate = Date()
     @State private var selectedTime = Date()
-    //TODO: Implement logic to see if user is owner of event
     let event : eventModelDTO
     @State var isOwner : Bool = false
     var body: some View {
@@ -36,7 +35,7 @@ struct DetailsView: View {
                         Fields(textFieldType: $detailsViewModel.place, fieldsCategory: DetailsViewModel.FieldsCategory.place.rawValue, textFieldPlaceholder: event.place ?? "")
                             .padding(5).disabled(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? false : true)
                         Spacer()
-                        // Date Picker and time picker
+                        
                         if(detailsViewModel.currentUserId == event.owner){
                             HStack(spacing: 16) {
                                 //Date
@@ -55,10 +54,11 @@ struct DetailsView: View {
                                 )
                                 .background(Color.clear)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                //Time
+                                
                                 HStack {
                                     DatePicker("", selection: $selectedTime, displayedComponents: .hourAndMinute)
                                         .labelsHidden()
+                                        .environment(\.locale, Locale(identifier: "en_GB"))
                                         .tint(.white)
                                     Image(systemName: "clock")
                                         .foregroundColor(.white)
@@ -85,71 +85,66 @@ struct DetailsView: View {
                             .background(Color.dividerColor)
                             .frame(width:350)
                         
-                        HStack{
+                        ForEach(userService.acceptedEventUsers.indices, id: \.self){ index in
+                            HStack{
+                                AsyncImage(url: URL(string:SupabaseConfig.baseURLStorage + (userService.acceptedEventUsers[index].users.avatar ?? SupabaseConfig.avatarDefault)), content: { Image in Image
+                                        .resizable()
+                                        .scaledToFill()
+                                        .clipShape(Circle())
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.dividerColor, lineWidth: 2)
+                                        )
+                                        .frame(width: 40, height: 40)
+                                }, placeholder: {
+                                    ProgressView()
+                                }
+                                )
+                                Text(userService.acceptedEventUsers[index].users.name).font(.title3).foregroundColor(.white).padding(.leading, 10)
+                                
+                            }.frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading, 35)
+                                .padding(.top, 5)
+                                .padding(.bottom, 5)
                             
-                            AsyncImage(url: URL(string: "https://zsjxwfjutstrybvltjov.supabase.co/storage/v1/object/public/avatar/logo2.jpg"), content: { Image in Image
-                                    .resizable()
-                                    .scaledToFill()
-                                    .clipShape(Circle())
-                                    .overlay(
-                                        Circle()
-                                            .stroke(Color.dividerColor, lineWidth: 2)
-                                    )
-                                    .frame(width: 40, height: 40)
-                            }, placeholder: {
-                                ProgressView()
-                            }
-                            )
-                            Text("Username").font(.title3).foregroundColor(.white).padding(.leading, 10)
-                            
-                        }.frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 35)
-                            .padding(.top, 10)
-                        
-                        Divider()
-                            .background(Color.dividerColor)
-                            .frame(width:350)
-                    }.padding(.top,70)
-                    
-                    
-                }
-                
-                Button(action: {
-                    
-                }){
-                    HStack {
-                        Text(StringConstants.LEAVE_EVENT)
-                        Image.doorRightHandOpen
+                            Divider()
+                                .background(Color.dividerColor)
+                                .frame(width:350)
+                        }
                     }
-                    .padding()
-                    .frame(width:310)
-                    .background(Color.loginButton)
-                    .cornerRadius(20)
-                    .foregroundColor(.black)
                 }
-                .padding(.bottom, 20)
-                .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGOUT)
-            }
-        }.onAppear{getAcceptedUsers()}
-        .applyBlurredBackground()
-    }
-    
-    func getAcceptedUsers() {
-        Task {
-            detailsViewModel.createUrlToGetAcceptedUsers(eventId: event.id)
-            print("URL to get acceptedUsers: \(detailsViewModel.urlToGetAcceptedUsers)\n")
-            await userService.getAcceptedUsers(from: detailsViewModel.urlToGetAcceptedUsers)
-            print("Accepted users data: \(userService.acceptedEventUsers)")
-            print("User name is : \(userService.acceptedEventUsers[0].users.name)\n")
-            print("User avatar is : \(userService.acceptedEventUsers[0].users.avatar)\n")
-            
+                    Button(action: {
+                        
+                    }){
+                        HStack {
+                            Text(StringConstants.LEAVE_EVENT)
+                            Image.doorRightHandOpen
+                        }
+                        .padding()
+                        .frame(width:310)
+                        .background(Color.loginButton)
+                        .cornerRadius(20)
+                        .foregroundColor(.black)
+                    }
+                    .padding(.bottom, 20)
+                    .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGOUT)
+                
+            }.onAppear{getAcceptedUsers()}
+                .applyBlurredBackground()
         }
     }
-}
-
-//#Preview {
-//    DetailsView()
-//}
+        func getAcceptedUsers() {
+            Task {
+                detailsViewModel.createUrlToGetAcceptedUsers(eventId: event.id)
+                print("URL to get acceptedUsers: \(detailsViewModel.urlToGetAcceptedUsers)\n")
+                await userService.getAcceptedUsers(from: detailsViewModel.urlToGetAcceptedUsers)
+                print("Accepted users data: \(userService.acceptedEventUsers)")
+                print("User name is : \(userService.acceptedEventUsers.first?.users.name)\n")
+                print("User avatar is : \(userService.acceptedEventUsers.first?.users.avatar)\n")
+                
+            }
+        }
+    }
 
 struct Fields: View {
     
