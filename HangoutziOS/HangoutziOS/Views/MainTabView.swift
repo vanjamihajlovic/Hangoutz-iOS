@@ -13,8 +13,6 @@ struct MainTabView: View {
     @State var currentTab = 0
     
     var body: some View {
-      
-        
         VStack(spacing: 0) {
             AppBarView()
             ZStack{
@@ -23,6 +21,8 @@ struct MainTabView: View {
                         .tabItem {
                             Label("Events", systemImage: "calendar")
                                 .accessibilityIdentifier("eventIcon")
+                                .accessibilityLabel(IdentifierConstants.EVENT_ICON
+                                )
                         }
                         .tag(0)
                     
@@ -30,6 +30,7 @@ struct MainTabView: View {
                         .tabItem {
                             Label("Friends", systemImage: "person.2.fill")
                                 .accessibilityIdentifier("friendsIcon")
+                                .accessibilityLabel(IdentifierConstants.FRIENDS_ICON)
                         }
                         .tag(1)
                     
@@ -37,6 +38,7 @@ struct MainTabView: View {
                         .tabItem {
                             Label("Profile", systemImage: "gearshape")
                                 .accessibilityIdentifier("settingsIcon")
+                                .accessibilityLabel(IdentifierConstants.SETTINGS_ICON)
                         }
                         .tag(2)
                 }

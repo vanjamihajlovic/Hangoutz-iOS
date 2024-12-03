@@ -19,6 +19,7 @@ struct AppBarView: View {
                     .padding(.leading, 25)
                     .padding(.bottom, 15)
                     .accessibilityIdentifier(IdentifierConstants.TOP_BAR_TEXT)
+                    .accessibilityLabel(IdentifierConstants.TOP_BAR_TEXT)
                 
                 Spacer()
             }

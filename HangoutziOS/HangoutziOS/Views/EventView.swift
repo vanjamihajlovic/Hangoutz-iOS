@@ -83,6 +83,7 @@ struct EventView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: 700)
             .padding(.top, 120)
+            
         }
         .applyGlobalBackground()
         .gesture(
