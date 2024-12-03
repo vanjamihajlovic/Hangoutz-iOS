@@ -9,7 +9,7 @@ import UIKit
 class UserService : ObservableObject {
     
     @Published var users: [userData] = []
-    @Published var acceptedEventUsers: [AcceptedEventUsers] = []
+    @Published var acceptedEventUsers: [AcceptedUsersList] = []
     let url: String = ""
     let body: [String: Any] = ["data": []]
     
@@ -36,14 +36,14 @@ class UserService : ObservableObject {
             return []
         }
     }
-    func getAcceptedUsers(from urlString: String) async -> [AcceptedEventUsers] {
+    func getAcceptedUsers(from urlString: String) async -> [AcceptedUsersList] {
         guard let url = URL(string: urlString) else {
             print("Invalid URL.")
             return []
         }
         let returnedData = await downloadData(fromURL: url, method: HTTPConstants.GET)
         if let data = returnedData {
-            guard let newAcceptedUsers = try? JSONDecoder().decode([AcceptedEventUsers].self, from: data) else {
+            guard let newAcceptedUsers = try? JSONDecoder().decode([AcceptedUsersList].self, from: data) else {
                 print("Failed to decode user data.")
                 return []
             }

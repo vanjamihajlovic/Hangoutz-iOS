@@ -6,11 +6,13 @@
 import Foundation
 
 // MARK: - WelcomeElement
-struct AcceptedEventUsers: Codable {
+struct AcceptedUsersList: Codable {
     let users: AcceptedUsersNames
 }
 
 // MARK: - Users
 struct AcceptedUsersNames: Codable {
     let name: String
+    let avatar: String?
 }
+

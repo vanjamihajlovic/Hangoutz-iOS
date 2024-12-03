@@ -10,6 +10,7 @@ import SwiftUI
 struct DetailsView: View {
     
     @ObservedObject var detailsViewModel = DetailsViewModel()
+    @ObservedObject var userService = UserService()
     @State private var selectedDate = Date()
     @State private var selectedTime = Date()
     //TODO: Implement logic to see if user is owner of event
@@ -25,7 +26,7 @@ struct DetailsView: View {
             VStack {
                 ScrollView {
                     VStack{
-
+                        
                         Fields(textFieldType: $detailsViewModel.title, fieldsCategory: DetailsViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: event.title ?? "").padding(5).disabled(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? false : true)
                         Fields(textFieldType: $detailsViewModel.description, fieldsCategory: DetailsViewModel.FieldsCategory.description.rawValue, textFieldPlaceholder: event.description ?? "").padding(5)
                             .disabled(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? false : true)
@@ -84,6 +85,30 @@ struct DetailsView: View {
                             .background(Color.dividerColor)
                             .frame(width:350)
                         
+                        HStack{
+                            
+                            AsyncImage(url: URL(string: "https://zsjxwfjutstrybvltjov.supabase.co/storage/v1/object/public/avatar/logo2.jpg"), content: { Image in Image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .clipShape(Circle())
+                                    .overlay(
+                                        Circle()
+                                            .stroke(Color.dividerColor, lineWidth: 2)
+                                    )
+                                    .frame(width: 40, height: 40)
+                            }, placeholder: {
+                                ProgressView()
+                            }
+                            )
+                            Text("Username").font(.title3).foregroundColor(.white).padding(.leading, 10)
+                            
+                        }.frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading, 35)
+                            .padding(.top, 10)
+                        
+                        Divider()
+                            .background(Color.dividerColor)
+                            .frame(width:350)
                     }.padding(.top,70)
                     
                     
@@ -105,8 +130,20 @@ struct DetailsView: View {
                 .padding(.bottom, 20)
                 .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGOUT)
             }
-        }
+        }.onAppear{getAcceptedUsers()}
         .applyBlurredBackground()
+    }
+    
+    func getAcceptedUsers() {
+        Task {
+            detailsViewModel.createUrlToGetAcceptedUsers(eventId: event.id)
+            print("URL to get acceptedUsers: \(detailsViewModel.urlToGetAcceptedUsers)\n")
+            await userService.getAcceptedUsers(from: detailsViewModel.urlToGetAcceptedUsers)
+            print("Accepted users data: \(userService.acceptedEventUsers)")
+            print("User name is : \(userService.acceptedEventUsers[0].users.name)\n")
+            print("User avatar is : \(userService.acceptedEventUsers[0].users.avatar)\n")
+            
+        }
     }
 }
 
