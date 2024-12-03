@@ -15,7 +15,6 @@ struct RegistrationView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     
-
     var body: some View {
         NavigationStack(){
             ZStack {
