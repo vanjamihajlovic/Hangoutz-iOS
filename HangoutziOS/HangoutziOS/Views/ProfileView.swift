@@ -21,13 +21,7 @@ struct ProfileView: View {
     var body: some View {
         
         ZStack {
-            
-            /*TODO: AFTER PR REMOVE VStack, because app bar will only be defined in maintabview*/
-            VStack{
-                AppBarView()
-                Spacer()
-            }
-            
+        
             ZStack {
                 
                 Image.profilelines.resizable()
