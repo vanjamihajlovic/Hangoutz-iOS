@@ -18,7 +18,6 @@ struct FriendsView: View {
             return firstWord1.localizedCompare(firstWord2) == .orderedAscending
         }
     }
-    
     var body: some View {
         ZStack {
             VStack(spacing: 20) {
