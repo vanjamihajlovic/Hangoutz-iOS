@@ -27,6 +27,7 @@ struct EventScreen: View {
             }
         
             ScrollView{
+
                 VStack{
                     ForEach(eventViewModel.events.indices, id: \.self){ index in
                         let event = eventViewModel.events[index]

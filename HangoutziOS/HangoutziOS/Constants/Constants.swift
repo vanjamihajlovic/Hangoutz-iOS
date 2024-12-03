@@ -56,6 +56,7 @@ class SupabaseConstants {
     static let SELECT_AVATAR : String = "rest/v1/users?select=avatar&id=eq."
     static let SELECT_EVENTS : String = "rest/v1/events?select=*,users(avatar)&order=date"
     static let SELECT_PEOPLE_COUNT : String = "rest/v1/invites?select=count&event_status=eq.accepted&event_id=eq."
+    static let GET_FIRENDS_VIA_ID : String = "rest/v1/friends?select=users!friend_id(name,avatar)&user_id=eq."
 }
 
 class AccessibilityIdentifierConstants {

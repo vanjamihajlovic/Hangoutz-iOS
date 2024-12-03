@@ -14,6 +14,8 @@ struct MainTabView: View {
     
     var body: some View {
         
+        VStack(spacing: 0) {
+            AppBarView()
             ZStack{
                 TabView(selection: $currentTab ) {
                     EventScreen()
@@ -22,8 +24,6 @@ struct MainTabView: View {
                         }
                         .tag(0)
                         .accessibilityIdentifier("eventIcon")
-                    
-                        
                     
                     FriendsView()
                         .tabItem {
@@ -41,23 +41,24 @@ struct MainTabView: View {
                 }
                 .accessibilityIdentifier("bottomBar")
                 .onAppear(){
-                        let tabBarAppearance = UITabBarAppearance()
-                        tabBarAppearance.configureWithOpaqueBackground()
-                        tabBarAppearance.backgroundColor = UIColor.barColor
-                        tabBarAppearance.stackedLayoutAppearance.normal.iconColor = .white
-                        tabBarAppearance.stackedLayoutAppearance.selected.iconColor = .lightGray
-                        tabBarAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [
-                            .foregroundColor: UIColor.white
-                        ]
-                        tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [
-                            .foregroundColor: UIColor.gray
-                        ]
-                            
-                        UITabBar.appearance().standardAppearance = tabBarAppearance
-                        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+                    let tabBarAppearance = UITabBarAppearance()
+                    tabBarAppearance.configureWithOpaqueBackground()
+                    tabBarAppearance.backgroundColor = UIColor.barColor
+                    tabBarAppearance.stackedLayoutAppearance.normal.iconColor = .white
+                    tabBarAppearance.stackedLayoutAppearance.selected.iconColor = .lightGray
+                    tabBarAppearance.stackedLayoutAppearance.normal.titleTextAttributes = [
+                        .foregroundColor: UIColor.white
+                    ]
+                    tabBarAppearance.stackedLayoutAppearance.selected.titleTextAttributes = [
+                        .foregroundColor: UIColor.gray
+                    ]
+                    
+                    UITabBar.appearance().standardAppearance = tabBarAppearance
+                    UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
                 }
             }
             .navigationBarBackButtonHidden(true)
+        }
          
     }
 }
