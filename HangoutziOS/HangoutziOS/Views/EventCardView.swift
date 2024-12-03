@@ -109,7 +109,7 @@ struct EventCard : View {
                 }
                 .padding(.top, 90)
             }
-            //.accessibilityIdentifier(IdentifierConstants.CARD)
+            .groupBoxAccessibilityIdentifier(IdentifierConstants.CARD)
             .background(color)
             .padding()
             .background(RoundedRectangle(cornerRadius: 20).fill(color))
@@ -122,5 +122,11 @@ struct EventCard : View {
                 }
             }
         }
+    }
+}
+
+struct ContainerGroupBoxStyle: GroupBoxStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.content
     }
 }
