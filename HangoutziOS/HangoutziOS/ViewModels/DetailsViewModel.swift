@@ -18,6 +18,7 @@ class DetailsViewModel: ObservableObject  {
     @Published var place : String = ""
     @Published var urlToGetAcceptedUsers : String = ""
     @Published var urlGetAvatarPhoto : String = ""
+    @Published var urlToDeleteInvite : String = ""
 
     enum FieldsCategory: String {
         case title = "Title*"
@@ -37,5 +38,8 @@ class DetailsViewModel: ObservableObject  {
             urlToGetAcceptedUsers = SupabaseConfig.baseURL + "rest/v1/invites?select=users(name,avatar)&event_id=eq.\(idOfEvent)&event_status=eq.accepted"
         }
         else {return}
+    }
+    func createUrlToDeleteInvite(eventId : String?) {
+        urlToDeleteInvite = SupabaseConfig.baseURL + "rest/v1/invites?user_id=eq.\(currentUserId)&event_id=eq.\(eventId)"
     }
 }

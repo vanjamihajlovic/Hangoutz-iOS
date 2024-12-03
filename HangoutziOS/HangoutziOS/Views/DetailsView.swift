@@ -25,7 +25,6 @@ struct DetailsView: View {
             VStack {
                 ScrollView {
                     VStack{
-                        
                         Fields(textFieldType: $detailsViewModel.title, fieldsCategory: DetailsViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: event.title ?? "").padding(5).disabled(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? false : true)
                         Fields(textFieldType: $detailsViewModel.description, fieldsCategory: DetailsViewModel.FieldsCategory.description.rawValue, textFieldPlaceholder: event.description ?? "").padding(5)
                             .disabled(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? false : true)
@@ -115,7 +114,8 @@ struct DetailsView: View {
                 }
                
                     Button(action: {
-                        
+                        deleteInvite()
+                        print("Button pressed! \n URL to delete invite: \(detailsViewModel.urlToDeleteInvite)\n")
                     }){
                         NavigationLink(destination: EventScreen().navigationBarBackButtonHidden(true)){
                         HStack {
@@ -149,6 +149,10 @@ struct DetailsView: View {
                 
             }
         }
+    func deleteInvite() {
+        detailsViewModel.createUrlToDeleteInvite(eventId: event.id)
+        userService.deleteInvite(url: detailsViewModel.urlToDeleteInvite)
+    }
     }
 
 struct Fields: View {
