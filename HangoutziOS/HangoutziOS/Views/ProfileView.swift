@@ -61,8 +61,8 @@ struct ProfileView: View {
                         HStack {
                             PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images) {
                                 VStack{
-                                    Text("Gallery").padding()
-                                    Image(systemName: "photo")
+                                    Text(StringConstants.GALLERY).padding()
+                                    Image(systemName: StringConstants.PHOTO)
                                         .font(.title)
                                         .overlay(
                                             Circle()
@@ -77,8 +77,8 @@ struct ProfileView: View {
                                 showCamera.toggle()
                             }){
                                 VStack{
-                                    Text("Camera").padding()
-                                    Image(systemName: "camera")
+                                    Text(StringConstants.CAMERA).padding()
+                                    Image(systemName: StringConstants.CAMERA)
                                         .font(.title)
                                         .overlay(
                                             Circle()
@@ -117,8 +117,8 @@ struct ProfileView: View {
                         HStack {
                             PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images) {
                                 VStack{
-                                    Text("Gallery").padding()
-                                    Image(systemName: "photo")
+                                    Text(StringConstants.GALLERY).padding()
+                                    Image(systemName: StringConstants.PHOTO)
                                         .font(.title)
                                         .overlay(
                                             Circle()
@@ -133,8 +133,8 @@ struct ProfileView: View {
                                 showCamera.toggle()
                             }){
                                 VStack{
-                                    Text("Camera").padding()
-                                    Image(systemName: "camera")
+                                    Text(StringConstants.CAMERA).padding()
+                                    Image(systemName: StringConstants.CAMERA)
                                         .font(.title)
                                         .overlay(
                                             Circle()
@@ -174,8 +174,8 @@ struct ProfileView: View {
                         HStack {
                             PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images) {
                                 VStack{
-                                    Text("Gallery").padding()
-                                    Image(systemName: "photo")
+                                    Text(StringConstants.GALLERY).padding()
+                                    Image(systemName: StringConstants.PHOTO)
                                         .font(.title)
                                         .overlay(
                                             Circle()
@@ -188,8 +188,8 @@ struct ProfileView: View {
                                 showCamera.toggle()
                             }){
                                 VStack{
-                                    Text("Camera").padding()
-                                    Image(systemName: "camera")
+                                    Text(StringConstants.CAMERA).padding()
+                                    Image(systemName: StringConstants.CAMERA)
                                         .font(.title)
                                         .overlay(
                                             Circle()
