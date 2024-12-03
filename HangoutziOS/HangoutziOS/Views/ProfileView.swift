@@ -53,7 +53,7 @@ struct ProfileView: View {
                             .frame(width: 160, height: 160)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
                             .onAppear{
-                                 uploadProfilePicture(imageToUpload: currentImage)
+                                uploadProfilePicture(imageToUpload: currentImage)
                                 showSheet = false
                                 
                             }
@@ -95,10 +95,10 @@ struct ProfileView: View {
                         .presentationDetents([.fraction(0.2)])
                     }
                 }
-                else if let currentImage = selectedImageCamera{
+                else if let selectedImageCamera {
                     Button(action: {showSheet.toggle()
                     }
-                    ) { Image(uiImage: currentImage)
+                    ) { Image(uiImage: selectedImageCamera)
                             .resizable()
                             .scaledToFill()
                             .clipShape(Circle())
@@ -109,7 +109,7 @@ struct ProfileView: View {
                             .frame(width: 160, height: 160)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
                             .onAppear{
-                                uploadProfilePicture(imageToUpload: currentImage)
+                                uploadProfilePicture(imageToUpload: selectedImageCamera)
                                 showSheet = false
                                 
                             }
