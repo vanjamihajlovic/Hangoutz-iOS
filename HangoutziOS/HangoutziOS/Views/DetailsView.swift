@@ -113,12 +113,17 @@ struct DetailsView: View {
                         }
                     }
                 }
+               
                     Button(action: {
                         
                     }){
+                        NavigationLink(destination: EventScreen().navigationBarBackButtonHidden(true)){
                         HStack {
                             Text(StringConstants.LEAVE_EVENT)
                             Image.doorRightHandOpen
+                        }
+                        }.onTapGesture {
+                            EventScreen()
                         }
                         .padding()
                         .frame(width:310)
