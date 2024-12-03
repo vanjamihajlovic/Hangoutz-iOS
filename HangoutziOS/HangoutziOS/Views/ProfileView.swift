@@ -13,10 +13,14 @@ struct ProfileView: View {
     @StateObject var profileViewModel : ProfileViewModel = ProfileViewModel()
     @StateObject private var photoPickerViewModel = PhotoPickerViewModel()
     @State var newUserName : String = ""
-    @State var photoPickerIsPressed : Bool = false
     @State var currentImage : UIImage?
+    @State var selectedImageCamera : UIImage?
+    @State var showSheet: Bool = false
+    @State var showCamera: Bool = false
     var userService : UserService = UserService()
     let backgroundImage: String = "MainBackground"
+    @State private var selectedImage: UIImage?
+    
     
     var body: some View {
         
@@ -34,8 +38,9 @@ struct ProfileView: View {
                 Image.profilelines.resizable()
                 
                 if let currentImage = photoPickerViewModel.selectedImage {
-                    PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images){
-                        Image(uiImage: currentImage)
+                    Button(action: {showSheet.toggle()
+                    }
+                    ) { Image(uiImage: currentImage)
                             .resizable()
                             .scaledToFill()
                             .clipShape(Circle())
@@ -47,11 +52,108 @@ struct ProfileView: View {
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
                             .onAppear{
                                 uploadProfilePicture(imageToUpload: currentImage)
+                                showSheet = false
+                                
                             }
+                    }.sheet(isPresented: $showSheet) {
+                        HStack {
+                            PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images) {
+                                VStack{
+                                    Text(StringConstants.GALLERY).padding()
+                                    Image(systemName: StringConstants.PHOTO)
+                                        .font(.title)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.black, lineWidth: 1).padding(-10)
+                                        )
+                                }
+                                .padding(30)
+                            }
+                            .foregroundColor(Color.black)
+                            
+                            Button(action: {
+                                showCamera.toggle()
+                            }){
+                                VStack{
+                                    Text(StringConstants.CAMERA).padding()
+                                    Image(systemName: StringConstants.CAMERA)
+                                        .font(.title)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.black, lineWidth: 1).padding(-10)
+                                        )
+                                }
+                                .padding(30)
+                            }.foregroundColor(Color.black)
+                                .fullScreenCover(isPresented: self.$showCamera) {
+                                    accessCameraView(selectedImage: self.$selectedImageCamera)
+                                        .background(.black)
+                                }
+                        }
+                        .presentationDetents([.fraction(0.2)])
+                    }
+                }
+                else if let selectedImageCamera {
+                    Button(action: {showSheet.toggle()
+                    }
+                    ) { Image(uiImage: selectedImageCamera)
+                            .resizable()
+                            .scaledToFill()
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(Color.white, lineWidth: 2).padding(-5)
+                            )
+                            .frame(width: 160, height: 160)
+                            .accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
+                            .onAppear{
+                                uploadProfilePicture(imageToUpload: selectedImageCamera)
+                                showSheet = false
+                                
+                            }
+                    }.sheet(isPresented: $showSheet) {
+                        HStack {
+                            PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images) {
+                                VStack{
+                                    Text(StringConstants.GALLERY).padding()
+                                    Image(systemName: StringConstants.PHOTO)
+                                        .font(.title)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.black, lineWidth: 1).padding(-10)
+                                        )
+                                }
+                                .padding(30)
+                            }
+                            .foregroundColor(Color.black)
+                            
+                            Button(action: {
+                                showCamera.toggle()
+                            }){
+                                VStack{
+                                    Text(StringConstants.CAMERA).padding()
+                                    Image(systemName: StringConstants.CAMERA)
+                                        .font(.title)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.black, lineWidth: 1).padding(-10)
+                                        )
+                                }
+                                .padding(30)
+                            }.foregroundColor(Color.black)
+                                .fullScreenCover(isPresented: self.$showCamera) {
+                                    accessCameraView(selectedImage: self.$selectedImageCamera)
+                                        .background(.black)
+                                }
+                        }
+                        .presentationDetents([.fraction(0.2)])
                     }
                 }
                 else {
-                    PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images) {
+                    Button(action: {
+                        showSheet.toggle()
+                        print("On first button pressed, showSheet is \(showSheet)\n")
+                    }){
                         AsyncImage(url: URL(string: profileViewModel.currentUserAvatar ?? "No avatar"), content: { Image in Image
                                 .resizable()
                                 .scaledToFill()
@@ -66,8 +168,42 @@ struct ProfileView: View {
                         }
                         ).accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
                     }
+                    .sheet(isPresented: $showSheet) {
+                        HStack {
+                            PhotosPicker(selection: $photoPickerViewModel.imageSelection, matching: .images) {
+                                VStack{
+                                    Text(StringConstants.GALLERY).padding()
+                                    Image(systemName: StringConstants.PHOTO)
+                                        .font(.title)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.black, lineWidth: 1).padding(-10)
+                                        )
+                                }.padding(30)
+                                
+                            }.foregroundColor(Color.black)
+                            Button(action: {
+                                showCamera.toggle()
+                            }){
+                                VStack{
+                                    Text(StringConstants.CAMERA).padding()
+                                    Image(systemName: StringConstants.CAMERA)
+                                        .font(.title)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.black, lineWidth: 1).padding(-10)
+                                        )
+                                }
+                                .padding(30)
+                            }.foregroundColor(Color.black)
+                                .fullScreenCover(isPresented: self.$showCamera) {
+                                    accessCameraView(selectedImage: self.$selectedImageCamera)
+                                        .background(.black)
+                                }
+                        }
+                        .presentationDetents([.fraction(0.2)])
+                    }
                 }
-                Spacer()
             }
             .padding(.bottom, 350)
             VStack{

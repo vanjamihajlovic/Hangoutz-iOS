@@ -17,7 +17,6 @@ struct MainTabView: View {
         
         VStack(spacing: 0) {
             AppBarView()
-
             ZStack{
                 TabView(selection: $currentTab ) {
                     EventView()

@@ -21,6 +21,7 @@ final class PhotoPickerViewModel: ObservableObject {
             setImage(from: imageSelection)
         }
     }
+    
     private func setImage(from selection: PhotosPickerItem?) {
         guard let selection else { return }
         

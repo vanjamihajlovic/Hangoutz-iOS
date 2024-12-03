@@ -77,6 +77,9 @@ class StringConstants {
     static let LOGIN : String = "Login"
     static let LOGOUT : String = "Logout"
     static let CREATE_ACCOUNT : String = "Create account"
+    static let CAMERA : String = "Camera"
+    static let GALLERY : String = "Gallery"
+    static let PHOTO : String = "photo"
 }
 
 class SupabaseConstants {
@@ -86,6 +89,8 @@ class SupabaseConstants {
     static let SELECT_GOING_EVENTS :  String = "rest/v1/events?select=*,invites!inner(event_status,user_id),users!owner(id,avatar,name)&invites.event_status=eq.accepted&invites.user_id=eq."
     static let SELECT_INVITED_EVENTS :  String = "rest/v1/events?select=*,invites!inner(event_status,user_id),users!owner(id,avatar,name)&invites.event_status=eq.invited&invites.user_id=eq."
     static let SELECT_MINE_EVENTS : String = "rest/v1/events?select=*,users(avatar)&owner=eq."
+    static let GET_FIRENDS_VIA_ID : String = "rest/v1/friends?select=users!friend_id(name,avatar)&user_id=eq."
+
 }
 
 class AccessibilityIdentifierConstants {
