@@ -23,7 +23,6 @@ struct EventView: View {
                 HStack {
                     ForEach(Tab.allCases, id: \.self) { tab in
                         ZStack {
-            
                             if selectedTab == tab {
                                 Capsule()
                                     .fill(Color.filterBarAccentColor)
@@ -60,7 +59,8 @@ struct EventView: View {
                         }
                     }
                 }
-                .accessibilityIdentifier("filterBar")
+                .accessibilityIdentifier(IdentifierConstants.FILTER_BAR
+                )
                 .padding(5)
                 .background(
                     Capsule()

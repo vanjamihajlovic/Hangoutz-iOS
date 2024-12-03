@@ -11,10 +11,6 @@ struct FriendsView: View {
 
     var body: some View {
         ZStack {
-    
-            VStack{
-                Spacer()
-            }
             
             Text("Friends screen")
                 .foregroundColor(.white)

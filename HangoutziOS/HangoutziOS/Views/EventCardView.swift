@@ -24,30 +24,36 @@ struct EventCard : View {
                     if let avatarImage = event.users?.avatar {
                         AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage), content: { Image in Image
                                 .resizable()
-                                .scaledToFit()
+                                .scaledToFill()
                                 .clipShape(Circle())
                                 .overlay(
                                     Circle()
                                         .stroke(Color.white, lineWidth: 2)
                                 )
-                                .frame(width: 90, height: 90)
-                                .padding(.bottom,20)
-                                .padding(.trailing, 10)
+                                .frame(width: UIConstants.AVATAR_FRAME_WIDTH, height: UIConstants.AVATAR_FRAME_HEIGHT)
+                                .padding(.bottom,UIConstants.AVATAR_PADDING_BOTTOM)
+                                .padding(.trailing, UIConstants.AVATAR_PADDING_TRAILING)
                         }, placeholder: {
                             ProgressView()
                         }
                         )
-                        .accessibilityIdentifier("cardImage")
+                        .accessibilityIdentifier(IdentifierConstants.CARD_IMAGE)
                     } else {
-                        Circle()
-                            .fill(Color.white.opacity(0.5))
-                            .frame(width: 80, height: 80)
-                            .padding(.bottom,20)
-                            .accessibilityIdentifier("cardImage")
+                        Image("avatar_default")
+                            .resizable()
+                            .scaledToFill()
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(Color.white, lineWidth: 2)
+                            )
+                            .frame(width: UIConstants.AVATAR_FRAME_WIDTH, height: UIConstants.AVATAR_FRAME_HEIGHT)
+                            .padding(.bottom,UIConstants.AVATAR_PADDING_BOTTOM)
+                            .padding(.trailing, UIConstants.AVATAR_PADDING_TRAILING)
                     }
                     VStack(alignment: .leading, spacing: 5) {
                         Text(event.title ?? "No Title")
-                            .accessibilityIdentifier("cardImage")
+                            .accessibilityIdentifier(IdentifierConstants.CARD_IMAGE)
                             .foregroundColor(.white)
                             .bold()
                             .font(.title2)
@@ -55,7 +61,7 @@ struct EventCard : View {
                             .truncationMode(.tail)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         Text(eventPlaceString)
-                            .accessibilityIdentifier("cardPlace")
+                            .accessibilityIdentifier(IdentifierConstants.CARD_PLACE)
                             .bold()
                             .font(.title3)
                             .foregroundColor(.white)
@@ -63,7 +69,7 @@ struct EventCard : View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.trailing)
                         Text(dateTimeString)
-                            .accessibilityIdentifier("cardTime")
+                            .accessibilityIdentifier(IdentifierConstants.CARD_TIME)
                             .font(.subheadline)
                             .foregroundColor(.white)
                             .lineLimit(1)
@@ -81,14 +87,14 @@ struct EventCard : View {
                     Spacer()
                     if(eventViewModel.count == 1){
                         Text("\(eventViewModel.count) person going")
-                            .accessibilityIdentifier("cardPeopleGoing")
+                            .accessibilityIdentifier(IdentifierConstants.CARD_PEOPLE_GOING)
                             .foregroundColor(.white)
                             .padding(.trailing)
                             .font(.caption)
                             .lineLimit(1)
                     }else {
                         Text("\(eventViewModel.count) people going")
-                            .accessibilityIdentifier("cardPeopleGoing")
+                            .accessibilityIdentifier(IdentifierConstants.CARD_PEOPLE_GOING)
                             .foregroundColor(.white)
                             .padding(.trailing)
                             .font(.caption)
@@ -97,7 +103,7 @@ struct EventCard : View {
                 }
                 .padding(.top, 90)
             }
-            .accessibilityIdentifier("card")
+            .accessibilityIdentifier(IdentifierConstants.CARD)
             .background(color)
             .padding()
             .background(RoundedRectangle(cornerRadius: 20).fill(color))

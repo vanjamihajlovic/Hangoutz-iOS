@@ -25,8 +25,34 @@ enum DaySuffix {
     static let DAY_3 = 3
 }
 
+class IdentifierConstants {
+    static let BOTTOM_BAR = "bottomBar"
+    static let EVENT_ICON = "eventIcon"
+    static let FRIENDS_ICON = "friendsIcon"
+    static let SETTINGS_ICON = "settingsIcon"
+    static let TOP_BAR = "topBar"
+    static let TOP_BAR_TEXT = "topBarText"
+    static let FILTER_BAR = "filterBar"
+    static let GOING = "going"
+    static let INVITED = "invited"
+    static let MINE = "mine"
+    static let CARD = "card"
+    static let CARD_IMAGE = "cardImage"
+    static let CARD_PLACE = "cardPlace"
+    static let CARD_TITLE = "cardTitle"
+    static let CARD_TIME = "cardTime"
+    static let CARD_PEOPLE_GOING = "cardPeopleGoing"
+    static let DECLINE_BUTTON = "declineButton"
+    static let ACCEPT_BUTTON = "acceptButton"
+    static let NEW_EVENT_BUTTON = "newEventButton"
+}
+
 class UIConstants {
     static let MIN_HORIZONTAL_SWIPE: CGFloat = 50
+    static let AVATAR_FRAME_WIDTH: CGFloat = 90
+    static let AVATAR_FRAME_HEIGHT: CGFloat = 90
+    static let AVATAR_PADDING_BOTTOM: CGFloat = 20
+    static let AVATAR_PADDING_TRAILING: CGFloat = 10
 }
 
 class DateConstants {
