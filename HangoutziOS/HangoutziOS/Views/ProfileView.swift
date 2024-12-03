@@ -29,9 +29,12 @@ struct ProfileView: View {
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
+<<<<<<< HEAD
             VStack{
                 Spacer()
             }
+=======
+>>>>>>> Development
             
             ZStack {
                 
