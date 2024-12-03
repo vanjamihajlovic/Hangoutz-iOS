@@ -109,7 +109,7 @@ struct EventCard : View {
                 }
                 .padding(.top, 90)
             }
-            .accessibilityIdentifier(IdentifierConstants.CARD)
+            //.accessibilityIdentifier(IdentifierConstants.CARD)
             .background(color)
             .padding()
             .background(RoundedRectangle(cornerRadius: 20).fill(color))
