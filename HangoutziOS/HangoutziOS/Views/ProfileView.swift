@@ -29,11 +29,6 @@ struct ProfileView: View {
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
-            /*TODO: AFTER PR REMOVE VStack, because app bar will only be defined in maintabview*/
-            VStack{
-                AppBarView()
-                Spacer()
-            }
             
             ZStack {
                 
