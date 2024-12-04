@@ -9,6 +9,7 @@ import UIKit
 class UserService : ObservableObject {
     
     @Published var users: [userData] = []
+    @Published var acceptedEventUsers: [AcceptedUsersList] = []
     let url: String = ""
     let body: [String: Any] = ["data": []]
     
@@ -31,6 +32,25 @@ class UserService : ObservableObject {
                 self.users = newUsers
             }
             return newUsers
+        } else {
+            return []
+        }
+    }
+    func getAcceptedUsers(from urlString: String) async -> [AcceptedUsersList] {
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL.")
+            return []
+        }
+        let returnedData = await downloadData(fromURL: url, method: HTTPConstants.GET)
+        if let data = returnedData {
+            guard let newAcceptedUsers = try? JSONDecoder().decode([AcceptedUsersList].self, from: data) else {
+                print("Failed to decode user data.")
+                return []
+            }
+            await MainActor.run {
+                self.acceptedEventUsers = newAcceptedUsers
+            }
+            return newAcceptedUsers
         } else {
             return []
         }
@@ -141,6 +161,35 @@ class UserService : ObservableObject {
                 print("Name successfully updated!")
             } else {
                 print("Failed to update name. Status code: \(httpResponse.statusCode)")
+            }
+        }.resume()
+    }
+    func deleteInvite(url: String) {
+        
+        guard let url = URL(string: url) else {
+            print("Invalid URL")
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPConstants.DELETE.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
+        request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            if (200...299).contains(httpResponse.statusCode) {
+                print("Invite successfully deleted!")
+            } else {
+                print("Failed to delete invite. Status code: \(httpResponse.statusCode)")
             }
         }.resume()
     }

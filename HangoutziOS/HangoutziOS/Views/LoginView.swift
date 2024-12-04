@@ -22,14 +22,11 @@ struct LoginView: View {
                     .navigationBarBackButtonHidden(true)
             }else{
                 ZStack{
-                    Image(backgroundImage)
-                        .resizable()
-                        .scaledToFill()
-                        .edgesIgnoringSafeArea(.all)
+                    
                     hangoutzLogo
                     LoginSection(loginViewModel:loginViewModel, isVisiblePassword: false)
                     CreateAccount(loginViewModel: loginViewModel, userService: userService)
-                }
+                }.applyGlobalBackground()
             }
         }
     }

@@ -32,6 +32,7 @@ extension Color {
    static let secondEventCardColor = Color("SecondEventCard")
    static let thirdEventCardColor = Color("ThirdEventCard")
    static let shadowColor = Color("ShadowColor")
+   static let dividerColor = Color("Divider")
    static let filterBarPrimaryColor = Color("FilterBarPrimaryColor")
    static let filterBarAccentColor = Color("FilterBarAccentColor")
    static let filterBarSelectedTextColor = Color("FilterBarSelectedTextColor")
@@ -43,6 +44,7 @@ extension UIColor {
 
 extension Image {
     static let backgroundImage = Image("MainBackground")
+    static let blurredImage = Image("BlurredBackground")
     static let profilePicturePen = Image("penProfileScreen")
     static let checkmark = Image(systemName: "person.fill.checkmark")
     static let doorRightHandOpen = Image(systemName: "door.right.hand.open")

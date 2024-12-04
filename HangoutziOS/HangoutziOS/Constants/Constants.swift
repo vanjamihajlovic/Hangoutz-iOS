@@ -77,6 +77,8 @@ class StringConstants {
     static let LOGIN : String = "Login"
     static let LOGOUT : String = "Logout"
     static let CREATE_ACCOUNT : String = "Create account"
+    static let LEAVE_EVENT : String = "Leave event"
+    static let PARTICIPANTS : String = "Participants"
     static let CAMERA : String = "Camera"
     static let GALLERY : String = "Gallery"
     static let PHOTO : String = "photo"
@@ -104,8 +106,22 @@ class AccessibilityIdentifierConstants {
     static let CHECKMARK : String = "checkmark"
     static let EMAIL_LABEL : String = "emailLabel"
     static let NAME_LABEL : String = "nameLabel"
+    static let DESCRIPTION : String = "description"
+    static let PLACE : String = "place"
+    static let CITY : String = "city"
+    static let TIME : String = "time"
+    static let DATE : String = "date"
+    static let STREET : String = "street"
+    static let TITLE : String = "title"
+    static let PARTICIPANTS : String = "participants"
 }
 
 class ColorConstants {
-   static let eventCardColors: [Color] = [Color.firstEventCard, Color.secondEventCard, Color.thirdEventCard]
+    static let eventCardColors: [Color] = [Color.firstEventCard, Color.secondEventCard, Color.thirdEventCard]
+}
+
+class ImageConstants {
+    
+    static let CALENDAR : String = "calendar"
+    static let CLOCK : String = "clock"
 }
