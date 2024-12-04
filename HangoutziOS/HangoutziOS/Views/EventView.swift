@@ -71,14 +71,14 @@ struct EventView: View {
                 Spacer()
             }
             .padding(.top, 35)
-          
+            
             ScrollView{
                 VStack{
                     ForEach(eventViewModel.events.indices, id: \.self){ index in
                         let event = eventViewModel.events[index]
                         let color = ColorConstants.eventCardColors[index % ColorConstants.eventCardColors.count]
                         
-                        EventCard(event:event,color:color)
+                        EventCard(event:event,color:color,selTab:selectedTab)
                     }
                 }
             }
@@ -92,7 +92,7 @@ struct EventView: View {
                 .onEnded { value in
                     handleSwipe(value:value)
                 }
-            )
+        )
         .onAppear() {
             Task{
                 await eventViewModel.createUrlEventFilteredGoing()
