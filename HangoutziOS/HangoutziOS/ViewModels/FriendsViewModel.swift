@@ -36,12 +36,4 @@ class FriendsViewModel : ObservableObject {
             self.friends = fetchedFriends
         }
     }
-    // ako je uslov popunjen da je search length veci ili jednak sa 3 onda fecuj usere.
-//    if uiState.searchQuery.count >= Constants.minSearchLength {
-//                fetchFriends(isSearching: true)
-//            } else {
-//                fetchFriends(isSearching: false)
-//            }
-    // vrv ovde ovaj bool zaustavlja i pokrece fecovanje
-
 }
