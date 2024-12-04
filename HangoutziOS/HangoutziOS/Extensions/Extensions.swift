@@ -36,6 +36,8 @@ extension Color {
    static let filterBarPrimaryColor = Color("FilterBarPrimaryColor")
    static let filterBarAccentColor = Color("FilterBarAccentColor")
    static let filterBarSelectedTextColor = Color("FilterBarSelectedTextColor")
+   static let acceptButtonColor = Color("AcceptButtonColor")
+   static let declineButtonColor = Color("DeclineButtonColor")
 }
 
 extension UIColor {

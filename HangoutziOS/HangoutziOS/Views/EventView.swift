@@ -14,8 +14,8 @@ struct EventView: View {
     @AppStorage("currentUserEmail") var currentUserEmail: String?
     @AppStorage("currentUserName") var currentUserName: String?
     @State private var selectedTabIndex: Int = 0
-    @State var badgeCount = 0
     @State var selectedTab: Tab = .going
+    
     
     var body: some View {
         ZStack {
@@ -45,18 +45,25 @@ struct EventView: View {
                                     }
                                 }
                             
-                            if tab == .invited, badgeCount > 0 {
-                                ZStack {
-                                    Circle()
-                                        .fill(Color.red)
-                                        .frame(width: 20, height: 20)
-                                    Text("\(badgeCount)")
-                                        .foregroundColor(.white)
-                                        .font(.caption)
-                                        .bold()
-                                }
-                                .offset(x: 40, y: -10)
-                            }
+                            // A 'PROBLEMATIC' PART OF THE CODE
+//                            if tab == .invited {
+//                                eventViewModel.createUrlInvitedEventsCount(idUser: currentUserId)
+//                                eventViewModel.getBadgeCount()
+//                                let count = eventViewModel.badgeCount
+//                                if count > 0 {
+//                                ZStack {
+//                                        Circle()
+//                                            .fill(Color.red)
+//                                            .frame(width: 20, height: 20)
+//                                        Text("\(eventViewModel.badgeCount)")
+//                                            .foregroundColor(.white)
+//                                            .font(.caption)
+//                                            .bold()
+//                                    }
+//                                }
+//                                .offset(x: 40, y: -10)
+//                        }
+                            // END OF THE 'PROBLEMATIC' PART
                         }
                     }
                 }
@@ -78,12 +85,32 @@ struct EventView: View {
                         let event = eventViewModel.events[index]
                         let color = ColorConstants.eventCardColors[index % ColorConstants.eventCardColors.count]
                         
-                        EventCard(event:event,color:color)
+                        EventCard(event:event,color:color, tab:selectedTab)
                     }
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: 700)
             .padding(.top, 120)
+            
+            //NavigationLink(destination: CreateEventView()) {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Image("EventViewPlusSign")
+                            .resizable()
+                            .padding(.trailing, UIConstants.PLUS_SIGN_PADDING_TRAILING)
+                            .padding(.bottom, UIConstants.AVATAR_PADDING_BOTTOM)
+                            .frame(width: UIConstants.PLUS_SIGN_FRAME_WIDTH, height: UIConstants.PLUS_SIGN_FRAME_HEIGHT)
+//                            .onTapGesture {
+//                                CreateEventView()
+//                            }
+                            .accessibilityIdentifier(IdentifierConstants.NEW_EVENT_BUTTON)
+                    }
+                }
+            //}
+            
+                
             
         }
         .applyGlobalBackground()
@@ -103,8 +130,9 @@ struct EventView: View {
     
     private func handleSwipe(value: DragGesture.Value) {
         let allTabs = Tab.allCases
-        
-        if value.translation.width < UIConstants.MIN_HORIZONTAL_SWIPE {
+        //---------
+        let width = value.translation.width
+        if width < UIConstants.MIN_HORIZONTAL_SWIPE {
             if let currentIndex = allTabs.firstIndex(of: selectedTab),
                currentIndex < allTabs.count - 1 {
                 withAnimation {
@@ -112,7 +140,7 @@ struct EventView: View {
                     eventViewModel.performApiLogic(for: selectedTab)
                 }
             }
-        } else if value.translation.width > UIConstants.MIN_HORIZONTAL_SWIPE {
+        } else if width > UIConstants.MIN_HORIZONTAL_SWIPE {
             if let currentIndex = allTabs.firstIndex(of: selectedTab),
                currentIndex > 0 {
                 withAnimation {

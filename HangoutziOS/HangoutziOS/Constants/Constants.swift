@@ -53,6 +53,10 @@ class UIConstants {
     static let AVATAR_FRAME_HEIGHT: CGFloat = 90
     static let AVATAR_PADDING_BOTTOM: CGFloat = 20
     static let AVATAR_PADDING_TRAILING: CGFloat = 10
+    static let PLUS_SIGN_FRAME_WIDTH: CGFloat = 80
+    static let PLUS_SIGN_FRAME_HEIGHT: CGFloat = 80
+    static let PLUS_SIGN_PADDING_TRAILING: CGFloat = 20
+    static let PLUS_SIGN_PADDING_BOTTOM: CGFloat = 15
 }
 
 class DateConstants {
@@ -92,6 +96,9 @@ class SupabaseConstants {
     static let SELECT_INVITED_EVENTS :  String = "rest/v1/events?select=*,invites!inner(event_status,user_id),users!owner(id,avatar,name)&invites.event_status=eq.invited&invites.user_id=eq."
     static let SELECT_MINE_EVENTS : String = "rest/v1/events?select=*,users(avatar)&owner=eq."
     static let GET_FIRENDS_VIA_ID : String = "rest/v1/friends?select=users!friend_id(name,avatar)&user_id=eq."
+    static let SET_EVENT_STATUS_ACC_DEC_1 : String = "rest/v1/invites?event_id=eq."
+    static let SET_EVENT_STATUS_ACC_DEC_2 : String = "&user_id=eq."
+    static let SELECT_INVITED_COUNT : String = "rest/v1/invites?select=count&event_status=eq.invited&user_id=eq."
 
 }
 

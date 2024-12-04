@@ -84,4 +84,36 @@ class EventService : ObservableObject {
             }.resume()
         }
     }
+    func updateInvitationStatus(fromURL url: String, changeTo: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        // Construct the URL
+        guard let endpoint = URL(string: url) else {
+            completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
+            return
+        }
+        
+        // Create the request
+        var request = URLRequest(url: endpoint)
+        request.httpMethod = HTTPConstants.PATCH.rawValue
+        request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
+        request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
+        
+        // Add the JSON body
+        let body: [String: Any] = ["event_status": changeTo]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+        
+        // Execute the request
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 204 else {
+                completion(.failure(NSError(domain: "Unexpected Response", code: 0, userInfo: nil)))
+                return
+            }
+            
+            completion(.success(()))
+        }.resume()
+    }
 }

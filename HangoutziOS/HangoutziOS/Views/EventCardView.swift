@@ -9,6 +9,8 @@ import SwiftUI
 struct EventCard : View {
     let event: eventModelDTO
     let color : Color
+    let tab : Tab
+    @AppStorage("currentUserId") var currentUserId: String?
     @ObservedObject var userViewModel : UserViewModel = UserViewModel()
     @ObservedObject var eventViewModel = EventViewModel.shared
     @StateObject var eventService = EventService.shared
@@ -85,29 +87,66 @@ struct EventCard : View {
                         Spacer()
                         
                     }
-                }.onTapGesture {
-                    DetailsView(event:event)
                 }
-                
-                HStack{
-                    Spacer()
-                    if(eventViewModel.count == 1){
-                        Text("\(eventViewModel.count) person going")
-                            .accessibilityIdentifier(IdentifierConstants.CARD_PEOPLE_GOING)
-                            .foregroundColor(.white)
-                            .padding(.trailing)
-                            .font(.caption)
-                            .lineLimit(1)
-                    }else {
-                        Text("\(eventViewModel.count) people going")
-                            .accessibilityIdentifier(IdentifierConstants.CARD_PEOPLE_GOING)
-                            .foregroundColor(.white)
-                            .padding(.trailing)
-                            .font(.caption)
-                            .lineLimit(1)
+                if(tab != .invited){
+                    HStack{
+                        Spacer()
+                        if(eventViewModel.count == 1){
+                            Text("\(eventViewModel.count) person going")
+                                .accessibilityIdentifier(IdentifierConstants.CARD_PEOPLE_GOING)
+                                .foregroundColor(.white)
+                                .padding(.trailing)
+                                .font(.caption)
+                                .lineLimit(1)
+                        }else {
+                            Text("\(eventViewModel.count) people going")
+                                .accessibilityIdentifier(IdentifierConstants.CARD_PEOPLE_GOING)
+                                .foregroundColor(.white)
+                                .padding(.trailing)
+                                .font(.caption)
+                                .lineLimit(1)
+                        }
                     }
+                    .padding(.top, 90)
+                } else {
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            withAnimation(.easeInOut(duration: 0.2)){
+                                eventViewModel.createInvitationUpdateUrl(eventId: event.id ?? "", userId: currentUserId ?? "" , change: "declined")
+                                eventViewModel.updateInvitation()
+                                eventViewModel.performApiLogic(for: .invited)
+                            }
+                                    }) {
+                                        Text("Decline")
+                                            .foregroundColor(.white)
+                                            .padding()
+                                            .frame(width: 100, height: 25)
+                                            .background(Color.declineButtonColor)
+                                            .cornerRadius(15)
+                                            .shadow(radius: 10, x: 0, y: 5)
+                                            .accessibilityIdentifier(IdentifierConstants.DECLINE_BUTTON)
+                                    }
+                        Button(action: {
+                                        withAnimation(.easeInOut(duration: 0.2)){
+                                            eventViewModel.createInvitationUpdateUrl(eventId: event.id ?? "", userId: currentUserId ?? "" , change: "accepted")
+                                            eventViewModel.updateInvitation()
+                                            eventViewModel.performApiLogic(for: .invited)
+                                        }
+                                    }){
+                                        Text("Accept")
+                                            .foregroundColor(.filterBarSelectedTextColor)
+                                            .padding()
+                                            .frame(width: 100, height: 25)
+                                            .background(Color.acceptButtonColor)
+                                            .cornerRadius(15)
+                                            .shadow(radius: 10, x: 0, y: 5)
+                                            .accessibilityIdentifier(IdentifierConstants.ACCEPT_BUTTON)
+                                    }
+                                
+                    }
+                    .padding(.top, 100)
                 }
-                .padding(.top, 90)
             }
             .groupBoxAccessibilityIdentifier(IdentifierConstants.CARD)
             .background(color)
@@ -115,6 +154,9 @@ struct EventCard : View {
             .background(RoundedRectangle(cornerRadius: 20).fill(color))
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
+            .onTapGesture {
+                DetailsView(event:event)
+            }
             .onAppear() {
                 Task{
                     await eventViewModel.createUrlPeopleGoingCount(idEvent: event.id ?? "")
