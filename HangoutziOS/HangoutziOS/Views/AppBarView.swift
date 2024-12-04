@@ -18,13 +18,14 @@ struct AppBarView: View {
                     .fontWeight(.bold)
                     .padding(.leading, 25)
                     .padding(.bottom, 15)
-                    .accessibilityIdentifier("topBarText")
+                    .accessibilityIdentifier(IdentifierConstants.TOP_BAR_TEXT)
+                    .accessibilityLabel(IdentifierConstants.TOP_BAR_TEXT)
                 
                 Spacer()
             }
             .background(Color(Color.appBarColor))
             .frame(maxWidth:.infinity)
-            .accessibilityIdentifier("topBar")
+            .accessibilityIdentifier(IdentifierConstants.TOP_BAR)
         }
         .background(Color.appBarColor)
     }

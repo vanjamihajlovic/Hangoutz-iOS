@@ -13,31 +13,34 @@ struct MainTabView: View {
     @State var currentTab = 0
     
     var body: some View {
-        
         VStack(spacing: 0) {
             AppBarView()
             ZStack{
                 TabView(selection: $currentTab ) {
-                    EventScreen()
+                    EventView()
                         .tabItem {
                             Label("Events", systemImage: "calendar")
+                                .accessibilityIdentifier("eventIcon")
+                                .accessibilityLabel(IdentifierConstants.EVENT_ICON
+                                )
                         }
                         .tag(0)
-                        .accessibilityIdentifier("eventIcon")
                     
                     FriendsView()
                         .tabItem {
                             Label("Friends", systemImage: "person.2.fill")
+                                .accessibilityIdentifier("friendsIcon")
+                                .accessibilityLabel(IdentifierConstants.FRIENDS_ICON)
                         }
                         .tag(1)
-                        .accessibilityIdentifier("friendsIcon")
                     
                     ProfileView()
                         .tabItem {
                             Label("Profile", systemImage: "gearshape")
+                                .accessibilityIdentifier("settingsIcon")
+                                .accessibilityLabel(IdentifierConstants.SETTINGS_ICON)
                         }
                         .tag(2)
-                        .accessibilityIdentifier("settingsIcon")
                 }
                 .accessibilityIdentifier("bottomBar")
                 .onAppear(){

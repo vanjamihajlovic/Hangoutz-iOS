@@ -9,12 +9,33 @@ import Foundation
 import SwiftUICore
 import SwiftUI
 
+
+extension GroupBoxStyle where Self == ContainerGroupBoxStyle {
+    static var contain: Self { Self() }
+}
+
+extension View {
+    /// This method wraps the view inside a GroupBox
+    /// and adds accessibilityIdentifier to it
+    func groupBoxAccessibilityIdentifier(_ identifier: String) -> some View {
+        GroupBox {
+            self
+        }
+        .groupBoxStyle(.contain)
+        .accessibilityIdentifier(identifier)
+    }
+}
+
 extension Color {
    static let appBarColor = Color("AppBarColor")
    static let firstEventCardColor = Color("FirstEventCard")
    static let secondEventCardColor = Color("SecondEventCard")
    static let thirdEventCardColor = Color("ThirdEventCard")
    static let shadowColor = Color("ShadowColor")
+   static let dividerColor = Color("Divider")
+   static let filterBarPrimaryColor = Color("FilterBarPrimaryColor")
+   static let filterBarAccentColor = Color("FilterBarAccentColor")
+   static let filterBarSelectedTextColor = Color("FilterBarSelectedTextColor")
 }
 
 extension UIColor {
@@ -23,6 +44,7 @@ extension UIColor {
 
 extension Image {
     static let backgroundImage = Image("MainBackground")
+    static let blurredImage = Image("BlurredBackground")
     static let profilePicturePen = Image("penProfileScreen")
     static let checkmark = Image(systemName: "person.fill.checkmark")
     static let doorRightHandOpen = Image(systemName: "door.right.hand.open")

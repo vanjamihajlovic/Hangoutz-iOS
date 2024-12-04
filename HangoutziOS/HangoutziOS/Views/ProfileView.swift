@@ -25,15 +25,11 @@ struct ProfileView: View {
     var body: some View {
         
         ZStack {
+
             Image.backgroundImage
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
-            /*TODO: AFTER PR REMOVE VStack, because app bar will only be defined in maintabview*/
-            VStack{
-                AppBarView()
-                Spacer()
-            }
             
             ZStack {
                 
@@ -242,7 +238,6 @@ struct ProfileView: View {
                             .bold()
                             .onTapGesture {
                                 profileViewModel.isEditing.toggle()
-                                
                             }
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.PEN)
                     }
@@ -265,14 +260,18 @@ struct ProfileView: View {
             }.padding(.top, 550)
                 .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGOUT)
         }
+        .applyGlobalBackground()
         .onAppear{getProfilePicture()}
     }
     func getProfilePicture()  {
         Task{
             profileViewModel.createUrlToGetAvatarJson(id: profileViewModel.currentUserId ?? "No id")
             await userService.getUsers(from: profileViewModel.urlGetAvatarJson)
+            print("URL to get avatar json: \(profileViewModel.urlGetAvatarJson)")
             profileViewModel.createUrlToGetAvatarPhoto(imageName: userService.users.first?.avatar ?? SupabaseConfig.avatarDefault)
             profileViewModel.currentUserAvatar = profileViewModel.urlGetAvatarPhoto
+            print("URL to get from storage: \(profileViewModel.urlGetAvatarPhoto)")
+
         }
     }
     func uploadProfilePicture(imageToUpload: UIImage) {

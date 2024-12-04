@@ -20,9 +20,24 @@ struct GlobalBackgroundModifier: ViewModifier {
     }
 }
 
+struct GlobalBlurredBackgroundModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .background(
+                Image("BlurredBackground")
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea(.all)
+            )
+    }
+}
+
 extension View {
     func applyGlobalBackground() -> some View {
         self.modifier(GlobalBackgroundModifier())
+    }
+    func applyBlurredBackground() -> some View {
+        self.modifier(GlobalBlurredBackgroundModifier())
     }
 }
 
