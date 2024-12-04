@@ -7,12 +7,14 @@
 
 import Foundation
 
+
 struct userData: Codable {
     let name: String?
     let avatar: String?
     let email: String?
     let id : String?
     let passwordHash: String?
+
     
     enum CodingKeys: String, CodingKey {
         case name, avatar, id, email

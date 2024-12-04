@@ -3,8 +3,10 @@
 //  HangoutziOS
 //
 //  Created by Aleksa on 12/1/24.
+//  DetailsView.swift
+//  HangoutziOS
 //
-
+//
 import SwiftUI
 
 struct DetailsView: View {
@@ -87,13 +89,13 @@ struct DetailsView: View {
                     deleteInvite()
                     print("Button pressed! \n URL to delete invite: \(detailsViewModel.urlToDeleteInvite)\n")
                 }){
-                    NavigationLink(destination: EventScreen().navigationBarBackButtonHidden(true)){
+                    NavigationLink(destination: EventView().navigationBarBackButtonHidden(true)){
                         HStack {
                             Text(StringConstants.LEAVE_EVENT)
                             Image.doorRightHandOpen
                         }
                     }.onTapGesture {
-                        EventScreen()
+                        EventView()
                     }
                     .padding()
                     .frame(width:310)
@@ -195,4 +197,7 @@ struct Fields: View {
             )
         }
     }
+
 }
+
+
