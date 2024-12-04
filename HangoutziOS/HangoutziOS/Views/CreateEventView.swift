@@ -16,8 +16,6 @@ struct CreateEventView: View {
     @ObservedObject var eventViewModel = EventViewModel.shared
     @State private var selectedDate = Date()
     @State private var selectedTime = Date()
-    @State var isOwner : Bool = false
-    let event : eventModelDTO
     var body: some View {
         
         ZStack {
@@ -26,71 +24,48 @@ struct CreateEventView: View {
                 
                 ScrollView {
                     VStack{
-                        FieldsCreateEvent(textFieldType: $detailsViewModel.title, fieldsCategory: DetailsViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: event.title ?? "").padding(5).disabled(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? false : true)
+                        FieldsCreateEvent(textFieldType: $detailsViewModel.title, fieldsCategory: DetailsViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: "")
+                            .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.TITLE)
-                        FieldsCreateEvent(textFieldType: $detailsViewModel.description, fieldsCategory: DetailsViewModel.FieldsCategory.description.rawValue, textFieldPlaceholder: event.description ?? "").padding(5)
-                            .disabled(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? false : true)
+                        FieldsCreateEvent(textFieldType: $detailsViewModel.description, fieldsCategory: DetailsViewModel.FieldsCategory.description.rawValue, textFieldPlaceholder: "")
+                            .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.DESCRIPTION)
-                        FieldsCreateEvent(textFieldType: $detailsViewModel.city, fieldsCategory: DetailsViewModel.FieldsCategory.city.rawValue, textFieldPlaceholder: event.city ?? "").padding(5).disabled(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? false : true)
+                        FieldsCreateEvent(textFieldType: $detailsViewModel.city, fieldsCategory: DetailsViewModel.FieldsCategory.city.rawValue, textFieldPlaceholder: "")
+                            .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.CITY)
-                        FieldsCreateEvent(textFieldType: $detailsViewModel.street, fieldsCategory: DetailsViewModel.FieldsCategory.street.rawValue, textFieldPlaceholder: event.street ?? "")
-                            .padding(5).disabled(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? false : true)
+                        FieldsCreateEvent(textFieldType: $detailsViewModel.street, fieldsCategory: DetailsViewModel.FieldsCategory.street.rawValue, textFieldPlaceholder: "")
+                            .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.STREET)
-                        FieldsCreateEvent(textFieldType: $detailsViewModel.place, fieldsCategory: DetailsViewModel.FieldsCategory.place.rawValue, textFieldPlaceholder: event.place ?? "")
-                            .padding(5).disabled(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? false : true)
+                        FieldsCreateEvent(textFieldType: $detailsViewModel.place, fieldsCategory: DetailsViewModel.FieldsCategory.place.rawValue, textFieldPlaceholder: "")
+                            .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.PLACE)
                         
                         Spacer()
                         
-                        if(detailsViewModel.currentUserId == event.owner){
-                            DateAndTime
-                        }
+                        DateAndTime
                         
-                        Text(StringConstants.PARTICIPANTS)
-                            .font(.title2)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 30)
-                            .foregroundColor(.white)
-                            .padding(.top, 10)
+                        HStack {
+                            Text(StringConstants.PARTICIPANTS)
+                                .font(.title2)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading, 15)
+                                .foregroundColor(.white)
+                            Image("AddButtonImage")
+                                .resizable()
+                                .frame(width:40, height:40)
+                                .padding(.trailing, 20)
+                        }
                         
                         Divider()
                             .background(Color.dividerColor)
                             .frame(width:350)
-                        
-                        ForEach(userService.acceptedEventUsers.indices, id: \.self){ index in
-                            HStack{
-                                AsyncImage(url: URL(string:SupabaseConfig.baseURLStorage + (userService.acceptedEventUsers[index].users.avatar ?? SupabaseConfig.avatarDefault)), content: { Image in Image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .clipShape(Circle())
-                                        .overlay(
-                                            Circle()
-                                                .stroke(Color.dividerColor, lineWidth: 2)
-                                        )
-                                        .frame(width: 40, height: 40)
-                                }, placeholder: {
-                                    ProgressView()
-                                }
-                                )
-                                Text(userService.acceptedEventUsers[index].users.name).font(.title3).foregroundColor(.white).padding(.leading, 10)
-                            }.frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.leading, 35)
-                                .padding(.top, 5)
-                                .padding(.bottom, 5)
-                                .accessibilityIdentifier(AccessibilityIdentifierConstants.PARTICIPANTS)
-                            Divider()
-                                .background(Color.dividerColor)
-                                .frame(width:350)
-                        }
-                    }
+                    }.padding(.top, 20)
                 }
                 Button(action: {
-                    deleteInvite()
-                    print("Button pressed! \n URL to delete invite: \(detailsViewModel.urlToDeleteInvite)\n")
                 }){
                     NavigationLink(destination: EventView().navigationBarBackButtonHidden(true)){
                         HStack {
-                            Text(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? StringConstants.UPDATE : StringConstants.LEAVE_EVENT)
+                            Text(StringConstants.CREATE)
                             Image.doorRightHandOpen
                         }
                     }.onTapGesture {
@@ -98,7 +73,7 @@ struct CreateEventView: View {
                         EventView()
                     }
                     .onDisappear{
-                        eventViewModel.performApiLogic(for:.created)
+                        eventViewModel.performApiLogic(for:.going)
                         EventView()}
                     .padding()
                     .frame(width:310)
@@ -109,15 +84,14 @@ struct CreateEventView: View {
                 .padding(.bottom, 20)
                 .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGOUT)
                 
-            }.onAppear{getAcceptedUsers()}
-                .applyBlurredBackground()
+            }
+            .applyBlurredBackground()
         }
         
     }
     var DateAndTime : some View{
         
         HStack(spacing: 30) {
-            //Date
             HStack {
                 DatePicker("", selection: $selectedDate, displayedComponents: .date)
                     .labelsHidden()
@@ -155,24 +129,12 @@ struct CreateEventView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityIdentifier(AccessibilityIdentifierConstants.TIME)
         }.padding()
-            .padding(.leading, -5)
-        
+            .padding(.leading, -3)
     }
-    
-    func getAcceptedUsers() {
-        Task {
-            detailsViewModel.createUrlToGetAcceptedUsers(eventId: event.id)
-            print("URL to get acceptedUsers: \(detailsViewModel.urlToGetAcceptedUsers)\n")
-            await userService.getAcceptedUsers(from: detailsViewModel.urlToGetAcceptedUsers)
-            print("Accepted users data: \(userService.acceptedEventUsers)")
-            print("User name is : \(userService.acceptedEventUsers.first?.users.name)\n")
-            print("User avatar is : \(userService.acceptedEventUsers.first?.users.avatar)\n")
-        }
-    }
-    func deleteInvite() {
-        detailsViewModel.createUrlToDeleteInvite(eventId: event.id)
-        userService.deleteInvite(url: detailsViewModel.urlToDeleteInvite)
-    }
+}
+
+#Preview {
+    CreateEventView()
 }
 
 struct FieldsCreateEvent: View {
@@ -203,7 +165,6 @@ struct FieldsCreateEvent: View {
             )
         }
     }
-    
 }
 
 

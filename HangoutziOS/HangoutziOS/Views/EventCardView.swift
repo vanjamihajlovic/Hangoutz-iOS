@@ -18,7 +18,7 @@ struct EventCard : View {
         let eventPlaceString = eventViewModel.createEventPlaceString(event: event)
         
             ZStack {
-                NavigationLink(destination: CreateEventView(event: event)) {
+                NavigationLink(destination: DetailsView(event:event)) {
                     HStack(){
                         
                         if let avatarImage = event.users?.avatar {
@@ -86,7 +86,7 @@ struct EventCard : View {
                         
                     }
                 }.onTapGesture {
-                    CreateEventView(event:event)
+                    DetailsView(event:event)
                 }
                 
                 HStack{
