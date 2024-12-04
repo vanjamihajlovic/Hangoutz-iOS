@@ -34,7 +34,8 @@ struct EventView: View {
                             Text(tab.rawValue)
                                 .accessibilityIdentifier(tab.rawValue.lowercased())
                                 .frame(maxWidth: .infinity)
-                                .font(.headline)
+                                .font(.footnote)
+                                .bold()
                                 .foregroundColor(selectedTab == tab ? Color.filterBarSelectedTextColor : Color.filterBarAccentColor)
                                 .padding(.horizontal, 20)
                                 .onTapGesture {

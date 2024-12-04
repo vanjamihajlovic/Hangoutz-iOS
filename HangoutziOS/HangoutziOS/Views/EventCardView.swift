@@ -35,10 +35,12 @@ struct EventCard : View {
                                     .padding(.trailing, UIConstants.AVATAR_PADDING_TRAILING)
                             }, placeholder: {
                                 ProgressView()
+                                    .frame(width: UIConstants.AVATAR_FRAME_WIDTH, height: UIConstants.AVATAR_FRAME_HEIGHT)
+                                    .padding(.bottom,UIConstants.AVATAR_PADDING_BOTTOM)
+                                    .padding(.trailing, UIConstants.AVATAR_PADDING_TRAILING)
                             }
                             )
                             .accessibilityIdentifier(IdentifierConstants.CARD_IMAGE)
-                            .accessibilityLabel(IdentifierConstants.CARD_IMAGE)
                         } else {
                             Image("avatar_default")
                                 .resizable()
@@ -54,8 +56,7 @@ struct EventCard : View {
                         }
                         VStack(alignment: .leading, spacing: 5) {
                             Text(event.title ?? "No Title")
-                                .accessibilityIdentifier(IdentifierConstants.CARD_IMAGE)
-                                .accessibilityLabel(IdentifierConstants.CARD_IMAGE)
+                                .accessibilityIdentifier(IdentifierConstants.CARD_TITLE)
                                 .foregroundColor(.white)
                                 .bold()
                                 .font(.title2)
@@ -64,7 +65,6 @@ struct EventCard : View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             Text(eventPlaceString)
                                 .accessibilityIdentifier(IdentifierConstants.CARD_PLACE)
-                                .accessibilityLabel(IdentifierConstants.CARD_PLACE)
                                 .bold()
                                 .font(.title3)
                                 .foregroundColor(.white)
@@ -73,7 +73,6 @@ struct EventCard : View {
                                 .padding(.trailing)
                             Text(dateTimeString)
                                 .accessibilityIdentifier(IdentifierConstants.CARD_TIME)
-                                .accessibilityLabel(IdentifierConstants.CARD_TIME)
                                 .font(.subheadline)
                                 .foregroundColor(.white)
                                 .lineLimit(1)
@@ -95,7 +94,6 @@ struct EventCard : View {
                     if(eventViewModel.count == 1){
                         Text("\(eventViewModel.count) person going")
                             .accessibilityIdentifier(IdentifierConstants.CARD_PEOPLE_GOING)
-                            .accessibilityLabel(IdentifierConstants.CARD_PEOPLE_GOING)
                             .foregroundColor(.white)
                             .padding(.trailing)
                             .font(.caption)
@@ -103,7 +101,6 @@ struct EventCard : View {
                     }else {
                         Text("\(eventViewModel.count) people going")
                             .accessibilityIdentifier(IdentifierConstants.CARD_PEOPLE_GOING)
-                            .accessibilityLabel(IdentifierConstants.CARD_PEOPLE_GOING)
                             .foregroundColor(.white)
                             .padding(.trailing)
                             .font(.caption)
