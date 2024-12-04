@@ -10,5 +10,5 @@ import Foundation
 enum Tab: String, CaseIterable {
     case going = "GOING"
     case invited = "INVITED"
-    case mine = "MINE"
+    case created = "CREATED"
 }

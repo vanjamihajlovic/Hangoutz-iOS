@@ -34,7 +34,7 @@ class EventViewModel : ObservableObject {
                 await createUrlEventFilteredInvited()
                 await getEvents()
             }
-        case .mine:
+        case .created:
             Task{
                 await createUrlEventMine()
                 await getEvents()
