@@ -99,7 +99,7 @@ struct FriendsView: View {
                                 .font(.headline)
                                 .foregroundColor(Color("FriendFontColor"))
                         }
-                        .accessibilityIdentifier("friendListItem")
+                        .groupBoxAccessibilityIdentifier("friendListItem")
                         .listRowBackground(
                             Rectangle()
                                 .fill(Color("FriendsColor"))
@@ -124,7 +124,7 @@ struct FriendsView: View {
                             .frame(width: 70, height: 70)
                             .padding()
                     }
-                    .accessibilityIdentifier("dddFriendButton")
+                    .accessibilityIdentifier("AddFriendButton")
                 }
             }
         }
