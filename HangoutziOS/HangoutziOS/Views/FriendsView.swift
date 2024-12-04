@@ -50,67 +50,75 @@ struct FriendsView: View {
                 .background(Color("SearchBarColor").cornerRadius(20))
                 .frame(width: 340, height:60, alignment: .center)
                 .padding(.top, 10)
-
-                List {
-                    ForEach(sortedFriends) { friend in
-                        HStack {
-                            if let avatarImage = friend.avatar {
-                                AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
-                                    content:{ Image in
+                
+                if sortedFriends.isEmpty{
+                    Spacer()
+                    Text("No friends found.")
+                        .foregroundColor(Color.white)
+                    Spacer()
+                }
+                else {
+                    List {
+                        ForEach(sortedFriends) { friend in
+                            HStack {
+                                if let avatarImage = friend.avatar {
+                                    AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
+                                               content:{ Image in
                                         Image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .clipShape(Circle())
-                                        .overlay(
-                                            Circle()
-                                            .stroke(Color("FriendAddButton"), lineWidth: 4)
-                                        )
-                                        .frame(width: 50, height: 50)
-                                        .clipShape(Circle())
-                                }, placeholder: {
+                                            .resizable()
+                                            .scaledToFill()
+                                            .clipShape(Circle())
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color("FriendAddButton"), lineWidth: 4)
+                                            )
+                                            .frame(width: 50, height: 50)
+                                            .clipShape(Circle())
+                                    }, placeholder: {
+                                        Image("DefaultImage")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .clipShape(Circle())
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                            )
+                                            .frame(width: 50, height: 50)
+                                            .accessibilityIdentifier("friendImagePlaceholder")
+                                    }
+                                    )
+                                    .accessibilityIdentifier("friendImage")
+                                } else {
                                     Image("DefaultImage")
                                         .resizable()
                                         .scaledToFit()
                                         .clipShape(Circle())
                                         .overlay(
                                             Circle()
-                                            .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                                .stroke(Color("FriendAddButton"), lineWidth: 2)
                                         )
                                         .frame(width: 50, height: 50)
-                                        .accessibilityIdentifier("friendImagePlaceholder")
+                                        .accessibilityIdentifier("defaultFriendImage")
+                                    
                                 }
-                                )
-                                .accessibilityIdentifier("friendImage")
-                            } else {
-                                Image("DefaultImage")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .clipShape(Circle())
-                                    .overlay(
-                                        Circle()
-                                        .stroke(Color("FriendAddButton"), lineWidth: 2)
-                                    )
-                                    .frame(width: 50, height: 50)
-                                    .accessibilityIdentifier("defaultFriendImage")
-
+                                Text(friend.name)
+                                    .accessibilityIdentifier("friendName")
+                                    .font(.headline)
+                                    .foregroundColor(Color("FriendFontColor"))
                             }
-                            Text(friend.name)
-                                .accessibilityIdentifier("friendName")
-                                .font(.headline)
-                                .foregroundColor(Color("FriendFontColor"))
+                            .groupBoxAccessibilityIdentifier("friendListItem")
+                            .listRowBackground(
+                                Rectangle()
+                                    .fill(Color("FriendsColor"))
+                                    .frame(width: 340, height: 65)
+                                    .cornerRadius(25)
+                            )
+                            .padding(.vertical, 8)
                         }
-                        .groupBoxAccessibilityIdentifier("friendListItem")
-                        .listRowBackground(
-                            Rectangle()
-                                .fill(Color("FriendsColor"))
-                                .frame(width: 340, height: 65)
-                                .cornerRadius(25)
-                        )
-                        .padding(.vertical, 8)
+                        .listRowSeparator(.hidden)
                     }
-                    .listRowSeparator(.hidden)
+                    .scrollContentBackground(.hidden)
                 }
-                .scrollContentBackground(.hidden)
             }
             
             VStack {
