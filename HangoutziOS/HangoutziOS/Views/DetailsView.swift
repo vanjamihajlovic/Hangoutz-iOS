@@ -94,11 +94,11 @@ struct DetailsView: View {
                             Image.doorRightHandOpen
                         }
                     }.onTapGesture {
-                        eventViewModel.performApiLogic(for:.mine)
+                        eventViewModel.performApiLogic(for:.created)
                         EventView()
                     }
                     .onDisappear{
-                        eventViewModel.performApiLogic(for:.mine)
+                        eventViewModel.performApiLogic(for:.created)
                         EventView()}
                     .padding()
                     .frame(width:310)
