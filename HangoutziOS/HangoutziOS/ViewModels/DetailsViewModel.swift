@@ -3,7 +3,7 @@
 //  HangoutziOS
 //
 //  Created by Aleksa on 12/1/24.
-//rest/v1/invites?select=users(name,avatar)&event_id=eq.6592910b-a891-42f6-8f35-c833589197da&event_status=eq.accepted
+//
 
 import Foundation
 import SwiftUI
@@ -19,7 +19,7 @@ class DetailsViewModel: ObservableObject  {
     @Published var urlToGetAcceptedUsers : String = ""
     @Published var urlGetAvatarPhoto : String = ""
     @Published var urlToDeleteInvite : String = ""
-
+    
     enum FieldsCategory: String {
         case title = "Title*"
         case description = "Description"

@@ -165,6 +165,7 @@ class UserService : ObservableObject {
         }.resume()
     }
     func deleteInvite(url: String) {
+        
         guard let url = URL(string: url) else {
             print("Invalid URL")
             return
@@ -186,9 +187,9 @@ class UserService : ObservableObject {
                 return
             }
             if (200...299).contains(httpResponse.statusCode) {
-                print("Name successfully updated!")
+                print("Invite successfully deleted!")
             } else {
-                print("Failed to update name. Status code: \(httpResponse.statusCode)")
+                print("Failed to delete invite. Status code: \(httpResponse.statusCode)")
             }
         }.resume()
     }
