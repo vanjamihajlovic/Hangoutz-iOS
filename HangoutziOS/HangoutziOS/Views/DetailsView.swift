@@ -91,7 +91,7 @@ struct DetailsView: View {
                     NavigationLink(destination: EventView().navigationBarBackButtonHidden(true)){
                         HStack {
                             Text(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? StringConstants.UPDATE : StringConstants.LEAVE_EVENT)
-                            Image.doorRightHandOpen
+                            if(!detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "")){Image.doorRightHandOpen}
                         }
                     }.onTapGesture {
                         eventViewModel.performApiLogic(for:.created)
@@ -155,7 +155,7 @@ struct DetailsView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityIdentifier(AccessibilityIdentifierConstants.TIME)
         }.padding()
-            .padding(.leading, -5)
+            .padding(.leading, -3)
         
     }
     
