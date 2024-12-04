@@ -13,6 +13,7 @@ struct DetailsView: View {
     
     @ObservedObject var detailsViewModel = DetailsViewModel()
     @ObservedObject var userService = UserService()
+    @ObservedObject var eventViewModel = EventViewModel.shared
     @State private var selectedDate = Date()
     @State private var selectedTime = Date()
     @State var isOwner : Bool = false
@@ -20,11 +21,9 @@ struct DetailsView: View {
     var body: some View {
         
         ZStack {
-            VStack{
-                AppBarView()
-                Spacer()
-            }
             VStack {
+                AppBarView()
+                
                 ScrollView {
                     VStack{
                         Fields(textFieldType: $detailsViewModel.title, fieldsCategory: DetailsViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: event.title ?? "").padding(5).disabled(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? false : true)
@@ -91,12 +90,16 @@ struct DetailsView: View {
                 }){
                     NavigationLink(destination: EventView().navigationBarBackButtonHidden(true)){
                         HStack {
-                            Text(StringConstants.LEAVE_EVENT)
-                            Image.doorRightHandOpen
+                            Text(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? StringConstants.UPDATE : StringConstants.LEAVE_EVENT)
+                            if(!detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "")){Image.doorRightHandOpen}
                         }
                     }.onTapGesture {
+                        eventViewModel.performApiLogic(for:.created)
                         EventView()
                     }
+                    .onDisappear{
+                        eventViewModel.performApiLogic(for:.created)
+                        EventView()}
                     .padding()
                     .frame(width:310)
                     .background(Color.loginButton)
@@ -109,15 +112,17 @@ struct DetailsView: View {
             }.onAppear{getAcceptedUsers()}
                 .applyBlurredBackground()
         }
+        
     }
     var DateAndTime : some View{
         
-        HStack(spacing: 16) {
+        HStack(spacing: 30) {
             //Date
             HStack {
                 DatePicker("", selection: $selectedDate, displayedComponents: .date)
                     .labelsHidden()
                     .tint(.white)
+                    .foregroundColor(.white)
                 Image(systemName: ImageConstants.CALENDAR)
                     .foregroundColor(.white)
             }
@@ -136,6 +141,7 @@ struct DetailsView: View {
                     .labelsHidden()
                     .environment(\.locale, Locale(identifier: "en_GB"))
                     .tint(.white)
+                    .foregroundColor(.white)
                 Image(systemName: ImageConstants.CLOCK)
                     .foregroundColor(.white)
             }
@@ -149,7 +155,7 @@ struct DetailsView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityIdentifier(AccessibilityIdentifierConstants.TIME)
         }.padding()
-            .padding(.leading, 10)
+            .padding(.leading, -3)
         
     }
     
@@ -197,7 +203,7 @@ struct Fields: View {
             )
         }
     }
-
+    
 }
 
 

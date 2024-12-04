@@ -77,9 +77,11 @@ class StringConstants {
     static let LOGIN : String = "Login"
     static let LOGOUT : String = "Logout"
     static let CREATE_ACCOUNT : String = "Create account"
+    static let CREATE : String = "Create"
     static let LEAVE_EVENT : String = "Leave event"
+    static let UPDATE : String = "Update"
     static let PARTICIPANTS : String = "Participants"
-    static let CAMERA : String = "Camera"
+    static let CAMERA : String = "camera"
     static let GALLERY : String = "Gallery"
     static let PHOTO : String = "photo"
 }
