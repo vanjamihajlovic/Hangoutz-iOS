@@ -18,6 +18,7 @@ struct DetailsView: View {
     @State private var selectedTime = Date()
     @State var isOwner : Bool = false
     let event : eventModelDTO
+    let selectedTab : Tab
     var body: some View {
         
         ZStack {
@@ -94,12 +95,13 @@ struct DetailsView: View {
                             if(!detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "")){Image.doorRightHandOpen}
                         }
                     }.onTapGesture {
-                        eventViewModel.performApiLogic(for:.created)
-                        EventView()
+                        eventViewModel.performApiLogic(for: selectedTab)
+                        MainTabView()
                     }
                     .onDisappear{
-                        eventViewModel.performApiLogic(for:.created)
-                        EventView()}
+                        eventViewModel.performApiLogic(for: selectedTab)
+                        MainTabView()
+                    }
                     .padding()
                     .frame(width:310)
                     .background(Color.loginButton)
