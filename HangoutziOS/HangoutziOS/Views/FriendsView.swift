@@ -11,6 +11,9 @@ struct FriendsView: View {
     @AppStorage("currentUserId") var currentUserId: String?
     @ObservedObject var friendViewModel = FriendsViewModel()
     @State private var searchText = ""
+    @State private var searchUser = ""
+    @State var showSheet: Bool = false
+    
     
     var filteredFriends: [Friend] {
         if searchText.count >= 3 {
@@ -34,7 +37,7 @@ struct FriendsView: View {
             VStack(spacing: 0) {
                 HStack {
                     TextField("", text: $searchText,prompt:
-                        Text("Search...")
+                                Text("Search...")
                         .foregroundColor(Color.gray)
                     )
                     if !searchText.isEmpty {
@@ -50,20 +53,20 @@ struct FriendsView: View {
                 .background(Color("SearchBarColor").cornerRadius(20))
                 .frame(width: 340, height:60, alignment: .center)
                 .padding(.top, 10)
-
+                
                 List {
                     ForEach(sortedFriends) { friend in
                         HStack {
                             if let avatarImage = friend.avatar {
                                 AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
-                                    content:{ Image in
-                                        Image
+                                           content:{ Image in
+                                    Image
                                         .resizable()
                                         .scaledToFill()
                                         .clipShape(Circle())
                                         .overlay(
                                             Circle()
-                                            .stroke(Color("FriendAddButton"), lineWidth: 4)
+                                                .stroke(Color("FriendAddButton"), lineWidth: 4)
                                         )
                                         .frame(width: 50, height: 50)
                                         .clipShape(Circle())
@@ -74,7 +77,7 @@ struct FriendsView: View {
                                         .clipShape(Circle())
                                         .overlay(
                                             Circle()
-                                            .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                                .stroke(Color("FriendAddButton"), lineWidth: 2)
                                         )
                                         .frame(width: 50, height: 50)
                                         .accessibilityIdentifier("friendImagePlaceholder")
@@ -88,11 +91,11 @@ struct FriendsView: View {
                                     .clipShape(Circle())
                                     .overlay(
                                         Circle()
-                                        .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                            .stroke(Color("FriendAddButton"), lineWidth: 2)
                                     )
                                     .frame(width: 50, height: 50)
                                     .accessibilityIdentifier("defaultFriendImage")
-
+                                
                             }
                             Text(friend.name)
                                 .accessibilityIdentifier("friendName")
@@ -117,7 +120,10 @@ struct FriendsView: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Button(action: {}) {
+                    Button(action: {
+                        showSheet.toggle()
+                    })
+                    {
                         Image("AddButtonImage")
                             .resizable()
                             .scaledToFit()
@@ -125,6 +131,98 @@ struct FriendsView: View {
                             .padding()
                     }
                     .accessibilityIdentifier("AddFriendButton")
+                    .sheet(isPresented: $showSheet){
+                        ZStack {
+                            Color("AddFriendsPopupColor")
+                                .edgesIgnoringSafeArea(.all)
+                            VStack {
+                                HStack {
+                                    TextField("", text: $searchUser,prompt:
+                                                Text("Search...")
+                                        .foregroundColor(Color.black)
+                                    )
+                                    .padding()
+                                    
+                                    if !searchUser.isEmpty {
+                                        Button(action: {
+                                            searchUser = ""
+                                        }){
+                                            Image(systemName: "x.circle")
+                                                .foregroundColor(Color.gray)
+                                        }
+                                    }
+                                }
+                                .padding(12)
+                                .cornerRadius(20)
+                                .frame(width: 320, height:60, alignment: .center)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .stroke(Color.black, lineWidth: 1)
+                                        .frame(height: 40)
+                                )
+                                .padding(.top, 15)
+                                
+                                //OVDE IDE LISTA
+//                                ScrollView{
+//                                    
+//                                    ForEach(friendViewModel.testUsers){ Index in
+//                                        HStack{
+//                                            if let avatarImage = friendViewModel.testUsers.avatar {
+//                                                AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
+//                                                           content:{ Image in
+//                                                    Image
+//                                                        .resizable()
+//                                                        .scaledToFill()
+//                                                        .clipShape(Circle())
+//                                                        .overlay(
+//                                                            Circle()
+//                                                                .stroke(Color("FriendAddButton"), lineWidth: 4)
+//                                                        )
+//                                                        .frame(width: 50, height: 50)
+//                                                        .clipShape(Circle())
+//                                                }, placeholder: {
+//                                                    Image("DefaultImage")
+//                                                        .resizable()
+//                                                        .scaledToFit()
+//                                                        .clipShape(Circle())
+//                                                        .overlay(
+//                                                            Circle()
+//                                                                .stroke(Color("FriendAddButton"), lineWidth: 2)
+//                                                        )
+//                                                        .frame(width: 50, height: 50)
+//                                                        .accessibilityIdentifier("friendImagePlaceholder")
+//                                                }
+//                                                )
+//                                                .accessibilityIdentifier("friendImage")
+//                                            }
+//                                        } else {
+//                                            Image("DefaultImage")
+//                                                .resizable()
+//                                                .scaledToFit()
+//                                                .clipShape(Circle())
+//                                                .overlay(
+//                                                    Circle()
+//                                                        .stroke(Color("FriendAddButton"), lineWidth: 2)
+//                                                )
+//                                                .frame(width: 50, height: 50)
+//                                                .accessibilityIdentifier("defaultFriendImage")
+//                                            
+//                                        }
+//                                    }
+//                                    
+//                                }
+                                
+                                
+                                
+                                
+                                
+                                Spacer()
+                            }
+                            
+                        }
+                        .presentationDetents([.fraction(0.7)])
+                    }
+                    
                 }
             }
         }

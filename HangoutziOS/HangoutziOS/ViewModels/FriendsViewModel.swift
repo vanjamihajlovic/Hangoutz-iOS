@@ -14,17 +14,14 @@ class FriendsViewModel : ObservableObject {
     @AppStorage("currentUserId") var currentUserId: String?
     let friendsService = FriendsService()
 
-    let testUsers = [
-        Friend(name: "Milan Jovanović", avatar: "https://example.com/avatar1.png"),
-        Friend(name: "Ana Petrović", avatar: "https://example.com/avatar2.png"),
-        Friend(name: "Marko Marković", avatar: "https://example.com/avatar3.png"),
-        Friend(name: "Ivana Savić", avatar: "https://example.com/avatar4.png"),
-        Friend(name: "Stefan Milošević", avatar: "https://example.com/avatar5.png"),
-        Friend(name: "Jelena Nikolić", avatar: "https://example.com/avatar6.png"),
-        Friend(name: "Nikola Stojanović", avatar: "https://example.com/avatar7.png"),
-        Friend(name: "Tamara Ilić", avatar: "https://example.com/avatar8.png")
+    let testUsers: [Friend] = [
+        Friend(name: "Ana Nikolić", avatar: "person.circle"),
+        Friend(name: "Marko Jovanović", avatar: "person.circle.fill"),
+        Friend(name: "Jelena Petrović", avatar: "star.circle"),
+        Friend(name: "Ivan Ilić", avatar: "heart.circle"),
+        Friend(name: "Sara Perić", avatar: "bolt.circle")
     ]
-   
+    
     func getFriends() async {
         guard let userId = currentUserId else {
             print("Current user ID is nil.")
