@@ -22,7 +22,6 @@ struct FriendsView: View {
             return friendViewModel.friends
         }
     }
-    
     var sortedFriends: [Friend] {
         filteredFriends.sorted {
             let firstWord1 = $0.name.components(separatedBy: " ").first ?? $0.name
