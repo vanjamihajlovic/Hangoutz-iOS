@@ -36,6 +36,8 @@ extension Color {
    static let filterBarPrimaryColor = Color("FilterBarPrimaryColor")
    static let filterBarAccentColor = Color("FilterBarAccentColor")
    static let filterBarSelectedTextColor = Color("FilterBarSelectedTextColor")
+   static let acceptButtonColor = Color("AcceptButtonColor")
+   static let declineButtonColor = Color("DeclineButtonColor")
 }
 
 extension UIColor {
@@ -49,6 +51,8 @@ extension Image {
     static let checkmark = Image(systemName: "person.fill.checkmark")
     static let doorRightHandOpen = Image(systemName: "door.right.hand.open")
     static let profilelines = Image("profilelines")
+    static let plusImage = Image("EventViewPlusSign")
+    static let avatarImage = Image("avatar_default")
 }
 
 extension Date {
