@@ -45,6 +45,7 @@ class IdentifierConstants {
     static let DECLINE_BUTTON = "declineButton"
     static let ACCEPT_BUTTON = "acceptButton"
     static let NEW_EVENT_BUTTON = "newEventButton"
+    static let NO_EVENTS_TEXT = "noEventsText"
 }
 
 class UIConstants {
@@ -81,9 +82,11 @@ class StringConstants {
     static let LOGIN : String = "Login"
     static let LOGOUT : String = "Logout"
     static let CREATE_ACCOUNT : String = "Create account"
+    static let CREATE : String = "Create"
     static let LEAVE_EVENT : String = "Leave event"
+    static let UPDATE : String = "Update"
     static let PARTICIPANTS : String = "Participants"
-    static let CAMERA : String = "Camera"
+    static let CAMERA : String = "camera"
     static let GALLERY : String = "Gallery"
     static let PHOTO : String = "photo"
     static let NO_EVENTS : String = "No events available"
@@ -92,6 +95,9 @@ class StringConstants {
     static let DECLINE : String = "Decline"
     static let ACCEPTED : String = "accepted"
     static let DECLINED : String = "declined"
+    static let DELETE: String = "Delete"
+    static let ADD_BUTTON: String = "AddButtonImage"
+
 }
 
 class SupabaseConstants {
@@ -137,4 +143,5 @@ class ImageConstants {
     
     static let CALENDAR : String = "calendar"
     static let CLOCK : String = "clock"
+    
 }

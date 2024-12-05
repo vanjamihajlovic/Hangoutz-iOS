@@ -25,11 +25,6 @@ struct ProfileView: View {
     var body: some View {
         
         ZStack {
-
-            Image.backgroundImage
-                .resizable()
-                .scaledToFill()
-                .edgesIgnoringSafeArea(.all)
             
             ZStack {
                 

@@ -81,21 +81,22 @@ struct EventView: View {
                             Text(StringConstants.NO_EVENTS)
                                 .foregroundColor(.white)
                                 .font(.headline)
+                                .accessibilityIdentifier(IdentifierConstants.NO_EVENTS_TEXT)
                         } else {
                             ScrollView{
                                 VStack{
-                                    ForEach(eventViewModel.events.indices, id: \.self){ index in
+                                    ForEach(eventViewModel.events.indices, id:  \.self){ index in
                                         let event = eventViewModel.events[index]
                                         let color = ColorConstants.eventCardColors[index % ColorConstants.eventCardColors.count]
                                         
-                                        
-                                        EventCard(event:event,color:color, tab:selectedTab)
+                                        EventCard(event:event,color:color, selTab:selectedTab)
                                     }
                                 }
                             }
                             .frame(maxWidth: .infinity, maxHeight: 700)
                             .padding(.top, 120)
                         }
+                        
             
                 VStack {
                     Spacer()
@@ -110,7 +111,6 @@ struct EventView: View {
                                 .padding(.trailing, UIConstants.PLUS_SIGN_PADDING_TRAILING)
                                 .padding(.bottom, UIConstants.AVATAR_PADDING_BOTTOM)
                                 .frame(width: UIConstants.PLUS_SIGN_FRAME_WIDTH, height: UIConstants.PLUS_SIGN_FRAME_HEIGHT)
-                                
                                 .accessibilityIdentifier(IdentifierConstants.NEW_EVENT_BUTTON)
                         }
                         }.onTapGesture {
