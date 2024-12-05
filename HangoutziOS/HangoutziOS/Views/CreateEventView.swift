@@ -1,4 +1,4 @@
-//
+
 //  SwiftUIView.swift
 //  HangoutziOS
 //
@@ -152,10 +152,6 @@ struct CreateEventView: View {
     }
 }
 
-#Preview {
-    CreateEventView()
-}
-
 struct FieldsCreateEvent: View {
     
     @Binding var textFieldType : String
@@ -185,5 +181,3 @@ struct FieldsCreateEvent: View {
         }
     }
 }
-
-

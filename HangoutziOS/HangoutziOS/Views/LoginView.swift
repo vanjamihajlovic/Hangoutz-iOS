@@ -27,6 +27,7 @@ struct LoginView: View {
                     LoginSection(loginViewModel:loginViewModel, isVisiblePassword: false)
                     CreateAccount(loginViewModel: loginViewModel, userService: userService)
                 }.applyGlobalBackground()
+                    .ignoresSafeArea(.keyboard, edges: .all)
             }
         }
     }
