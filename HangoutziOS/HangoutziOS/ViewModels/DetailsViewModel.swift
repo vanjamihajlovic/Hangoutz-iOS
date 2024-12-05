@@ -40,6 +40,6 @@ class DetailsViewModel: ObservableObject  {
         else {return}
     }
     func createUrlToDeleteInvite(eventId : String?) {
-        urlToDeleteInvite = SupabaseConfig.baseURL + "rest/v1/invites?user_id=eq.\(currentUserId)&event_id=eq.\(eventId)"
+        urlToDeleteInvite = SupabaseConfig.baseURL + "rest/v1/invites?user_id=eq.\(currentUserId ?? "")&event_id=eq.\(eventId ?? "")"
     }
 }

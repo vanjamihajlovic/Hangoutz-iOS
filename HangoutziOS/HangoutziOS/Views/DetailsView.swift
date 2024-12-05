@@ -17,9 +17,9 @@ struct DetailsView: View {
     @State private var selectedDate = Date()
     @State private var selectedTime = Date()
     @State var isOwner : Bool = false
+    @Environment(\.presentationMode) var presentationMode
     let event : eventModelDTO
     let selectedTab : Tab
-    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         
@@ -96,6 +96,7 @@ struct DetailsView: View {
                         }
                     }
                 }
+                
                 NavigationLink(destination: MainTabView().navigationBarBackButtonHidden(true)){
                     
                     Button(action: {
@@ -107,7 +108,6 @@ struct DetailsView: View {
                             Text(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? StringConstants.UPDATE : StringConstants.LEAVE_EVENT)
                             if(!detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "")){Image.doorRightHandOpen}
                         }
-                        
                         .onDisappear{
                             eventViewModel.performApiLogic(for: selectedTab)
                             MainTabView()
@@ -169,7 +169,6 @@ struct DetailsView: View {
             .padding(.leading, -3)
         
     }
-    
     func getAcceptedUsers() {
         Task {
             detailsViewModel.createUrlToGetAcceptedUsers(eventId: event.id)
