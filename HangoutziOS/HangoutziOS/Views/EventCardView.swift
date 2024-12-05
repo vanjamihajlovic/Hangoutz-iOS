@@ -2,7 +2,7 @@
 //  EventCard.swift
 //  HangoutziOS
 //
-//  Created by User03 on 12/2/24.
+//  Created by strahinjamil on 12/2/24.
 //
 import SwiftUI
 
@@ -44,7 +44,7 @@ struct EventCard : View {
                             )
                             .accessibilityIdentifier(IdentifierConstants.CARD_IMAGE)
                         } else {
-                            Image("avatar_default")
+                            Image.avatarImage
                                 .resizable()
                                 .scaledToFill()
                                 .clipShape(Circle())
@@ -79,7 +79,6 @@ struct EventCard : View {
                                 .foregroundColor(.white)
                                 .lineLimit(1)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            
                         }
                         .padding(.bottom, 20)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -113,12 +112,16 @@ struct EventCard : View {
                         Spacer()
                         Button(action: {
                             withAnimation(.easeInOut(duration: 0.2)){
-                                eventViewModel.createInvitationUpdateUrl(eventId: event.id ?? "", userId: currentUserId ?? "" , change: "declined")
+                                eventViewModel.createInvitationUpdateUrl(eventId: event.id ?? "", userId: currentUserId ?? "" , change: StringConstants.DECLINED)
                                 eventViewModel.updateInvitation()
                                 eventViewModel.performApiLogic(for: .invited)
+                                Task{
+                                   await eventViewModel.createUrlInvitedEventsCount(idUser: currentUserId ?? "")
+                                   await eventViewModel.getBadgeCount()
+                                }
                             }
                                     }) {
-                                        Text("Decline")
+                                        Text(StringConstants.DECLINE)
                                             .foregroundColor(.white)
                                             .padding()
                                             .frame(width: 100, height: 25)
@@ -129,12 +132,17 @@ struct EventCard : View {
                                     }
                         Button(action: {
                                         withAnimation(.easeInOut(duration: 0.2)){
-                                            eventViewModel.createInvitationUpdateUrl(eventId: event.id ?? "", userId: currentUserId ?? "" , change: "accepted")
+                                            eventViewModel.createInvitationUpdateUrl(eventId: event.id ?? "", userId: currentUserId ?? "" , change: StringConstants.ACCEPTED)
                                             eventViewModel.updateInvitation()
                                             eventViewModel.performApiLogic(for: .invited)
+                                            Task{
+                                               await eventViewModel.createUrlInvitedEventsCount(idUser: currentUserId ?? "")
+                                               await eventViewModel.getBadgeCount()
+                                            }
+                                            
                                         }
                                     }){
-                                        Text("Accept")
+                                        Text(StringConstants.ACCEPT)
                                             .foregroundColor(.filterBarSelectedTextColor)
                                             .padding()
                                             .frame(width: 100, height: 25)
@@ -143,7 +151,6 @@ struct EventCard : View {
                                             .shadow(radius: 10, x: 0, y: 5)
                                             .accessibilityIdentifier(IdentifierConstants.ACCEPT_BUTTON)
                                     }
-                                
                     }
                     .padding(.top, 100)
                 }
@@ -160,7 +167,7 @@ struct EventCard : View {
             .onAppear() {
                 Task{
                     await eventViewModel.createUrlPeopleGoingCount(idEvent: event.id ?? "")
-                    await eventViewModel.getCount()
+                    await eventViewModel.getPeopleCount()
                 }
             }
         

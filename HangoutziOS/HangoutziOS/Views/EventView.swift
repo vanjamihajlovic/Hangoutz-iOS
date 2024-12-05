@@ -15,103 +15,109 @@ struct EventView: View {
     @AppStorage("currentUserName") var currentUserName: String?
     @State private var selectedTabIndex: Int = 0
     @State var selectedTab: Tab = .going
-    
+    @State private var isPolling: Bool = false
     
     var body: some View {
         ZStack {
-            VStack {
-                HStack {
-                    ForEach(Tab.allCases, id: \.self) { tab in
-                        ZStack {
-                            if selectedTab == tab {
-                                Capsule()
-                                    .fill(Color.filterBarAccentColor)
-                                    .frame(height: 40)
-                                    .padding(.horizontal, 8)
-                                    .shadow(radius: 3)
-                            }
-                            
-                            Text(tab.rawValue)
-                                .accessibilityIdentifier(tab.rawValue.lowercased())
-                                .frame(maxWidth: .infinity)
-                                .font(.footnote)
-                                .bold()
-                                .foregroundColor(selectedTab == tab ? Color.filterBarSelectedTextColor : Color.filterBarAccentColor)
-                                .padding(.horizontal, 20)
-                                .onTapGesture {
-                                    withAnimation{
-                                        selectedTab = tab
-                                        eventViewModel.performApiLogic(for:tab)
+                VStack {
+                    HStack {
+                        ForEach(Tab.allCases, id: \.self) { tab in
+                            ZStack {
+                                if selectedTab == tab {
+                                    Capsule()
+                                        .fill(Color.filterBarAccentColor)
+                                        .frame(height: 40)
+                                        .padding(.horizontal, 8)
+                                        .shadow(radius: 3)
+                                }
+                                
+                                Text(tab.rawValue)
+                                    .accessibilityIdentifier(tab.rawValue.lowercased())
+                                    .frame(maxWidth: .infinity)
+                                    .font(.footnote)
+                                    .bold()
+                                    .foregroundColor(selectedTab == tab ? Color.filterBarSelectedTextColor : Color.filterBarAccentColor)
+                                    .padding(.horizontal, 20)
+                                    .onTapGesture {
+                                        withAnimation{
+                                            selectedTab = tab
+                                            eventViewModel.performApiLogic(for:tab)
+                                        }
+                                    }
+                                if tab == .invited {
+                                    if eventViewModel.badgeCount > 0 {
+                                        ZStack {
+                                            Circle()
+                                                .fill(Color.red)
+                                                .frame(width: 20, height: 20)
+                                            Text("\(eventViewModel.badgeCount)")
+                                                .foregroundColor(.white)
+                                                .font(.caption)
+                                                .bold()
+                                        }
+                                        .offset(x: 40, y: -10)
                                     }
                                 }
-                            
-                            // A 'PROBLEMATIC' PART OF THE CODE
-//                            if tab == .invited {
-//                                eventViewModel.createUrlInvitedEventsCount(idUser: currentUserId)
-//                                eventViewModel.getBadgeCount()
-//                                let count = eventViewModel.badgeCount
-//                                if count > 0 {
-//                                ZStack {
-//                                        Circle()
-//                                            .fill(Color.red)
-//                                            .frame(width: 20, height: 20)
-//                                        Text("\(eventViewModel.badgeCount)")
-//                                            .foregroundColor(.white)
-//                                            .font(.caption)
-//                                            .bold()
-//                                    }
-//                                }
-//                                .offset(x: 40, y: -10)
-//                        }
-                            // END OF THE 'PROBLEMATIC' PART
+                            }
                         }
                     }
+                    .accessibilityIdentifier(IdentifierConstants.FILTER_BAR
+                    )
+                    .padding(5)
+                    .background(
+                        Capsule()
+                            .fill(Color.filterBarPrimaryColor.opacity(0.5))
+                    )
+                    .padding(.horizontal, 16)
+                    Spacer()
                 }
-                .accessibilityIdentifier(IdentifierConstants.FILTER_BAR
-                )
-                .padding(5)
-                .background(
-                    Capsule()
-                        .fill(Color.filterBarPrimaryColor.opacity(0.5))
-                )
-                .padding(.horizontal, 16)
-                Spacer()
-            }
-            .padding(.top, 35)
-          
-            ScrollView{
-                VStack{
-                    ForEach(eventViewModel.events.indices, id: \.self){ index in
-                        let event = eventViewModel.events[index]
-                        let color = ColorConstants.eventCardColors[index % ColorConstants.eventCardColors.count]
-                        
-                        EventCard(event:event,color:color, tab:selectedTab)
-                    }
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: 700)
-            .padding(.top, 120)
+                .padding(.top, 35)
             
-            //NavigationLink(destination: CreateEventView()) {
+            if eventViewModel.isLoading {
+                ProgressView(StringConstants.LOADING_EVENTS)
+                                .foregroundColor(.white)
+                                .font(.headline)
+                        } else if eventViewModel.events.isEmpty {
+                            Text(StringConstants.NO_EVENTS)
+                                .foregroundColor(.white)
+                                .font(.headline)
+                        } else {
+                            ScrollView{
+                                VStack{
+                                    ForEach(eventViewModel.events.indices, id: \.self){ index in
+                                        let event = eventViewModel.events[index]
+                                        let color = ColorConstants.eventCardColors[index % ColorConstants.eventCardColors.count]
+                                        
+                                        
+                                        EventCard(event:event,color:color, tab:selectedTab)
+                                    }
+                                }
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: 700)
+                            .padding(.top, 120)
+                        }
+            
                 VStack {
                     Spacer()
+                  
                     HStack {
                         Spacer()
-                        Image("EventViewPlusSign")
-                            .resizable()
-                            .padding(.trailing, UIConstants.PLUS_SIGN_PADDING_TRAILING)
-                            .padding(.bottom, UIConstants.AVATAR_PADDING_BOTTOM)
-                            .frame(width: UIConstants.PLUS_SIGN_FRAME_WIDTH, height: UIConstants.PLUS_SIGN_FRAME_HEIGHT)
-//                            .onTapGesture {
-//                                CreateEventView()
-//                            }
-                            .accessibilityIdentifier(IdentifierConstants.NEW_EVENT_BUTTON)
+                       
+                        ZStack {
+                            NavigationLink(destination: CreateEventView()) {
+                                Image.plusImage
+                                .resizable()
+                                .padding(.trailing, UIConstants.PLUS_SIGN_PADDING_TRAILING)
+                                .padding(.bottom, UIConstants.AVATAR_PADDING_BOTTOM)
+                                .frame(width: UIConstants.PLUS_SIGN_FRAME_WIDTH, height: UIConstants.PLUS_SIGN_FRAME_HEIGHT)
+                                
+                                .accessibilityIdentifier(IdentifierConstants.NEW_EVENT_BUTTON)
+                        }
+                        }.onTapGesture {
+                            CreateEventView()
                     }
                 }
-            //}
-            
-                
-            
+            }
         }
         .applyGlobalBackground()
         .gesture(
@@ -124,13 +130,13 @@ struct EventView: View {
             Task{
                 await eventViewModel.createUrlEventFilteredGoing()
                 await eventViewModel.getEvents()
+                startPollingForBadgeCount()
             }
         }
     }
     
     private func handleSwipe(value: DragGesture.Value) {
         let allTabs = Tab.allCases
-        //---------
         let width = value.translation.width
         if width < UIConstants.MIN_HORIZONTAL_SWIPE {
             if let currentIndex = allTabs.firstIndex(of: selectedTab),
@@ -150,6 +156,19 @@ struct EventView: View {
             }
         }
     }
+    
+    private func startPollingForBadgeCount() {
+            isPolling = true
+            Task {
+                while isPolling {
+                    if let userId = currentUserId {
+                        await eventViewModel.createUrlInvitedEventsCount(idUser: userId)
+                        await eventViewModel.getBadgeCount()
+                        }
+                    try? await Task.sleep(nanoseconds: 5_000_000_000)
+                }
+            }
+        }
 }
 
 #Preview {

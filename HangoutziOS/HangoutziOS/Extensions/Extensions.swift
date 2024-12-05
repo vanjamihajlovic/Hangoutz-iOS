@@ -51,6 +51,8 @@ extension Image {
     static let checkmark = Image(systemName: "person.fill.checkmark")
     static let doorRightHandOpen = Image(systemName: "door.right.hand.open")
     static let profilelines = Image("profilelines")
+    static let plusImage = Image("EventViewPlusSign")
+    static let avatarImage = Image("avatar_default")
 }
 
 extension Date {

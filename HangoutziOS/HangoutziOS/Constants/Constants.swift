@@ -86,6 +86,12 @@ class StringConstants {
     static let CAMERA : String = "Camera"
     static let GALLERY : String = "Gallery"
     static let PHOTO : String = "photo"
+    static let NO_EVENTS : String = "No events available"
+    static let LOADING_EVENTS : String = "Loading events..."
+    static let ACCEPT : String = "Accept"
+    static let DECLINE : String = "Decline"
+    static let ACCEPTED : String = "accepted"
+    static let DECLINED : String = "declined"
 }
 
 class SupabaseConstants {

@@ -18,53 +18,54 @@ class EventViewModel : ObservableObject {
     @Published var count: Int = 0
     @AppStorage("currentUserId") var currentUserId: String?
     @Published var updateStatus: String = ""
+    @Published var isLoading: Bool = false
     @Published var badgeCount = 0
     var changeTo: String = ""
+    
     static let shared = EventViewModel()
     
-    private init() {
-    }
-    
-    func createInvitationUpdateUrl(eventId: String, userId: String, change: String) {
-        changeTo = change
-        urlPatch = SupabaseConfig.baseURL + SupabaseConstants.SET_EVENT_STATUS_ACC_DEC_1 + eventId + SupabaseConstants.SET_EVENT_STATUS_ACC_DEC_2 + userId
-    }
+        private init() {
+        }
+        
+        func createInvitationUpdateUrl(eventId: String, userId: String, change: String) {
+            changeTo = change
+            urlPatch = SupabaseConfig.baseURL + SupabaseConstants.SET_EVENT_STATUS_ACC_DEC_1 + eventId + SupabaseConstants.SET_EVENT_STATUS_ACC_DEC_2 + userId
+        }
 
-    func updateInvitation() {
-        let url = urlPatch
-        eventService.updateInvitationStatus(fromURL: url, changeTo: changeTo) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    self.updateStatus = "Invitation Accepted!"
-                case .failure(let error):
-                    self.updateStatus = "Failed to accept invitation: \(error.localizedDescription)"
+        func updateInvitation() {
+            let url = urlPatch
+            eventService.updateInvitationStatus(fromURL: url, changeTo: changeTo) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success:
+                        self.updateStatus = "Invitation Accepted!"
+                    case .failure(let error):
+                        self.updateStatus = "Failed to accept invitation: \(error.localizedDescription)"
+                    }
                 }
             }
         }
-    }
     
-    func performApiLogic(for tab: Tab) {
-        switch tab {
-        case .going:
-            Task{
-                await createUrlEventFilteredGoing()
-                await getEvents()
-            }
-        case .invited:
-            Task{
-                await createUrlEventFilteredInvited()
-                await getEvents()
-            }
-        case .created:
-            Task{
-                await createUrlEventMine()
-                await getEvents()
+        func performApiLogic(for tab: Tab) {
+            switch tab {
+            case .going:
+                Task{
+                    await createUrlEventFilteredGoing()
+                    await getEvents()
+                }
+            case .invited:
+                Task{
+                    await createUrlEventFilteredInvited()
+                    await getEvents()
+                }
+            case .created:
+                Task{
+                    await createUrlEventMine()
+                    await getEvents()
+                }
             }
         }
-    }
     
-        
         func createUrlEventNonfiltered() async {
             url = SupabaseConfig.baseURL + SupabaseConstants.SELECT_EVENTS
         }
@@ -91,6 +92,8 @@ class EventViewModel : ObservableObject {
         
         func getEvents() async {
             Task {
+                isLoading = true
+                defer { isLoading = false }
                 await events = eventService.getEvents(from: url)
             }
         }
@@ -103,7 +106,7 @@ class EventViewModel : ObservableObject {
             return ("@ " + (event.place ?? "No Place"))
         }
         
-        func getCount() async {
+        func getPeopleCount() async {
             Task{
                 await count = 1 + (eventService.getCount(from: urlCount) ?? 0)
             }
@@ -114,7 +117,6 @@ class EventViewModel : ObservableObject {
                 await badgeCount = eventService.getCount(from: urlCount) ?? 0
             }
         }
-        
     }
     
 
