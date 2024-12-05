@@ -9,18 +9,52 @@ import SwiftUICore
 import SwiftUI
 
 class FriendsViewModel : ObservableObject {
-    @Published var friends: [Friend] = []
+    @Published var friends: [Friend] = []{
+        didSet{
+            print("Friends: \(friends)")
+        }
+    }
+    @Published var notFriends: [Friend] = []{
+        didSet{
+            print("Not friends: \(notFriends)")
+        }
+    }
+    
+    @Published var searchUser = ""
+   // @State private var searchUser = ""
+
+    //var sortedFriends: [Friend]
     @Published var url: String = ""
+    @Published var searchText = ""
+    @State private var excludedFriendIds: [String] = []
     @AppStorage("currentUserId") var currentUserId: String?
     let friendsService = FriendsService()
 
-    let testUsers: [Friend] = [
-        Friend(name: "Ana Nikolić", avatar: "person.circle"),
-        Friend(name: "Marko Jovanović", avatar: "person.circle.fill"),
-        Friend(name: "Jelena Petrović", avatar: "star.circle"),
-        Friend(name: "Ivan Ilić", avatar: "heart.circle"),
-        Friend(name: "Sara Perić", avatar: "bolt.circle")
-    ]
+//    let testUsers: [Friend] = [
+//        Friend(id: "",name: "Ana Nikolić", avatar: "person.circle"),
+//        Friend(id: "",name: "Marko Jovanović", avatar: "person.circle.fill"),
+//        Friend(id: "",name: "Jelena Petrović", avatar: "star.circle"),
+//        Friend(id: "",name: "Ivan Ilić", avatar: "heart.circle"),
+//        Friend(id: "",name: "Sara Perić", avatar: "bolt.circle")
+//    ]
+    
+    var filteredFriends: [Friend] {
+        if searchText.count >= 3 {
+            return friends.filter { friend in
+                let firstWord = friend.name.components(separatedBy: " ").first ?? ""
+                return firstWord.localizedCaseInsensitiveContains(searchText)
+            }
+        } else {
+            return friends
+        }
+    }
+    var sortedFriends: [Friend] {
+        filteredFriends.sorted {
+            let firstWord1 = $0.name.components(separatedBy: " ").first ?? $0.name
+            let firstWord2 = $1.name.components(separatedBy: " ").first ?? $1.name
+            return firstWord1.localizedCompare(firstWord2) == .orderedAscending
+        }
+    }
     
     func getFriends() async {
         guard let userId = currentUserId else {
@@ -31,6 +65,16 @@ class FriendsViewModel : ObservableObject {
         let fetchedFriends = await friendsService.getFriends(from: url)
         await MainActor.run {
             self.friends = fetchedFriends
+        }
+    }
+    
+    func getUsersWhoAreNotFriends() async {
+        excludedFriendIds = sortedFriends.compactMap { $0.id }
+        print("\(excludedFriendIds)")
+        url = SupabaseConfig.baseURL + SupabaseConstants.GET_USERS_WHO_ARE_NOT_FRIENDS + "\(excludedFriendIds)" + ")&name=ilike." + searchUser + "*"
+        let fetchedFriends2 = await friendsService.getFriends(from: url)
+        await MainActor.run {
+            self.notFriends = fetchedFriends2
         }
     }
 }

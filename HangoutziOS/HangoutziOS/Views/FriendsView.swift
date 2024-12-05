@@ -10,40 +10,38 @@ struct FriendsView: View {
     
     @AppStorage("currentUserId") var currentUserId: String?
     @ObservedObject var friendViewModel = FriendsViewModel()
-    @State private var searchText = ""
+//    @State private var searchText = ""
     @State var showSheet: Bool = false
     
-    
-    
-    var filteredFriends: [Friend] {
-        if searchText.count >= 3 {
-            return friendViewModel.friends.filter { friend in
-                let firstWord = friend.name.components(separatedBy: " ").first ?? ""
-                return firstWord.localizedCaseInsensitiveContains(searchText)
-            }
-        } else {
-            return friendViewModel.friends
-        }
-    }
-    var sortedFriends: [Friend] {
-        filteredFriends.sorted {
-            let firstWord1 = $0.name.components(separatedBy: " ").first ?? $0.name
-            let firstWord2 = $1.name.components(separatedBy: " ").first ?? $1.name
-            return firstWord1.localizedCompare(firstWord2) == .orderedAscending
-        }
-    }
+//    var filteredFriends: [Friend] {
+//        if searchText.count >= 3 {
+//            return friendViewModel.friends.filter { friend in
+//                let firstWord = friend.name.components(separatedBy: " ").first ?? ""
+//                return firstWord.localizedCaseInsensitiveContains(searchText)
+//            }
+//        } else {
+//            return friendViewModel.friends
+//        }
+//    }
+//    var sortedFriends: [Friend] {
+//        filteredFriends.sorted {
+//            let firstWord1 = $0.name.components(separatedBy: " ").first ?? $0.name
+//            let firstWord2 = $1.name.components(separatedBy: " ").first ?? $1.name
+//            return firstWord1.localizedCompare(firstWord2) == .orderedAscending
+//        }
+//    }
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 HStack {
-                    TextField("", text: $searchText,prompt:
+                    TextField("", text: $friendViewModel.searchText,prompt:
                                 Text("Search...")
                         .foregroundColor(Color.gray)
                     )
                     .accessibilityIdentifier("friendsSearchField")
-                    if !searchText.isEmpty {
+                    if !friendViewModel.searchText.isEmpty {
                         Button(action: {
-                            searchText = ""
+                            friendViewModel.searchText = ""
                         }){
                             Image(systemName: "x.circle")
                                 .foregroundColor(Color.gray)
@@ -57,7 +55,7 @@ struct FriendsView: View {
                 .padding(.top, 10)
                 
                 List {
-                    ForEach(sortedFriends) { friend in
+                    ForEach(friendViewModel.sortedFriends) { friend in
                         HStack {
                             if let avatarImage = friend.avatar {
                                 AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
@@ -134,7 +132,7 @@ struct FriendsView: View {
                     }
                     .accessibilityIdentifier("AddFriendButton")
                     .sheet(isPresented: $showSheet){
-                        PopupView()
+                        PopupView(/*sortedFriends: sortedFriends*/)
                         
                     }
                 }
@@ -155,36 +153,40 @@ struct FriendsView: View {
 }
 
 struct PopupView: View {
-    @State private var searchUser = ""
+    //var sortedFriends: [Friend]
+    @ObservedObject var friendViewModel = FriendsViewModel()
+
+//    @State private var searchUser = ""
+    @State private var excludedFriendIds: [String] = []
     @State private var users: [Friend] = [
-        Friend(name: "Ana Perić", avatar: "https://via.placeholder.com/50"),
-        Friend(name: "Marko Jovanović", avatar: "https://via.placeholder.com/50"),
-        Friend(name: "Ivana Stanković", avatar: nil),
-        Friend(name: "Bojan Petrović", avatar: "https://via.placeholder.com/50"),
-        Friend(name: "Ana Kovačević", avatar: nil),
-        Friend(name: "Luka Milenković", avatar: "https://via.placeholder.com/50"),
-        Friend(name: "Mila Nikolić", avatar: nil),
-        Friend(name: "Nikola Ilić", avatar: "https://via.placeholder.com/50"),
-        Friend(name: "Jovana Lukić", avatar: nil),
-        Friend(name: "Petar Đorđević", avatar: "https://via.placeholder.com/50")
+        Friend(id: "",name: "Ana Perić", avatar: "https://via.placeholder.com/50"),
+        Friend(id: "",name: "Marko Jovanović", avatar: "https://via.placeholder.com/50"),
+        Friend(id: "",name: "Ivana Stanković", avatar: nil),
+        Friend(id: "",name: "Bojan Petrović", avatar: "https://via.placeholder.com/50"),
+        Friend(id: "",name: "Ana Kovačević", avatar: nil),
+        Friend(id: "",name: "Luka Milenković", avatar: "https://via.placeholder.com/50"),
+        Friend(id: "",name: "Mila Nikolić", avatar: nil),
+        Friend(id: "",name: "Nikola Ilić", avatar: "https://via.placeholder.com/50"),
+        Friend(id: "",name: "Jovana Lukić", avatar: nil),
+        Friend(id: "",name: "Petar Đorđević", avatar: "https://via.placeholder.com/50")
     ]
-    var filteredUsers: [Friend] {
-        if searchUser.count >= 3 {
-            return users.filter { friend in
-                let firstWord = friend.name.components(separatedBy: " ").first ?? ""
-                return firstWord.localizedCaseInsensitiveContains(searchUser)
-            }
-        } else {
-            return users
-        }
-    }
-    var sortedUsers: [Friend] {
-        filteredUsers.sorted {
-            let firstWord1 = $0.name.components(separatedBy: " ").first ?? $0.name
-            let firstWord2 = $1.name.components(separatedBy: " ").first ?? $1.name
-            return firstWord1.localizedCompare(firstWord2) == .orderedAscending
-        }
-    }
+//    var filteredUsers: [Friend] {
+//        if friendViewModel.searchUser.count >= 3 {
+//            return users.filter { friend in
+//                let firstWord = friend.name.components(separatedBy: " ").first ?? ""
+//                return firstWord.localizedCaseInsensitiveContains(friendViewModel.searchUser)
+//            }
+//        } else {
+//            return users
+//        }
+//    }
+//    var sortedUsers: [Friend] {
+//        filteredUsers.sorted {
+//            let firstWord1 = $0.name.components(separatedBy: " ").first ?? $0.name
+//            let firstWord2 = $1.name.components(separatedBy: " ").first ?? $1.name
+//            return firstWord1.localizedCompare(firstWord2) == .orderedAscending
+//        }
+//    }
     
     var body: some View {
         ZStack {
@@ -192,16 +194,16 @@ struct PopupView: View {
                 .edgesIgnoringSafeArea(.all)
             VStack {
                 HStack {
-                    TextField("", text: $searchUser,prompt:
+                    TextField("", text: $friendViewModel.searchUser,prompt:
                                 Text("Search...")
                         .foregroundColor(Color.black)
                     )
                     .accessibilityIdentifier("usersSearchField")
                     .padding()
                     
-                    if !searchUser.isEmpty {
+                    if !friendViewModel.searchUser.isEmpty {
                         Button(action: {
-                            searchUser = ""
+                            friendViewModel.searchUser = ""
                         }){
                             Image(systemName: "x.circle")
                                 .foregroundColor(Color.gray)
@@ -219,9 +221,9 @@ struct PopupView: View {
                 )
                 .padding(.top, 15)
                 
-                if searchUser.count >= 3{
+                if friendViewModel.searchUser.count >= 3{
                     ScrollView{
-                        ForEach(sortedUsers){ user in
+                        ForEach(friendViewModel.notFriends){ user in
                             HStack{
                                 if let avatarURL = user.avatar{
                                     AsyncImage(url: URL(string: avatarURL), content: {image in
@@ -297,6 +299,14 @@ struct PopupView: View {
                 }
             }
             .presentationDetents([.fraction(0.7)])
+            .onAppear {
+                Task {
+                    await friendViewModel.getUsersWhoAreNotFriends()
+                }
+               // friendViewModel.getUsersWhoAreNotFriends()
+//               excludedFriendIds = sortedFriends.compactMap { $0.id }
+               print("Excluded friends ids: \(friendViewModel.notFriends)")
+            }
         }
     }
 }
