@@ -11,8 +11,8 @@ struct FriendsView: View {
     @AppStorage("currentUserId") var currentUserId: String?
     @ObservedObject var friendViewModel = FriendsViewModel()
     @State private var searchText = ""
-    @State private var searchUser = ""
     @State var showSheet: Bool = false
+    
     
     
     var filteredFriends: [Friend] {
@@ -40,6 +40,7 @@ struct FriendsView: View {
                                 Text("Search...")
                         .foregroundColor(Color.gray)
                     )
+                    .accessibilityIdentifier("friendsSearchField")
                     if !searchText.isEmpty {
                         Button(action: {
                             searchText = ""
@@ -47,6 +48,7 @@ struct FriendsView: View {
                             Image(systemName: "x.circle")
                                 .foregroundColor(Color.gray)
                         }
+                        .accessibilityIdentifier("friendsSearchFieldClearButton")
                     }
                 }
                 .padding(12)
@@ -132,97 +134,9 @@ struct FriendsView: View {
                     }
                     .accessibilityIdentifier("AddFriendButton")
                     .sheet(isPresented: $showSheet){
-                        ZStack {
-                            Color("AddFriendsPopupColor")
-                                .edgesIgnoringSafeArea(.all)
-                            VStack {
-                                HStack {
-                                    TextField("", text: $searchUser,prompt:
-                                                Text("Search...")
-                                        .foregroundColor(Color.black)
-                                    )
-                                    .padding()
-                                    
-                                    if !searchUser.isEmpty {
-                                        Button(action: {
-                                            searchUser = ""
-                                        }){
-                                            Image(systemName: "x.circle")
-                                                .foregroundColor(Color.gray)
-                                        }
-                                    }
-                                }
-                                .padding(12)
-                                .cornerRadius(20)
-                                .frame(width: 320, height:60, alignment: .center)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(Color.black, lineWidth: 1)
-                                        .frame(height: 40)
-                                )
-                                .padding(.top, 15)
-                                
-                                //OVDE IDE LISTA
-//                                ScrollView{
-//                                    
-//                                    ForEach(friendViewModel.testUsers){ Index in
-//                                        HStack{
-//                                            if let avatarImage = friendViewModel.testUsers.avatar {
-//                                                AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
-//                                                           content:{ Image in
-//                                                    Image
-//                                                        .resizable()
-//                                                        .scaledToFill()
-//                                                        .clipShape(Circle())
-//                                                        .overlay(
-//                                                            Circle()
-//                                                                .stroke(Color("FriendAddButton"), lineWidth: 4)
-//                                                        )
-//                                                        .frame(width: 50, height: 50)
-//                                                        .clipShape(Circle())
-//                                                }, placeholder: {
-//                                                    Image("DefaultImage")
-//                                                        .resizable()
-//                                                        .scaledToFit()
-//                                                        .clipShape(Circle())
-//                                                        .overlay(
-//                                                            Circle()
-//                                                                .stroke(Color("FriendAddButton"), lineWidth: 2)
-//                                                        )
-//                                                        .frame(width: 50, height: 50)
-//                                                        .accessibilityIdentifier("friendImagePlaceholder")
-//                                                }
-//                                                )
-//                                                .accessibilityIdentifier("friendImage")
-//                                            }
-//                                        } else {
-//                                            Image("DefaultImage")
-//                                                .resizable()
-//                                                .scaledToFit()
-//                                                .clipShape(Circle())
-//                                                .overlay(
-//                                                    Circle()
-//                                                        .stroke(Color("FriendAddButton"), lineWidth: 2)
-//                                                )
-//                                                .frame(width: 50, height: 50)
-//                                                .accessibilityIdentifier("defaultFriendImage")
-//                                            
-//                                        }
-//                                    }
-//                                    
-//                                }
-                                
-                                
-                                
-                                
-                                
-                                Spacer()
-                            }
-                            
-                        }
-                        .presentationDetents([.fraction(0.7)])
+                        PopupView()
+                        
                     }
-                    
                 }
             }
         }
@@ -235,6 +149,154 @@ struct FriendsView: View {
     }
 }
 
+
 #Preview {
     FriendsView()
+}
+
+struct PopupView: View {
+    @State private var searchUser = ""
+    @State private var users: [Friend] = [
+        Friend(name: "Ana Perić", avatar: "https://via.placeholder.com/50"),
+        Friend(name: "Marko Jovanović", avatar: "https://via.placeholder.com/50"),
+        Friend(name: "Ivana Stanković", avatar: nil),
+        Friend(name: "Bojan Petrović", avatar: "https://via.placeholder.com/50"),
+        Friend(name: "Ana Kovačević", avatar: nil),
+        Friend(name: "Luka Milenković", avatar: "https://via.placeholder.com/50"),
+        Friend(name: "Mila Nikolić", avatar: nil),
+        Friend(name: "Nikola Ilić", avatar: "https://via.placeholder.com/50"),
+        Friend(name: "Jovana Lukić", avatar: nil),
+        Friend(name: "Petar Đorđević", avatar: "https://via.placeholder.com/50")
+    ]
+    var filteredUsers: [Friend] {
+        if searchUser.count >= 3 {
+            return users.filter { friend in
+                let firstWord = friend.name.components(separatedBy: " ").first ?? ""
+                return firstWord.localizedCaseInsensitiveContains(searchUser)
+            }
+        } else {
+            return users
+        }
+    }
+    var sortedUsers: [Friend] {
+        filteredUsers.sorted {
+            let firstWord1 = $0.name.components(separatedBy: " ").first ?? $0.name
+            let firstWord2 = $1.name.components(separatedBy: " ").first ?? $1.name
+            return firstWord1.localizedCompare(firstWord2) == .orderedAscending
+        }
+    }
+    
+    var body: some View {
+        ZStack {
+            Color("AddFriendsPopupColor")
+                .edgesIgnoringSafeArea(.all)
+            VStack {
+                HStack {
+                    TextField("", text: $searchUser,prompt:
+                                Text("Search...")
+                        .foregroundColor(Color.black)
+                    )
+                    .accessibilityIdentifier("usersSearchField")
+                    .padding()
+                    
+                    if !searchUser.isEmpty {
+                        Button(action: {
+                            searchUser = ""
+                        }){
+                            Image(systemName: "x.circle")
+                                .foregroundColor(Color.gray)
+                        }
+                        .accessibilityIdentifier("usersSearchFieldClearButton")
+                    }
+                }
+                .padding(12)
+                .cornerRadius(20)
+                .frame(width: 320, height:60, alignment: .center)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.black, lineWidth: 1)
+                        .frame(height: 40)
+                )
+                .padding(.top, 15)
+                
+                if searchUser.count >= 3{
+                    ScrollView{
+                        ForEach(sortedUsers){ user in
+                            HStack{
+                                if let avatarURL = user.avatar{
+                                    AsyncImage(url: URL(string: avatarURL), content: {image in
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: 47, height: 47)
+                                            .clipShape(Circle())
+                                            .overlay(Circle().stroke(Color("FriendAddButton"), lineWidth: 2))
+                                    }, placeholder: {
+                                        Image("DefaultImage")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .clipShape(Circle())
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                            )
+                                            .frame(width: 47, height: 47)
+                                            .accessibilityIdentifier("userImagePlaceholder")
+                                    }
+                                    )
+                                    .accessibilityIdentifier("userImage")
+                                } else {
+                                    Image("DefaultImage")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipShape(Circle())
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                        )
+                                        .frame(width: 47, height: 47)
+                                        .accessibilityIdentifier("defaultUserImage")
+                                }
+                                Text(user.name)
+                                    .font(.title3).padding(.leading, 10)
+                                    .foregroundColor(Color("FriendFontColor"))
+                                    .accessibilityIdentifier("userName")
+                                
+                                HStack {
+                                    Spacer()
+                                    Button(action: {
+                                    })
+                                    {
+                                        Image("AddButtonImage")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 40, height: 40)
+                                            .padding()
+                                    }
+                                    .accessibilityIdentifier("addUserButton")
+                                }
+                            }
+                            .frame(maxWidth: 340, maxHeight: 50, alignment: .leading)
+                            .padding(.leading, 35)
+                            .groupBoxAccessibilityIdentifier("userListItem")
+                            Divider()
+                                .frame(height: 1)
+                                .background(Color.black)
+                                .frame(width: 340)
+                                .shadow(color: .black.opacity(0.4), radius: 4, x: 2, y: 2)
+                        }
+                        Spacer()
+                    }
+                    .padding(.top, 30)
+                }
+                else {
+                    Spacer()
+                    Text("Search for new friends...")
+                        .bold()
+                    Spacer()
+                }
+            }
+            .presentationDetents([.fraction(0.7)])
+        }
+    }
 }
