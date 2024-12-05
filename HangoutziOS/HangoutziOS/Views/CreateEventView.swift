@@ -105,7 +105,7 @@ struct CreateEventView: View {
                 
             }
             .applyBlurredBackground()
-        }
+        }.ignoresSafeArea(.keyboard, edges: .all)
         
     }
     var DateAndTime : some View{

@@ -124,7 +124,7 @@ struct DetailsView: View {
                 
             }.onAppear{getAcceptedUsers()}
                 .applyBlurredBackground()
-        }
+        }.ignoresSafeArea(.keyboard, edges: .all)
         
     }
     var DateAndTime : some View{
