@@ -17,8 +17,10 @@ struct DetailsView: View {
     @State private var selectedDate = Date()
     @State private var selectedTime = Date()
     @State var isOwner : Bool = false
+    @Environment(\.presentationMode) var presentationMode
     let event : eventModelDTO
     let selectedTab : Tab
+    
     var body: some View {
         
         ZStack {
@@ -94,35 +96,34 @@ struct DetailsView: View {
                         }
                     }
                 }
-                Button(action: {
-                    deleteInvite()
-                    print("Button pressed! \n URL to delete invite: \(detailsViewModel.urlToDeleteInvite)\n")
-                }){
-                    NavigationLink(destination: EventView().navigationBarBackButtonHidden(true)){
+                
+                NavigationLink(destination: MainTabView().navigationBarBackButtonHidden(true)){
+                    
+                    Button(action: {
+                        deleteInvite()
+                        print("Button pressed! \n URL to delete invite: \(detailsViewModel.urlToDeleteInvite)\n")
+                        presentationMode.wrappedValue.dismiss()
+                    }){
                         HStack {
                             Text(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? StringConstants.UPDATE : StringConstants.LEAVE_EVENT)
                             if(!detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "")){Image.doorRightHandOpen}
                         }
-                    }.onTapGesture {
-                        eventViewModel.performApiLogic(for: selectedTab)
-                        MainTabView()
+                        .onDisappear{
+                            eventViewModel.performApiLogic(for: selectedTab)
+                            MainTabView()
+                        }
+                        .padding()
+                        .frame(width:310)
+                        .background(Color.loginButton)
+                        .cornerRadius(20)
+                        .foregroundColor(.black)
                     }
-                    .onDisappear{
-                        eventViewModel.performApiLogic(for: selectedTab)
-                        MainTabView()
-                    }
-                    .padding()
-                    .frame(width:310)
-                    .background(Color.loginButton)
-                    .cornerRadius(20)
-                    .foregroundColor(.black)
+                    .padding(.bottom, 20)
+                    .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGOUT)
                 }
-                .padding(.bottom, 20)
-                .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGOUT)
-                
             }.onAppear{getAcceptedUsers()}
                 .applyBlurredBackground()
-        }
+        }.ignoresSafeArea(.keyboard, edges: .all)
     }
     var DateAndTime : some View{
         
@@ -168,7 +169,6 @@ struct DetailsView: View {
             .padding(.leading, -3)
         
     }
-    
     func getAcceptedUsers() {
         Task {
             detailsViewModel.createUrlToGetAcceptedUsers(eventId: event.id)
