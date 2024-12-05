@@ -24,9 +24,6 @@ class EventViewModel : ObservableObject {
     
     static let shared = EventViewModel()
     
-        private init() {
-        }
-        
         func createInvitationUpdateUrl(eventId: String, userId: String, change: String) {
             changeTo = change
             urlPatch = SupabaseConfig.baseURL + SupabaseConstants.SET_EVENT_STATUS_ACC_DEC_1 + eventId + SupabaseConstants.SET_EVENT_STATUS_ACC_DEC_2 + userId

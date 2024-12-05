@@ -139,6 +139,10 @@ class ColorConstants {
     static let eventCardColors: [Color] = [Color.firstEventCard, Color.secondEventCard, Color.thirdEventCard]
 }
 
+class NumberConstants {
+    static let BADGE_NANOSECONDS: UInt64 = 5_000_000_000
+}
+
 class ImageConstants {
     
     static let CALENDAR : String = "calendar"

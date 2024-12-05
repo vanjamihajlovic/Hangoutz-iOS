@@ -165,7 +165,7 @@ struct EventView: View {
                         await eventViewModel.createUrlInvitedEventsCount(idUser: userId)
                         await eventViewModel.getBadgeCount()
                         }
-                    try? await Task.sleep(nanoseconds: 5_000_000_000)
+                    try? await Task.sleep(nanoseconds: NumberConstants.BADGE_NANOSECONDS)
                 }
             }
         }

@@ -9,7 +9,6 @@ import SwiftUI
 struct EventCard : View {
     let event: eventModelDTO
     let color : Color
-    @AppStorage("currentUserId") var currentUserId: String?
     @ObservedObject var userViewModel : UserViewModel = UserViewModel()
     @ObservedObject var eventViewModel = EventViewModel.shared
     @StateObject var eventService = EventService.shared
@@ -114,11 +113,11 @@ struct EventCard : View {
                     Spacer()
                     Button(action: {
                         withAnimation(.easeInOut(duration: 0.2)){
-                            eventViewModel.createInvitationUpdateUrl(eventId: event.id ?? "", userId: currentUserId ?? "" , change: StringConstants.DECLINED)
+                            eventViewModel.createInvitationUpdateUrl(eventId: event.id ?? "", userId: eventViewModel.currentUserId ?? "" , change: StringConstants.DECLINED)
                             eventViewModel.updateInvitation()
                             eventViewModel.performApiLogic(for: .invited)
                             Task{
-                                await eventViewModel.createUrlInvitedEventsCount(idUser: currentUserId ?? "")
+                                await eventViewModel.createUrlInvitedEventsCount(idUser: eventViewModel.currentUserId ?? "")
                                 await eventViewModel.getBadgeCount()
                             }
                         }
@@ -134,11 +133,11 @@ struct EventCard : View {
                     }
                     Button(action: {
                         withAnimation(.easeInOut(duration: 0.2)){
-                            eventViewModel.createInvitationUpdateUrl(eventId: event.id ?? "", userId: currentUserId ?? "" , change: StringConstants.ACCEPTED)
+                            eventViewModel.createInvitationUpdateUrl(eventId: event.id ?? "", userId: eventViewModel.currentUserId ?? "" , change: StringConstants.ACCEPTED)
                             eventViewModel.updateInvitation()
                             eventViewModel.performApiLogic(for: .invited)
                             Task{
-                                await eventViewModel.createUrlInvitedEventsCount(idUser: currentUserId ?? "")
+                                await eventViewModel.createUrlInvitedEventsCount(idUser: eventViewModel.currentUserId ?? "")
                                 await eventViewModel.getBadgeCount()
                             }
                             
