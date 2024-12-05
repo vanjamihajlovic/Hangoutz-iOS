@@ -14,16 +14,18 @@ struct CreateEventView: View {
     @ObservedObject var detailsViewModel = DetailsViewModel()
     @ObservedObject var userService = UserService()
     @ObservedObject var eventViewModel = EventViewModel.shared
+    @Environment(\.presentationMode) var presentationMode
     @State private var selectedDate = Date()
     @State private var selectedTime = Date()
     @State var showSheet: Bool = false
     @State var searchText: String = ""
+    let selectedTab : Tab
+    
     var body: some View {
         
         ZStack {
             VStack {
                 AppBarView()
-                
                 ScrollView {
                     VStack{
                         FieldsCreateEvent(textFieldType: $detailsViewModel.title, fieldsCategory: DetailsViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: "")
@@ -70,7 +72,7 @@ struct CreateEventView: View {
                                         )
                                     Spacer()
                                 }.padding(.top, 20)
-                                .presentationDetents([.fraction(0.7)])
+                                    .presentationDetents([.fraction(0.7)])
                             }
                         }
                         
@@ -79,19 +81,19 @@ struct CreateEventView: View {
                             .frame(width:350)
                     }.padding(.top, 20)
                 }
-                Button(action: {
-                }){
-                    NavigationLink(destination: MainTabView().navigationBarBackButtonHidden(true)){
+                
+                NavigationLink(destination: MainTabView().navigationBarBackButtonHidden(true)){
+                    Button(action: {
+                        //TODO: MAKE NAVIGATION ONLY TO CREATED. TICKET REQUIREMENT!!
+                    }){
+                        
                         HStack {
                             Text(StringConstants.CREATE)
                             Image.doorRightHandOpen
                         }
-                    }.onTapGesture {
-                        eventViewModel.performApiLogic(for:.created)
-                        MainTabView()
                     }
                     .onDisappear{
-                        eventViewModel.performApiLogic(for:.going)
+                        eventViewModel.performApiLogic(for: selectedTab)
                         MainTabView()
                     }
                     .padding()
@@ -99,10 +101,9 @@ struct CreateEventView: View {
                     .background(Color.loginButton)
                     .cornerRadius(20)
                     .foregroundColor(.black)
+                    .padding(.bottom, 20)
+                    .accessibilityIdentifier(AccessibilityIdentifierConstants.CREATE_EVENT)
                 }
-                .padding(.bottom, 20)
-                .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGOUT)
-                
             }
             .applyBlurredBackground()
         }.ignoresSafeArea(.keyboard, edges: .all)
@@ -169,6 +170,7 @@ struct FieldsCreateEvent: View {
                 .foregroundColor(.white))
             .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
             .autocapitalization(.none)
+            .autocorrectionDisabled()
             .frame(width: 320, height: 15, alignment: .center)
             .foregroundColor(.white)
             .textContentType(.emailAddress)

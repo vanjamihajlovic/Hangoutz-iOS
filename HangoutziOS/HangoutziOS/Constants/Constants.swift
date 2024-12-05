@@ -134,6 +134,7 @@ class AccessibilityIdentifierConstants {
     static let STREET : String = "street"
     static let TITLE : String = "title"
     static let PARTICIPANTS : String = "participants"
+    static let CREATE_EVENT : String = "createEvent"
 }
 
 class ColorConstants {

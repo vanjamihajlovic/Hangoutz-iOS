@@ -105,7 +105,7 @@ struct EventView: View {
                         Spacer()
                        
                         ZStack {
-                            NavigationLink(destination: CreateEventView()) {
+                            NavigationLink(destination: CreateEventView(selectedTab: selectedTab)) {
                                 Image.plusImage
                                 .resizable()
                                 .padding(.trailing, UIConstants.PLUS_SIGN_PADDING_TRAILING)
@@ -114,7 +114,7 @@ struct EventView: View {
                                 .accessibilityIdentifier(IdentifierConstants.NEW_EVENT_BUTTON)
                         }
                         }.onTapGesture {
-                            CreateEventView()
+                            CreateEventView(selectedTab: selectedTab)
                     }
                 }
             }
