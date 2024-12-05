@@ -16,6 +16,8 @@ struct CreateEventView: View {
     @ObservedObject var eventViewModel = EventViewModel.shared
     @State private var selectedDate = Date()
     @State private var selectedTime = Date()
+    @State var showSheet: Bool = false
+    @State var searchText: String = ""
     var body: some View {
         
         ZStack {
@@ -50,10 +52,26 @@ struct CreateEventView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.leading, 15)
                                 .foregroundColor(.white)
-                            Image("AddButtonImage")
-                                .resizable()
-                                .frame(width:40, height:40)
-                                .padding(.trailing, 20)
+                            Button(action: {showSheet.toggle()}){
+                                Image("AddButtonImage")
+                                    .resizable()
+                                    .frame(width:40, height:40)
+                                    .padding(.trailing, 20)
+                            }.sheet(isPresented: $showSheet){
+                                VStack{
+                                    TextField("Search...", text: $searchText, prompt: Text("Search..."))
+                                        .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
+                                        .autocapitalization(.none)
+                                        .frame(width: 300, height: 15, alignment: .center)
+                                        .padding()
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 20)
+                                                .stroke(Color.gray, lineWidth: 3)
+                                        )
+                                    Spacer()
+                                }.padding(.top, 20)
+                                .presentationDetents([.fraction(0.7)])
+                            }
                         }
                         
                         Divider()
@@ -63,18 +81,19 @@ struct CreateEventView: View {
                 }
                 Button(action: {
                 }){
-                    NavigationLink(destination: EventView().navigationBarBackButtonHidden(true)){
+                    NavigationLink(destination: MainTabView().navigationBarBackButtonHidden(true)){
                         HStack {
                             Text(StringConstants.CREATE)
                             Image.doorRightHandOpen
                         }
                     }.onTapGesture {
                         eventViewModel.performApiLogic(for:.created)
-                        EventView()
+                        MainTabView()
                     }
                     .onDisappear{
                         eventViewModel.performApiLogic(for:.going)
-                        EventView()}
+                        MainTabView()
+                    }
                     .padding()
                     .frame(width:310)
                     .background(Color.loginButton)

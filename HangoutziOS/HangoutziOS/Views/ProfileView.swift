@@ -102,7 +102,6 @@ struct ProfileView: View {
                             .onAppear{
                                 uploadProfilePicture(imageToUpload: selectedImageCamera)
                                 showSheet = false
-                                
                             }
                     }.sheet(isPresented: $showSheet) {
                         HStack {

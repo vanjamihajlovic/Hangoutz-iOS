@@ -84,6 +84,8 @@ class StringConstants {
     static let CAMERA : String = "camera"
     static let GALLERY : String = "Gallery"
     static let PHOTO : String = "photo"
+    static let DELETE: String = "Delete"
+    static let ADD_BUTTON: String = "AddButtonImage"
 }
 
 class SupabaseConstants {
@@ -126,4 +128,5 @@ class ImageConstants {
     
     static let CALENDAR : String = "calendar"
     static let CLOCK : String = "clock"
+    
 }

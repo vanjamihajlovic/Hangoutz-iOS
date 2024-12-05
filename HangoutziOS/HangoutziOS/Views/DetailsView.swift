@@ -23,8 +23,15 @@ struct DetailsView: View {
         
         ZStack {
             VStack {
-                AppBarView()
-                
+                ZStack{
+                        AppBarView()
+                        Image(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? StringConstants.DELETE : "").resizable()
+                        .frame(width : 30, height: 30, alignment: .trailing)
+                        .padding(.leading, 300)
+                        .padding(.bottom, 10)
+                            
+                    
+                }
                 ScrollView {
                     VStack{
                         Fields(textFieldType: $detailsViewModel.title, fieldsCategory: DetailsViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: event.title ?? "").padding(5).disabled(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? false : true)
@@ -46,14 +53,18 @@ struct DetailsView: View {
                         if(detailsViewModel.currentUserId == event.owner){
                             DateAndTime
                         }
-                        
-                        Text(StringConstants.PARTICIPANTS)
-                            .font(.title2)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 30)
-                            .foregroundColor(.white)
-                            .padding(.top, 10)
-                        
+                        HStack{
+                            Text(StringConstants.PARTICIPANTS)
+                                .font(.title2)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading, 30)
+                                .foregroundColor(.white)
+                                .padding(.top, 10)
+                            Image(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? StringConstants.ADD_BUTTON : "")
+                                .resizable()
+                                .frame(width:40, height:40)
+                                .padding(.trailing, 20)
+                        }
                         Divider()
                             .background(Color.dividerColor)
                             .frame(width:350)
@@ -196,7 +207,6 @@ struct Fields: View {
             .autocapitalization(.none)
             .frame(width: 320, height: 15, alignment: .center)
             .foregroundColor(.white)
-            .textContentType(.emailAddress)
             .padding()
             .foregroundColor(.white)
             .overlay(
