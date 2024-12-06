@@ -21,23 +21,11 @@ class FriendsViewModel : ObservableObject {
     }
     
     @Published var searchUser = ""
-   // @State private var searchUser = ""
-
-    //var sortedFriends: [Friend]
     @Published var url: String = ""
     @Published var searchText = ""
-   // @State private var excludedFriendIds: [String] = []
     @AppStorage("currentUserId") var currentUserId: String?
     let friendsService = FriendsService()
     let userService = UserService()
-
-//    let testUsers: [Friend] = [
-//        Friend(id: "",name: "Ana Nikolić", avatar: "person.circle"),
-//        Friend(id: "",name: "Marko Jovanović", avatar: "person.circle.fill"),
-//        Friend(id: "",name: "Jelena Petrović", avatar: "star.circle"),
-//        Friend(id: "",name: "Ivan Ilić", avatar: "heart.circle"),
-//        Friend(id: "",name: "Sara Perić", avatar: "bolt.circle")
-//    ]
     
     var filteredFriends: [Friend] {
         if searchText.count >= 3 {

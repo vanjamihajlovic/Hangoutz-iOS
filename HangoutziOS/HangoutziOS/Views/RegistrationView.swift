@@ -37,7 +37,7 @@ struct RegistrationView: View {
                         )
                         
                         if !registrationViewModel.isNameValid && registrationViewModel.allFieldsFilled {
-                            Text("Name must be 3-25 characters")
+                            Text("Name must be 3–25 characters")
                                 .foregroundColor(Color.white)
                                 .font(.system(size: 17))
                                 .padding(.leading, 5)
@@ -113,7 +113,7 @@ struct RegistrationView: View {
                         )
                         
                         if !registrationViewModel.isPassword2Valid && registrationViewModel.allFieldsFilled{
-                            Text("Password must match")
+                            Text("Passwords must match")
                                 .foregroundColor(Color.white)
                                 .font(.system(size: 17))
                                 .padding(.leading, 5)

@@ -153,10 +153,7 @@ struct FriendsView: View {
 }
 
 struct PopupView: View {
-    //var sortedFriends: [Friend]
     @ObservedObject var friendViewModel = FriendsViewModel()
-
-//    @State private var searchUser = ""
     @State private var excludedFriendIds: [String] = []
     @State private var users: [Friend] = [
         Friend(id: "",name: "Ana Perić", avatar: "https://via.placeholder.com/50"),
@@ -170,23 +167,6 @@ struct PopupView: View {
         Friend(id: "",name: "Jovana Lukić", avatar: nil),
         Friend(id: "",name: "Petar Đorđević", avatar: "https://via.placeholder.com/50")
     ]
-//    var filteredUsers: [Friend] {
-//        if friendViewModel.searchUser.count >= 3 {
-//            return users.filter { friend in
-//                let firstWord = friend.name.components(separatedBy: " ").first ?? ""
-//                return firstWord.localizedCaseInsensitiveContains(friendViewModel.searchUser)
-//            }
-//        } else {
-//            return users
-//        }
-//    }
-//    var sortedUsers: [Friend] {
-//        filteredUsers.sorted {
-//            let firstWord1 = $0.name.components(separatedBy: " ").first ?? $0.name
-//            let firstWord2 = $1.name.components(separatedBy: " ").first ?? $1.name
-//            return firstWord1.localizedCompare(firstWord2) == .orderedAscending
-//        }
-//    }
     
     var body: some View {
         ZStack {
@@ -311,8 +291,6 @@ struct PopupView: View {
                     await friendViewModel.getFriends()
                     await friendViewModel.getUsersWhoAreNotFriends()
                 }
-               // friendViewModel.getUsersWhoAreNotFriends()
-//               excludedFriendIds = sortedFriends.compactMap { $0.id }
                print("Excluded friends ids: \(friendViewModel.notFriends)")
             }
         }
