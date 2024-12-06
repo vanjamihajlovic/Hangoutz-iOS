@@ -30,5 +30,15 @@ class CreateEventViewModel : ObservableObject {
         case street = "Street"
         case place = "Place*"
     }
-    
+    func getFriends() async {
+        guard let userId = currentUserId else {
+            print("Current user ID is nil.")
+            return
+        }
+        url = SupabaseConfig.baseURL + SupabaseConstants.GET_FIRENDS_VIA_ID + userId
+        let fetchedFriends = await friendsService.getFriends(from: url)
+        await MainActor.run {
+            self.friends = fetchedFriends
+        }
+    }
 }

@@ -14,98 +14,103 @@ struct CreateEventView: View {
     @StateObject var createEventViewModel = CreateEventViewModel()
     @StateObject var eventViewModel = EventViewModel.shared
     @Environment(\.presentationMode) var presentationMode
-   
+    
     @State var showSheet: Bool = false
     @State var searchText: String = ""
     let selectedTab : Tab
     
     var body: some View {
-        
-        ZStack {
-            VStack {
-                AppBarView()
-                ScrollView {
-                    VStack{
-                        FieldsCreateEvent(textFieldType: $createEventViewModel.title, fieldsCategory: DetailsViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: "")
-                            .padding(5)
-                            .accessibilityIdentifier(AccessibilityIdentifierConstants.TITLE)
-                        FieldsCreateEvent(textFieldType: $createEventViewModel.description, fieldsCategory: DetailsViewModel.FieldsCategory.description.rawValue, textFieldPlaceholder: "")
-                            .padding(5)
-                            .accessibilityIdentifier(AccessibilityIdentifierConstants.DESCRIPTION)
-                        FieldsCreateEvent(textFieldType: $createEventViewModel.city, fieldsCategory: DetailsViewModel.FieldsCategory.city.rawValue, textFieldPlaceholder: "")
-                            .padding(5)
-                            .accessibilityIdentifier(AccessibilityIdentifierConstants.CITY)
-                        FieldsCreateEvent(textFieldType: $createEventViewModel.street, fieldsCategory: DetailsViewModel.FieldsCategory.street.rawValue, textFieldPlaceholder: "")
-                            .padding(5)
-                            .accessibilityIdentifier(AccessibilityIdentifierConstants.STREET)
-                        FieldsCreateEvent(textFieldType: $createEventViewModel.place, fieldsCategory: DetailsViewModel.FieldsCategory.place.rawValue, textFieldPlaceholder: "")
-                            .padding(5)
-                            .accessibilityIdentifier(AccessibilityIdentifierConstants.PLACE)
-                        
-                        Spacer()
-                        
-                        DateAndTime
-                        
-                        HStack {
-                            Text(StringConstants.PARTICIPANTS)
-                                .font(.title2)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.leading, 15)
-                                .foregroundColor(.white)
-                            Button(action: {showSheet.toggle()}){
-                                Image("AddButtonImage")
-                                    .resizable()
-                                    .frame(width:40, height:40)
-                                    .padding(.trailing, 20)
-                            }.sheet(isPresented: $showSheet){
-                                VStack{
-                                    TextField("Search...", text: $searchText, prompt: Text("Search..."))
-                                        .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
-                                        .autocapitalization(.none)
-                                        .frame(width: 300, height: 15, alignment: .center)
-                                        .padding()
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 20)
-                                                .stroke(Color.gray, lineWidth: 3)
-                                        )
-                                    Spacer()
-                                }.padding(.top, 20)
-                                    .presentationDetents([.fraction(0.7)])
+       // ScrollView {
+            ZStack {
+                VStack {
+                    AppBarView()
+                    ScrollView {
+                        VStack{
+                            FieldsCreateEvent(textFieldType: $createEventViewModel.title, fieldsCategory: CreateEventViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: "")
+                                .padding(5)
+                                .accessibilityIdentifier(AccessibilityIdentifierConstants.TITLE)
+                            FieldsCreateEvent(textFieldType: $createEventViewModel.description, fieldsCategory: CreateEventViewModel.FieldsCategory.description.rawValue, textFieldPlaceholder: "")
+                                .padding(5)
+                                .accessibilityIdentifier(AccessibilityIdentifierConstants.DESCRIPTION)
+                            FieldsCreateEvent(textFieldType: $createEventViewModel.city, fieldsCategory: CreateEventViewModel.FieldsCategory.city.rawValue, textFieldPlaceholder: "")
+                                .padding(5)
+                                .accessibilityIdentifier(AccessibilityIdentifierConstants.CITY)
+                            FieldsCreateEvent(textFieldType: $createEventViewModel.street, fieldsCategory: CreateEventViewModel.FieldsCategory.street.rawValue, textFieldPlaceholder: "")
+                                .padding(5)
+                                .accessibilityIdentifier(AccessibilityIdentifierConstants.STREET)
+                            FieldsCreateEvent(textFieldType: $createEventViewModel.place, fieldsCategory: CreateEventViewModel.FieldsCategory.place.rawValue, textFieldPlaceholder: "")
+                                .padding(5)
+                                .accessibilityIdentifier(AccessibilityIdentifierConstants.PLACE)
+                            
+                            Spacer()
+                            
+                            DateAndTime
+                            
+                            HStack {
+                                Text(StringConstants.PARTICIPANTS)
+                                    .font(.title2)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.leading, 15)
+                                    .foregroundColor(.white)
+                                Button(action: {showSheet.toggle()}){
+                                    Image("AddButtonImage")
+                                        .resizable()
+                                        .frame(width:40, height:40)
+                                        .padding(.trailing, 20)
+                                }.sheet(isPresented: $showSheet){
+                                    VStack{
+                                        TextField("Search...", text: $searchText, prompt: Text("Search..."))
+                                            .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
+                                            .autocapitalization(.none)
+                                            .frame(width: 300, height: 15, alignment: .center)
+                                            .padding()
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 20)
+                                                    .stroke(Color.gray, lineWidth: 3)
+                                            )
+                                        Spacer()
+                                        
+                                    }.padding(.top, 20)
+                                        .presentationDetents([.fraction(0.7)])
+                                }
                             }
-                        }
+                            
+                            Divider()
+                                .background(Color.dividerColor)
+                                .frame(width:350)
+                        }.padding(.top, 20)
+                            .frame(maxWidth: .infinity)
                         
-                        Divider()
-                            .background(Color.dividerColor)
-                            .frame(width:350)
-                    }.padding(.top, 20)
-                }
-                
-                NavigationLink(destination: MainTabView().navigationBarBackButtonHidden(true)){
-                    Button(action: {
-                        //TODO: MAKE NAVIGATION ONLY TO CREATED. TICKET REQUIREMENT!!
-                    }){
                         
-                        HStack {
-                            Text(StringConstants.CREATE)
-                            Image.doorRightHandOpen
+                    }
+                    ZStack{
+                        NavigationLink(destination: MainTabView().navigationBarBackButtonHidden(true)){
+                            Button(action: {
+                                //TODO: MAKE NAVIGATION ONLY TO CREATED. TICKET REQUIREMENT!!
+                            }){
+                                
+                                HStack {
+                                    Text(StringConstants.CREATE)
+                                    Image.doorRightHandOpen
+                                }
+                            }
+                            .onDisappear{
+                                eventViewModel.performApiLogic(for: selectedTab)
+                                MainTabView()
+                            }
+                            .padding()
+                            .frame(width:310)
+                            .background(Color.loginButton)
+                            .cornerRadius(20)
+                            .foregroundColor(.black)
+                            .padding(.bottom, 20)
+                            .accessibilityIdentifier(AccessibilityIdentifierConstants.CREATE_EVENT)
                         }
-                    }
-                    .onDisappear{
-                        eventViewModel.performApiLogic(for: selectedTab)
-                        MainTabView()
-                    }
-                    .padding()
-                    .frame(width:310)
-                    .background(Color.loginButton)
-                    .cornerRadius(20)
-                    .foregroundColor(.black)
-                    .padding(.bottom, 20)
-                    .accessibilityIdentifier(AccessibilityIdentifierConstants.CREATE_EVENT)
+                    }.ignoresSafeArea(.keyboard, edges: .all)
                 }
+                .applyBlurredBackground()
             }
-            .applyBlurredBackground()
-        }.ignoresSafeArea(.keyboard, edges: .all)
-        
+        //}
     }
     var DateAndTime : some View{
         
@@ -149,6 +154,7 @@ struct CreateEventView: View {
         }.padding()
             .padding(.leading, -3)
     }
+        
 }
 
 struct FieldsCreateEvent: View {
@@ -162,7 +168,7 @@ struct FieldsCreateEvent: View {
             Text("\(fieldsCategory)")
                 .font(.caption)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 40)
+                .padding(.leading, 20)
                 .foregroundColor(.white)
             TextField("", text: $textFieldType, prompt: Text(textFieldPlaceholder)
                 .foregroundColor(.white))
