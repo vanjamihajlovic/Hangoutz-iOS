@@ -11,12 +11,10 @@ import SwiftUI
 
 struct CreateEventView: View {
     
-    @ObservedObject var detailsViewModel = DetailsViewModel()
-    @ObservedObject var userService = UserService()
-    @ObservedObject var eventViewModel = EventViewModel.shared
+    @StateObject var createEventViewModel = CreateEventViewModel()
+    @StateObject var eventViewModel = EventViewModel.shared
     @Environment(\.presentationMode) var presentationMode
-    @State private var selectedDate = Date()
-    @State private var selectedTime = Date()
+   
     @State var showSheet: Bool = false
     @State var searchText: String = ""
     let selectedTab : Tab
@@ -28,19 +26,19 @@ struct CreateEventView: View {
                 AppBarView()
                 ScrollView {
                     VStack{
-                        FieldsCreateEvent(textFieldType: $detailsViewModel.title, fieldsCategory: DetailsViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: "")
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.title, fieldsCategory: DetailsViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.TITLE)
-                        FieldsCreateEvent(textFieldType: $detailsViewModel.description, fieldsCategory: DetailsViewModel.FieldsCategory.description.rawValue, textFieldPlaceholder: "")
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.description, fieldsCategory: DetailsViewModel.FieldsCategory.description.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.DESCRIPTION)
-                        FieldsCreateEvent(textFieldType: $detailsViewModel.city, fieldsCategory: DetailsViewModel.FieldsCategory.city.rawValue, textFieldPlaceholder: "")
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.city, fieldsCategory: DetailsViewModel.FieldsCategory.city.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.CITY)
-                        FieldsCreateEvent(textFieldType: $detailsViewModel.street, fieldsCategory: DetailsViewModel.FieldsCategory.street.rawValue, textFieldPlaceholder: "")
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.street, fieldsCategory: DetailsViewModel.FieldsCategory.street.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.STREET)
-                        FieldsCreateEvent(textFieldType: $detailsViewModel.place, fieldsCategory: DetailsViewModel.FieldsCategory.place.rawValue, textFieldPlaceholder: "")
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.place, fieldsCategory: DetailsViewModel.FieldsCategory.place.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.PLACE)
                         
@@ -113,7 +111,7 @@ struct CreateEventView: View {
         
         HStack(spacing: 30) {
             HStack {
-                DatePicker("", selection: $selectedDate, displayedComponents: .date)
+                DatePicker("", selection: $createEventViewModel.selectedDate, displayedComponents: .date)
                     .labelsHidden()
                     .tint(.white)
                     .foregroundColor(.white)
@@ -131,7 +129,7 @@ struct CreateEventView: View {
             .accessibilityIdentifier(AccessibilityIdentifierConstants.DATE)
             
             HStack {
-                DatePicker("", selection: $selectedTime, displayedComponents: .hourAndMinute)
+                DatePicker("", selection: $createEventViewModel.selectedTime, displayedComponents: .hourAndMinute)
                     .labelsHidden()
                     .environment(\.locale, Locale(identifier: "en_GB"))
                     .tint(.white)

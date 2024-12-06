@@ -11,9 +11,9 @@ import SwiftUI
 
 struct DetailsView: View {
     
-    @ObservedObject var detailsViewModel = DetailsViewModel()
-    @ObservedObject var userService = UserService()
-    @ObservedObject var eventViewModel = EventViewModel.shared
+    @StateObject var detailsViewModel = DetailsViewModel()
+    @StateObject var userService = UserService()
+    @StateObject var eventViewModel = EventViewModel.shared
     @State private var selectedDate = Date()
     @State private var selectedTime = Date()
     @State var isOwner : Bool = false
