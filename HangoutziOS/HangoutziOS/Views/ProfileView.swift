@@ -17,19 +17,13 @@ struct ProfileView: View {
     @State var selectedImageCamera : UIImage?
     @State var showSheet: Bool = false
     @State var showCamera: Bool = false
+    @State private var selectedImage: UIImage?
     var userService : UserService = UserService()
     let backgroundImage: String = "MainBackground"
-    @State private var selectedImage: UIImage?
-    
     
     var body: some View {
         
         ZStack {
-
-            Image.backgroundImage
-                .resizable()
-                .scaledToFill()
-                .edgesIgnoringSafeArea(.all)
             
             ZStack {
                 
@@ -165,6 +159,8 @@ struct ProfileView: View {
                             ProgressView()
                         }
                         ).accessibilityIdentifier(AccessibilityIdentifierConstants.PROFILE_PICTURE)
+                            .ignoresSafeArea(.keyboard, edges: .all)
+                        
                     }
                     .sheet(isPresented: $showSheet) {
                         HStack {
@@ -202,8 +198,8 @@ struct ProfileView: View {
                         .presentationDetents([.fraction(0.2)])
                     }
                 }
-            }
-            .padding(.bottom, 350)
+            }.ignoresSafeArea(.keyboard, edges: .all)
+                .padding(.bottom, 350)
             VStack{
                 HStack {
                     if(profileViewModel.isEditing){
@@ -213,6 +209,8 @@ struct ProfileView: View {
                             .disableAutocorrection(true)
                             .textInputAutocapitalization(.never)
                             .padding(10)
+                            .ignoresSafeArea(.keyboard, edges: .all)
+                        
                         Image.checkmark
                             .resizable()
                             .frame(width: 40, height: 30).foregroundColor(profileViewModel.checkUsername(param: newUserName) ? Color.white : Color.gray)
@@ -226,6 +224,7 @@ struct ProfileView: View {
                                 }
                             }
                     }
+                    
                     else{
                         Text(profileViewModel.currentUserName ?? "").font(.custom("Inter", size: 34)).foregroundColor(.white).padding(.top, 20).padding(10)
                             .lineLimit(1)
@@ -241,10 +240,13 @@ struct ProfileView: View {
                             }
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.PEN)
                     }
-                }
+                }.ignoresSafeArea(.keyboard, edges: .all)
+                
                 Text(profileViewModel.currentUserEmail ?? "").font(.custom("Inter", size: 24)).foregroundColor(.white)
                     .accessibilityIdentifier(AccessibilityIdentifierConstants.EMAIL_LABEL)
             }
+            .ignoresSafeArea(.keyboard, edges: .all)
+            
             Button(action: {
                 profileViewModel.isLoggedIn = false
             }){
@@ -257,12 +259,14 @@ struct ProfileView: View {
                 .background(Color.loginButton)
                 .cornerRadius(20)
                 .foregroundColor(.black)
-            }.padding(.top, 550)
+            }.ignoresSafeArea(.keyboard, edges: .all)
+                .padding(.top, 450)
                 .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGOUT)
-        }
-        .applyGlobalBackground()
-        .onAppear{getProfilePicture()}
+        }.ignoresSafeArea(.keyboard, edges: .all)
+            .applyGlobalBackground()
+            .onAppear{getProfilePicture()}
     }
+    
     func getProfilePicture()  {
         Task{
             profileViewModel.createUrlToGetAvatarJson(id: profileViewModel.currentUserId ?? "No id")
@@ -271,7 +275,7 @@ struct ProfileView: View {
             profileViewModel.createUrlToGetAvatarPhoto(imageName: userService.users.first?.avatar ?? SupabaseConfig.avatarDefault)
             profileViewModel.currentUserAvatar = profileViewModel.urlGetAvatarPhoto
             print("URL to get from storage: \(profileViewModel.urlGetAvatarPhoto)")
-
+            
         }
     }
     func uploadProfilePicture(imageToUpload: UIImage) {

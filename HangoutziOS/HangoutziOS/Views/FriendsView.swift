@@ -7,29 +7,10 @@
 import SwiftUI
 
 struct FriendsView: View {
-    
     @AppStorage("currentUserId") var currentUserId: String?
     @ObservedObject var friendViewModel = FriendsViewModel()
-//    @State private var searchText = ""
     @State var showSheet: Bool = false
     
-//    var filteredFriends: [Friend] {
-//        if searchText.count >= 3 {
-//            return friendViewModel.friends.filter { friend in
-//                let firstWord = friend.name.components(separatedBy: " ").first ?? ""
-//                return firstWord.localizedCaseInsensitiveContains(searchText)
-//            }
-//        } else {
-//            return friendViewModel.friends
-//        }
-//    }
-//    var sortedFriends: [Friend] {
-//        filteredFriends.sorted {
-//            let firstWord1 = $0.name.components(separatedBy: " ").first ?? $0.name
-//            let firstWord2 = $1.name.components(separatedBy: " ").first ?? $1.name
-//            return firstWord1.localizedCompare(firstWord2) == .orderedAscending
-//        }
-//    }
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -54,23 +35,44 @@ struct FriendsView: View {
                 .frame(width: 340, height:60, alignment: .center)
                 .padding(.top, 10)
                 
-                List {
-                    ForEach(friendViewModel.sortedFriends) { friend in
-                        HStack {
-                            if let avatarImage = friend.avatar {
-                                AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
-                                           content:{ Image in
-                                    Image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .clipShape(Circle())
-                                        .overlay(
-                                            Circle()
-                                                .stroke(Color("FriendAddButton"), lineWidth: 4)
-                                        )
-                                        .frame(width: 50, height: 50)
-                                        .clipShape(Circle())
-                                }, placeholder: {
+                if friendViewModel.sortedFriends.isEmpty{
+                    Spacer()
+                    Text("No friends found.")
+                        .foregroundColor(Color.white)
+                    Spacer()
+                }
+                else {
+                    List {
+                        ForEach(friendViewModel.sortedFriends) { friend in
+                            HStack {
+                                if let avatarImage = friend.avatar {
+                                    AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
+                                               content:{ Image in
+                                        Image
+                                            .resizable()
+                                            .scaledToFill()
+                                            .clipShape(Circle())
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color("FriendAddButton"), lineWidth: 4)
+                                            )
+                                            .frame(width: 50, height: 50)
+                                            .clipShape(Circle())
+                                    }, placeholder: {
+                                        Image("DefaultImage")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .clipShape(Circle())
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                            )
+                                            .frame(width: 50, height: 50)
+                                            .accessibilityIdentifier("friendImagePlaceholder")
+                                    }
+                                    )
+                                    .accessibilityIdentifier("friendImage")
+                                } else {
                                     Image("DefaultImage")
                                         .resizable()
                                         .scaledToFit()
@@ -80,40 +82,27 @@ struct FriendsView: View {
                                                 .stroke(Color("FriendAddButton"), lineWidth: 2)
                                         )
                                         .frame(width: 50, height: 50)
-                                        .accessibilityIdentifier("friendImagePlaceholder")
+                                        .accessibilityIdentifier("defaultFriendImage")
+                                    
                                 }
-                                )
-                                .accessibilityIdentifier("friendImage")
-                            } else {
-                                Image("DefaultImage")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .clipShape(Circle())
-                                    .overlay(
-                                        Circle()
-                                            .stroke(Color("FriendAddButton"), lineWidth: 2)
-                                    )
-                                    .frame(width: 50, height: 50)
-                                    .accessibilityIdentifier("defaultFriendImage")
-                                
+                                Text(friend.name)
+                                    .accessibilityIdentifier("friendName")
+                                    .font(.headline)
+                                    .foregroundColor(Color("FriendFontColor"))
                             }
-                            Text(friend.name)
-                                .accessibilityIdentifier("friendName")
-                                .font(.headline)
-                                .foregroundColor(Color("FriendFontColor"))
+                            .groupBoxAccessibilityIdentifier("friendListItem")
+                            .listRowBackground(
+                                Rectangle()
+                                    .fill(Color("FriendsColor"))
+                                    .frame(width: 340, height: 65)
+                                    .cornerRadius(25)
+                            )
+                            .padding(.vertical, 8)
                         }
-                        .groupBoxAccessibilityIdentifier("friendListItem")
-                        .listRowBackground(
-                            Rectangle()
-                                .fill(Color("FriendsColor"))
-                                .frame(width: 340, height: 65)
-                                .cornerRadius(25)
-                        )
-                        .padding(.vertical, 8)
+                        .listRowSeparator(.hidden)
                     }
-                    .listRowSeparator(.hidden)
+                    .scrollContentBackground(.hidden)
                 }
-                .scrollContentBackground(.hidden)
             }
             
             VStack {
@@ -155,18 +144,6 @@ struct FriendsView: View {
 struct PopupView: View {
     @ObservedObject var friendViewModel = FriendsViewModel()
     @State private var excludedFriendIds: [String] = []
-    @State private var users: [Friend] = [
-        Friend(id: "",name: "Ana Perić", avatar: "https://via.placeholder.com/50"),
-        Friend(id: "",name: "Marko Jovanović", avatar: "https://via.placeholder.com/50"),
-        Friend(id: "",name: "Ivana Stanković", avatar: nil),
-        Friend(id: "",name: "Bojan Petrović", avatar: "https://via.placeholder.com/50"),
-        Friend(id: "",name: "Ana Kovačević", avatar: nil),
-        Friend(id: "",name: "Luka Milenković", avatar: "https://via.placeholder.com/50"),
-        Friend(id: "",name: "Mila Nikolić", avatar: nil),
-        Friend(id: "",name: "Nikola Ilić", avatar: "https://via.placeholder.com/50"),
-        Friend(id: "",name: "Jovana Lukić", avatar: nil),
-        Friend(id: "",name: "Petar Đorđević", avatar: "https://via.placeholder.com/50")
-    ]
     
     var body: some View {
         ZStack {
@@ -291,7 +268,6 @@ struct PopupView: View {
                     await friendViewModel.getFriends()
                     await friendViewModel.getUsersWhoAreNotFriends()
                 }
-               print("Excluded friends ids: \(friendViewModel.notFriends)")
             }
         }
     }

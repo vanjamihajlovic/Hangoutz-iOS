@@ -230,7 +230,7 @@ class UserService : ObservableObject {
         }.resume()
     }
     func uploadImageToSupabase(image: UIImage, fileName: String) {
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+        guard let imageData = image.jpegData(compressionQuality: 0.2) else {
             print("Error, no image detected")
             return
         }
