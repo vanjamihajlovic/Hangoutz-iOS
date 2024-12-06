@@ -113,7 +113,7 @@ class RegistrationViewModel: ObservableObject {
             hasValidationErrors = true
         }
         if !allFieldsFilled {
-            globalErrorMessage = "All fields must be filled."
+            globalErrorMessage = "All fields must be filled!"
             showGlobalError = true
         } else {
             showGlobalError = false
