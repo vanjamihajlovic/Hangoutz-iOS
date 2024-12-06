@@ -121,7 +121,7 @@ struct FriendsView: View {
                     }
                     .accessibilityIdentifier("AddFriendButton")
                     .sheet(isPresented: $showSheet){
-                        PopupView(/*sortedFriends: sortedFriends*/)
+                        PopupView()
                         
                     }
                 }

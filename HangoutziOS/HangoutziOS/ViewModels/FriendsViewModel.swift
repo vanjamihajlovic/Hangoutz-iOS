@@ -9,17 +9,8 @@ import SwiftUICore
 import SwiftUI
 
 class FriendsViewModel : ObservableObject {
-    @Published var friends: [Friend] = []{
-        didSet{
-            print("Friends: \(friends)")
-        }
-    }
-    @Published var notFriends: [userData] = []{
-        didSet{
-            print("Not friends: \(notFriends)")
-        }
-    }
-    
+    @Published var friends: [Friend] = []
+    @Published var notFriends: [userData] = []
     @Published var searchUser = ""
     @Published var url: String = ""
     @Published var searchText = ""
@@ -59,14 +50,11 @@ class FriendsViewModel : ObservableObject {
     
     func getUsersWhoAreNotFriends() async {
         let excludedFriendIds = sortedFriends.compactMap { $0.id }
-        print("\(sortedFriends)")
-        print("\(excludedFriendIds)")
         let joinedString = excludedFriendIds.joined(separator: ",")
         url = SupabaseConfig.baseURL + SupabaseConstants.GET_USERS_WHO_ARE_NOT_FRIENDS + joinedString + ")&name=ilike." + searchUser + "*"
-        let fetchedFriends2 = await userService.getUsers(from: url)
-        print("fetched friends: \(fetchedFriends2)")
+        let fetchedNonFriends = await userService.getUsers(from: url)
         await MainActor.run {
-            self.notFriends = fetchedFriends2
+            self.notFriends = fetchedNonFriends
         }
     }
 }
