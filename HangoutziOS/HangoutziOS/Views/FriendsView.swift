@@ -200,6 +200,13 @@ struct PopupView: View {
                     )
                     .accessibilityIdentifier("usersSearchField")
                     .padding()
+                    .onChange(of: friendViewModel.searchUser) { newValue in
+                        if newValue.count >= 3 {
+                            Task {
+                                await friendViewModel.getUsersWhoAreNotFriends()
+                            }
+                        }
+                    }
                     
                     if !friendViewModel.searchUser.isEmpty {
                         Button(action: {
@@ -259,7 +266,7 @@ struct PopupView: View {
                                         .frame(width: 47, height: 47)
                                         .accessibilityIdentifier("defaultUserImage")
                                 }
-                                Text(user.name)
+                                Text(user.name ?? "")
                                     .font(.title3).padding(.leading, 10)
                                     .foregroundColor(Color("FriendFontColor"))
                                     .accessibilityIdentifier("userName")
@@ -301,6 +308,7 @@ struct PopupView: View {
             .presentationDetents([.fraction(0.7)])
             .onAppear {
                 Task {
+                    await friendViewModel.getFriends()
                     await friendViewModel.getUsersWhoAreNotFriends()
                 }
                // friendViewModel.getUsersWhoAreNotFriends()

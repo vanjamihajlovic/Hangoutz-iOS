@@ -92,7 +92,7 @@ class SupabaseConstants {
     static let SELECT_INVITED_EVENTS :  String = "rest/v1/events?select=*,invites!inner(event_status,user_id),users!owner(id,avatar,name)&invites.event_status=eq.invited&invites.user_id=eq."
     static let SELECT_MINE_EVENTS : String = "rest/v1/events?select=*,users(avatar)&owner=eq."
     static let GET_FIRENDS_VIA_ID : String = "rest/v1/friends?select=users!friend_id(id,name,avatar)&user_id=eq."
-    static let GET_USERS_WHO_ARE_NOT_FRIENDS: String = "rest/v1/users?select=name,avatar&id=not.in.("
+    static let GET_USERS_WHO_ARE_NOT_FRIENDS: String = "rest/v1/users?select=id,name,avatar&id=not.in.("
     //https://zsjxwfjutstrybvltjov.supabase.co/rest/v1/users?select=name,avatar&id=not.in.(......)&name=ilike.*
 
 }

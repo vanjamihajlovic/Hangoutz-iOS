@@ -14,7 +14,7 @@ class FriendsViewModel : ObservableObject {
             print("Friends: \(friends)")
         }
     }
-    @Published var notFriends: [Friend] = []{
+    @Published var notFriends: [userData] = []{
         didSet{
             print("Not friends: \(notFriends)")
         }
@@ -26,9 +26,10 @@ class FriendsViewModel : ObservableObject {
     //var sortedFriends: [Friend]
     @Published var url: String = ""
     @Published var searchText = ""
-    @State private var excludedFriendIds: [String] = []
+   // @State private var excludedFriendIds: [String] = []
     @AppStorage("currentUserId") var currentUserId: String?
     let friendsService = FriendsService()
+    let userService = UserService()
 
 //    let testUsers: [Friend] = [
 //        Friend(id: "",name: "Ana Nikolić", avatar: "person.circle"),
@@ -69,10 +70,13 @@ class FriendsViewModel : ObservableObject {
     }
     
     func getUsersWhoAreNotFriends() async {
-        excludedFriendIds = sortedFriends.compactMap { $0.id }
+        let excludedFriendIds = sortedFriends.compactMap { $0.id }
+        print("\(sortedFriends)")
         print("\(excludedFriendIds)")
-        url = SupabaseConfig.baseURL + SupabaseConstants.GET_USERS_WHO_ARE_NOT_FRIENDS + "\(excludedFriendIds)" + ")&name=ilike." + searchUser + "*"
-        let fetchedFriends2 = await friendsService.getFriends(from: url)
+        let joinedString = excludedFriendIds.joined(separator: ",")
+        url = SupabaseConfig.baseURL + SupabaseConstants.GET_USERS_WHO_ARE_NOT_FRIENDS + joinedString + ")&name=ilike." + searchUser + "*"
+        let fetchedFriends2 = await userService.getUsers(from: url)
+        print("fetched friends: \(fetchedFriends2)")
         await MainActor.run {
             self.notFriends = fetchedFriends2
         }
