@@ -20,57 +20,57 @@ struct CreateEventView: View {
     let selectedTab : Tab
     
     var body: some View {
-       // ScrollView {
-            ZStack {
-                VStack {
-                    AppBarView()
-                    ScrollView {
-                        VStack{
-                            FieldsCreateEvent(textFieldType: $createEventViewModel.title, fieldsCategory: CreateEventViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: "")
-                                .padding(5)
-                                .accessibilityIdentifier(AccessibilityIdentifierConstants.TITLE)
-                            FieldsCreateEvent(textFieldType: $createEventViewModel.description, fieldsCategory: CreateEventViewModel.FieldsCategory.description.rawValue, textFieldPlaceholder: "")
-                                .padding(5)
-                                .accessibilityIdentifier(AccessibilityIdentifierConstants.DESCRIPTION)
-                            FieldsCreateEvent(textFieldType: $createEventViewModel.city, fieldsCategory: CreateEventViewModel.FieldsCategory.city.rawValue, textFieldPlaceholder: "")
-                                .padding(5)
-                                .accessibilityIdentifier(AccessibilityIdentifierConstants.CITY)
-                            FieldsCreateEvent(textFieldType: $createEventViewModel.street, fieldsCategory: CreateEventViewModel.FieldsCategory.street.rawValue, textFieldPlaceholder: "")
-                                .padding(5)
-                                .accessibilityIdentifier(AccessibilityIdentifierConstants.STREET)
-                            FieldsCreateEvent(textFieldType: $createEventViewModel.place, fieldsCategory: CreateEventViewModel.FieldsCategory.place.rawValue, textFieldPlaceholder: "")
-                                .padding(5)
-                                .accessibilityIdentifier(AccessibilityIdentifierConstants.PLACE)
-                            
-                            Spacer()
-                            
-                            DateAndTime
-                            
-                            HStack {
-                                Text(StringConstants.PARTICIPANTS)
-                                    .font(.title2)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.leading, 15)
-                                    .foregroundColor(.white)
-                                Button(action: {showSheet.toggle()}){
-                                    Image("AddButtonImage")
-                                        .resizable()
-                                        .frame(width:40, height:40)
-                                        .padding(.trailing, 20)
-                                }.sheet(isPresented: $showSheet){
-                                    PopupViewFriends()
-                                }
+        ZStack {
+            VStack {
+                AppBarView()
+                ScrollView {
+                    VStack{
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.title, fieldsCategory: CreateEventViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: "")
+                            .padding(5)
+                            .accessibilityIdentifier(AccessibilityIdentifierConstants.TITLE)
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.description, fieldsCategory: CreateEventViewModel.FieldsCategory.description.rawValue, textFieldPlaceholder: "")
+                            .padding(5)
+                            .accessibilityIdentifier(AccessibilityIdentifierConstants.DESCRIPTION)
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.city, fieldsCategory: CreateEventViewModel.FieldsCategory.city.rawValue, textFieldPlaceholder: "")
+                            .padding(5)
+                            .accessibilityIdentifier(AccessibilityIdentifierConstants.CITY)
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.street, fieldsCategory: CreateEventViewModel.FieldsCategory.street.rawValue, textFieldPlaceholder: "")
+                            .padding(5)
+                            .accessibilityIdentifier(AccessibilityIdentifierConstants.STREET)
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.place, fieldsCategory: CreateEventViewModel.FieldsCategory.place.rawValue, textFieldPlaceholder: "")
+                            .padding(5)
+                            .accessibilityIdentifier(AccessibilityIdentifierConstants.PLACE)
+                        
+                        Spacer()
+                        
+                        DateAndTime
+                        
+                        HStack {
+                            Text(StringConstants.PARTICIPANTS)
+                                .font(.title2)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading, 15)
+                                .foregroundColor(.white)
+                            Button(action: {showSheet.toggle()}){
+                                Image("AddButtonImage")
+                                    .resizable()
+                                    .frame(width:40, height:40)
+                                    .padding(.trailing, 20)
+                            }.sheet(isPresented: $showSheet){
+                                PopupViewFriends()
                             }
-                            
-                            Divider()
-                                .background(Color.dividerColor)
-                                .frame(width:350)
-                        }.padding(.top, 20)
-                            .frame(maxWidth: .infinity)
+                        }
                         
-                        
-                    }
-                    ZStack{
+                        Divider()
+                            .background(Color.dividerColor)
+                            .frame(width:350)
+                    }.padding(.top, 20)
+                        .frame(maxWidth: .infinity)
+                    
+                    
+                }
+                ZStack{
+                    VStack{
                         NavigationLink(destination: MainTabView().navigationBarBackButtonHidden(true)){
                             Button(action: {
                                 //TODO: MAKE NAVIGATION ONLY TO CREATED. TICKET REQUIREMENT!!
@@ -78,7 +78,6 @@ struct CreateEventView: View {
                                 
                                 HStack {
                                     Text(StringConstants.CREATE)
-                                    Image.doorRightHandOpen
                                 }
                             }
                             .onDisappear{
@@ -93,11 +92,12 @@ struct CreateEventView: View {
                             .padding(.bottom, 20)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.CREATE_EVENT)
                         }
-                    }.ignoresSafeArea(.keyboard, edges: .all)
-                }
-                .applyBlurredBackground()
+                    }
+                } .ignoresSafeArea(.keyboard, edges: .all)
+                
             }
-        //}
+            .applyBlurredBackground()
+        }
     }
     var DateAndTime : some View{
         
@@ -141,7 +141,7 @@ struct CreateEventView: View {
         }.padding()
             .padding(.leading, -3)
     }
-        
+    
 }
 
 struct FieldsCreateEvent: View {
@@ -176,8 +176,9 @@ struct FieldsCreateEvent: View {
 }
 
 struct PopupViewFriends: View {
-    @ObservedObject var friendViewModel = FriendsViewModel()
-    @State private var excludedFriendIds: [String] = []
+    
+    @ObservedObject var createEventViewModel = CreateEventViewModel()
+    @State var isPressed : Bool = false
     
     var body: some View {
         ZStack {
@@ -185,23 +186,23 @@ struct PopupViewFriends: View {
                 .edgesIgnoringSafeArea(.all)
             VStack {
                 HStack {
-                    TextField("", text: $friendViewModel.searchUser,prompt:
+                    TextField("", text: $createEventViewModel.searchUser,prompt:
                                 Text("Search...")
                         .foregroundColor(Color.black)
-                    )
-                    .accessibilityIdentifier("usersSearchField")
-                    .padding()
-                    .onChange(of: friendViewModel.searchUser) { newValue in
-                        if newValue.count >= 3 {
-                            Task {
-                                await friendViewModel.getUsersWhoAreNotFriends()
+                    ).autocorrectionDisabled()
+                        .accessibilityIdentifier("usersSearchField")
+                        .padding()
+                        .onChange(of: createEventViewModel.searchUser) { newValue in
+                            if newValue.count >= 3 {
+                                Task {
+                                    await createEventViewModel.getFriends()
+                                }
                             }
                         }
-                    }
                     
-                    if !friendViewModel.searchUser.isEmpty {
+                    if !createEventViewModel.searchUser.isEmpty {
                         Button(action: {
-                            friendViewModel.searchUser = ""
+                            createEventViewModel.searchUser = ""
                         }){
                             Image(systemName: "x.circle")
                                 .foregroundColor(Color.gray)
@@ -219,9 +220,9 @@ struct PopupViewFriends: View {
                 )
                 .padding(.top, 15)
                 
-                if friendViewModel.searchUser.count >= 3{
+                if createEventViewModel.searchUser.count >= 3{
                     ScrollView{
-                        ForEach(friendViewModel.notFriends){ user in
+                        ForEach(createEventViewModel.myFriends){ user in
                             HStack{
                                 if let avatarURL = user.avatar{
                                     AsyncImage(url: URL(string: avatarURL), content: {image in
@@ -265,15 +266,17 @@ struct PopupViewFriends: View {
                                 HStack {
                                     Spacer()
                                     Button(action: {
+                                        isPressed.toggle()
                                     })
                                     {
-                                        Image("AddButtonImage")
+                                        Image(systemName:"square")
                                             .resizable()
+                                            .foregroundColor(Color.black)
                                             .scaledToFit()
-                                            .frame(width: 40, height: 40)
+                                            .frame(width: 30, height: 30)
                                             .padding()
                                     }
-                                    .accessibilityIdentifier("addUserButton")
+                                    .accessibilityIdentifier("checkbox")
                                 }
                             }
                             .frame(maxWidth: 340, maxHeight: 50, alignment: .leading)
@@ -299,8 +302,7 @@ struct PopupViewFriends: View {
             .presentationDetents([.fraction(0.7)])
             .onAppear {
                 Task {
-                    await friendViewModel.getFriends()
-                    await friendViewModel.getUsersWhoAreNotFriends()
+                    await createEventViewModel.getFriends()
                 }
             }
         }
