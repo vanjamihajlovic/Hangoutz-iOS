@@ -15,6 +15,7 @@ class CreateEventFriendsPopupViewModel : FriendsViewModel {
     @Published var myFriends: [Friend] = []
     let myFriendsService = FriendsService()
     
+
     override func getFriends() async {
         guard let userId = currentUserId else {
             print("Current user ID is nil.")
@@ -44,4 +45,10 @@ class CreateEventFriendsPopupViewModel : FriendsViewModel {
             return firstWord1.localizedCompare(firstWord2) == .orderedAscending
         }
     }
+    
+    func toggleFriendCheck(for friendID: String) {
+            if let index = myFriends.firstIndex(where: { $0.id == friendID }) {
+                myFriends[index].isChecked?.toggle()
+            }
+        }
 }

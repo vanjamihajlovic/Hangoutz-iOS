@@ -221,6 +221,7 @@ struct PopupViewFriends: View {
                 else {
                     List {
                         ForEach(createEventFriendsPopupViewModel.sortedFriends) { friend in
+                            
                             HStack {
                                 if let avatarImage = friend.avatar {
                                     AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
@@ -267,24 +268,30 @@ struct PopupViewFriends: View {
                                     .font(.headline)
                                     .foregroundColor(Color("FriendFontColor"))
                                 Spacer()
-                                Button(action: {isPressed.toggle()}){
-                                    Image(systemName: isPressed ? "checkmark.square" : "square").resizable()
+                                Button(action: {
+                                    
+                                    createEventFriendsPopupViewModel.toggleFriendCheck(for: friend.id)
+                                    
+                                    
+                                }){
+                                    Image(systemName: (friend.isChecked ?? false) ? "checkmark.square" : "square").resizable()
                                         .frame(width: 30, height: 30)
                                         .foregroundColor(Color.black)
+                                    
                                 }
                             }
                             .groupBoxAccessibilityIdentifier("friendListItem")
-                            
                         }
                     }
                     .scrollContentBackground(.hidden)
                 }
             }
             
-        } .onAppear(){
-            Task {
-                await createEventFriendsPopupViewModel.getFriends()
-            }
         }
+        //        .onAppear(){
+        //            Task {
+        //                await createEventFriendsPopupViewModel.getFriends()
+        //            }
+        //        }
     }
 }

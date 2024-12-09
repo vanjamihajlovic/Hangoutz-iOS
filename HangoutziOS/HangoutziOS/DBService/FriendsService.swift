@@ -22,7 +22,11 @@ class FriendsService : ObservableObject{
         if let data = returnedData {
             do {
                 let decodedResponse = try JSONDecoder().decode([APIResponse].self, from: data)
-                let friends = decodedResponse.map { $0.users }
+                let friends = decodedResponse.map { $0.users }.map { friend in
+                    var updatedFriend = friend
+                    updatedFriend.isChecked = friend.isChecked ?? false
+                    return updatedFriend
+                }
                 return friends
             } catch {
                 print("Failed to decode friends data: \(error)")
