@@ -57,4 +57,46 @@ class FriendsViewModel : ObservableObject {
             self.notFriends = fetchedNonFriends
         }
     }
+    
+    func createJsonObjectDelete(friendId: String) -> Data? {
+           let friendId = friendId
+           let jsonObject: [String: Any] = [
+               "user_id" : currentUserId,
+               "friend_id": friendId
+           ]
+           do {
+               let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
+               return jsonData
+           } catch {
+               print("Error creating JSON: \(error.localizedDescription)")
+               return nil
+           }
+       }
+    
+    func createUrlDeleteFriend(){
+        url = SupabaseConfig.baseURL + "rest/v1/friends"
+    }
+    
+    func deleteFriend(friendId : String) async -> Int {
+        let friendId = friendId
+        createUrlDeleteFriend()
+        guard let jsonData = createJsonObjectDelete(friendId: friendId) else {
+            print("Failed to create JSON data.")
+            return 500
+        }
+        let userService = UserService()
+        do {
+            let success = try await userService.deleteFriend(urlString: url, jsonData: jsonData)
+            if success {
+                print("User registered successfully!")
+                return 200
+            }
+        } catch let error as NSError {
+            print("Failed to register user: \(error.localizedDescription)")
+            return error.code
+        }
+        return 500
+    }
+    }
+    
 }

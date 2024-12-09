@@ -102,6 +102,7 @@ struct FriendsView: View {
                         .listRowSeparator(.hidden)
                     }
                     .scrollContentBackground(.hidden)
+                    
                 }
             }
             
@@ -134,6 +135,7 @@ struct FriendsView: View {
         }
         .applyGlobalBackground()
     }
+    func delete(){}
 }
 
 
