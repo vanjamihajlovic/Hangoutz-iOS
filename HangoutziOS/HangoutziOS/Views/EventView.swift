@@ -86,8 +86,13 @@ struct EventView: View {
                         } else {
                             ScrollView{
                                 VStack{
-                                    ForEach(eventViewModel.events.indices, id:  \.self){ index in
-                                        let event = eventViewModel.events[index]
+                                    let sortedEvents = eventViewModel.events.sorted {
+                                        guard let date1 = $0.date, let date2 = $1.date else { return false }
+                                        return date1 < date2
+                                    }
+                                    
+                                    ForEach(sortedEvents.indices, id:  \.self){ index in
+                                        let event = sortedEvents[index]
                                         let color = ColorConstants.eventCardColors[index % ColorConstants.eventCardColors.count]
                                         
                                         EventCard(event:event,color:color, selTab:selectedTab)
