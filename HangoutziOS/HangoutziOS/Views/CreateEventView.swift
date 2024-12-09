@@ -65,6 +65,7 @@ struct CreateEventView: View {
                         Divider()
                             .background(Color.dividerColor)
                             .frame(width:350)
+                        
                     }.padding(.top, 20)
                         .frame(maxWidth: .infinity)
                 }
@@ -187,7 +188,6 @@ struct FieldsCreateEvent: View {
                 .font(.caption)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 20)
-                .padding(.leading, 30)
                 .foregroundColor(.white)
             TextField("", text: $textFieldType, prompt: Text(textFieldPlaceholder)
                 .foregroundColor(.white))
@@ -296,7 +296,6 @@ struct PopupViewFriends: View {
                                     .foregroundColor(Color("FriendFontColor"))
                                 Spacer()
                                 Button(action: {
-                                    
                                     createEventFriendsPopupViewModel.toggleFriendCheck(for: friend.id)
                                     
                                 }){
