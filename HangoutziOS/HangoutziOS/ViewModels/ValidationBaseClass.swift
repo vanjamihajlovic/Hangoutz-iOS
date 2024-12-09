@@ -26,4 +26,11 @@ class Validation {
     func isNameValid(_ name: String) -> Bool {
         return name.count >= ValidationConstants.MIN_NAME_LENGTH && name.count <= ValidationConstants.MAX_NAME_LENGTH
     }
+    
+    func isDateAndTimeValid(dateAndTime: Date) -> Bool{
+        let now = Date()
+        print("Assembled Date: \(dateAndTime)")
+        print("Current Date: \(now)")
+        return dateAndTime > now
+    }
 }

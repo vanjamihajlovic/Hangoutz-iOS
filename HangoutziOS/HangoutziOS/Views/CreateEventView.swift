@@ -14,7 +14,7 @@ struct CreateEventView: View {
     @StateObject var createEventViewModel = CreateEventViewModel()
     @StateObject var eventViewModel = EventViewModel.shared
     @Environment(\.presentationMode) var presentationMode
-    
+    @State private var navigateToMainTab = false
     @State var showSheet: Bool = false
     @State var searchText: String = ""
     let selectedTab : Tab
@@ -25,19 +25,21 @@ struct CreateEventView: View {
                 AppBarView()
                 ScrollView {
                     VStack{
-                        FieldsCreateEvent(textFieldType: $createEventViewModel.title, fieldsCategory: CreateEventViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: "")
+                        
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.title, fieldsCategory: DetailsViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.TITLE)
-                        FieldsCreateEvent(textFieldType: $createEventViewModel.description, fieldsCategory: CreateEventViewModel.FieldsCategory.description.rawValue, textFieldPlaceholder: "")
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.description,fieldsCategory: DetailsViewModel.FieldsCategory.description.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.DESCRIPTION)
-                        FieldsCreateEvent(textFieldType: $createEventViewModel.city, fieldsCategory: CreateEventViewModel.FieldsCategory.city.rawValue, textFieldPlaceholder: "")
+                        
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.city, fieldsCategory: DetailsViewModel.FieldsCategory.city.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.CITY)
-                        FieldsCreateEvent(textFieldType: $createEventViewModel.street, fieldsCategory: CreateEventViewModel.FieldsCategory.street.rawValue, textFieldPlaceholder: "")
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.street, fieldsCategory: DetailsViewModel.FieldsCategory.street.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.STREET)
-                        FieldsCreateEvent(textFieldType: $createEventViewModel.place, fieldsCategory: CreateEventViewModel.FieldsCategory.place.rawValue, textFieldPlaceholder: "")
+                        FieldsCreateEvent(textFieldType: $createEventViewModel.place, fieldsCategory: DetailsViewModel.FieldsCategory.place.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.PLACE)
                         
@@ -60,41 +62,60 @@ struct CreateEventView: View {
                                 PopupViewFriends(createEventFriendsPopupViewModel: createEventFriendsPopupViewModel)
                             }
                         }
-                        
                         Divider()
                             .background(Color.dividerColor)
                             .frame(width:350)
                     }.padding(.top, 20)
                         .frame(maxWidth: .infinity)
-                    
-                    
                 }
-                ZStack{
-                    VStack{
-                        NavigationLink(destination: MainTabView().navigationBarBackButtonHidden(true)){
-                            Button(action: {
-                                //TODO: MAKE NAVIGATION ONLY TO CREATED. TICKET REQUIREMENT!!
-                            }){
-                                
-                                HStack {
-                                    Text(StringConstants.CREATE)
-                                }
+                
+                if let emptyError = createEventViewModel.emptyError {
+                    Text(emptyError)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                }
+                
+                if let dateError = createEventViewModel.dateError {
+                    Text(dateError)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                        .padding(.bottom,5)
+                }
+                
+                if let descriptionError = createEventViewModel.descriptionError {
+                    Text(descriptionError)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                        .padding(.bottom,5)
+                }
+                
+                NavigationLink(
+                    destination: MainTabView(selectedTab: .created)
+                        .navigationBarBackButtonHidden(true),
+                    isActive: $navigateToMainTab,
+                    label: {
+                        Button(action: {
+                            createEventViewModel.createCreateEventURLAndInstance()
+                            createEventViewModel.assembleDate()
+                            createEventViewModel.createEvent()
+                            if createEventViewModel.validateFields() {
+                                navigateToMainTab = true
                             }
-                            .onDisappear{
-                                eventViewModel.performApiLogic(for: selectedTab)
-                                MainTabView()
+                        }) {
+                            HStack {
+                                Text(StringConstants.CREATE)
                             }
                             .padding()
-                            .frame(width:310)
+                            .frame(width: 310)
                             .background(Color.loginButton)
                             .cornerRadius(20)
                             .foregroundColor(.black)
-                            .padding(.bottom, 20)
-                            .accessibilityIdentifier(AccessibilityIdentifierConstants.CREATE_EVENT)
                         }
                     }
-                } .ignoresSafeArea(.keyboard, edges: .all)
-                
+                )
+                .ignoresSafeArea(.keyboard, edges: .all)
+                .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGOUT)
+                .padding(.bottom, 20)
             }
             .applyBlurredBackground()
         }.onAppear{
@@ -110,6 +131,9 @@ struct CreateEventView: View {
                 DatePicker("", selection: $createEventViewModel.selectedDate, displayedComponents: .date)
                     .labelsHidden()
                     .tint(.white)
+                    .onChange(of: createEventViewModel.selectedDate) { newDate in
+                        print("Selected Date Picker Value: \(newDate)")
+                    }
                     .foregroundColor(.white)
                 Image(systemName: ImageConstants.CALENDAR)
                     .foregroundColor(.white)
@@ -128,6 +152,9 @@ struct CreateEventView: View {
                 DatePicker("", selection: $createEventViewModel.selectedTime, displayedComponents: .hourAndMinute)
                     .labelsHidden()
                     .environment(\.locale, Locale(identifier: "en_GB"))
+                    .onChange(of: createEventViewModel.selectedDate) { newDate in
+                        print("Selected Time Picker Value: \(newDate)")
+                    }
                     .tint(.white)
                     .foregroundColor(.white)
                 Image(systemName: ImageConstants.CLOCK)
@@ -160,6 +187,7 @@ struct FieldsCreateEvent: View {
                 .font(.caption)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 20)
+                .padding(.leading, 30)
                 .foregroundColor(.white)
             TextField("", text: $textFieldType, prompt: Text(textFieldPlaceholder)
                 .foregroundColor(.white))
@@ -221,7 +249,6 @@ struct PopupViewFriends: View {
                 else {
                     List {
                         ForEach(createEventFriendsPopupViewModel.sortedFriends) { friend in
-                            
                             HStack {
                                 if let avatarImage = friend.avatar {
                                     AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
@@ -288,10 +315,5 @@ struct PopupViewFriends: View {
             }
             
         }
-        //        .onAppear(){
-        //            Task {
-        //                await createEventFriendsPopupViewModel.getFriends()
-        //            }
-        //        }
     }
 }

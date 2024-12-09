@@ -11,7 +11,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		57DE76522D06E39D002244F0 /* Exceptions for "HangoutziOS" folder in "HangoutziOS" target */ = {
+		57DE76612D077240002244F0 /* Exceptions for "HangoutziOS" folder in "HangoutziOS" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -24,7 +24,7 @@
 		59B6D58B2CE60DC100BF6DE3 /* HangoutziOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				57DE76522D06E39D002244F0 /* Exceptions for "HangoutziOS" folder in "HangoutziOS" target */,
+				57DE76612D077240002244F0 /* Exceptions for "HangoutziOS" folder in "HangoutziOS" target */,
 			);
 			path = HangoutziOS;
 			sourceTree = "<group>";

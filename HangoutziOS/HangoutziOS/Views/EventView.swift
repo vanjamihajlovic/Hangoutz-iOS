@@ -16,6 +16,7 @@ struct EventView: View {
     @State private var selectedTabIndex: Int = 0
     @State var selectedTab: Tab = .going
     @State private var isPolling: Bool = false
+    @State var currentTask: Task<Void, Never>?
     
     var body: some View {
         ZStack {
@@ -85,8 +86,13 @@ struct EventView: View {
                         } else {
                             ScrollView{
                                 VStack{
-                                    ForEach(eventViewModel.events.indices, id:  \.self){ index in
-                                        let event = eventViewModel.events[index]
+                                    let sortedEvents = eventViewModel.events.sorted {
+                                        guard let date1 = $0.date, let date2 = $1.date else { return false }
+                                        return date1 < date2
+                                    }
+                                    
+                                    ForEach(sortedEvents.indices, id:  \.self){ index in
+                                        let event = sortedEvents[index]
                                         let color = ColorConstants.eventCardColors[index % ColorConstants.eventCardColors.count]
                                         
                                         EventCard(event:event,color:color, selTab:selectedTab)
@@ -105,7 +111,8 @@ struct EventView: View {
                         Spacer()
                        
                         ZStack {
-                            NavigationLink(destination: CreateEventView(selectedTab: selectedTab)) {
+
+                            NavigationLink(destination: CreateEventView(selectedTab:selectedTab)) {
                                 Image.plusImage
                                 .resizable()
                                 .padding(.trailing, UIConstants.PLUS_SIGN_PADDING_TRAILING)
@@ -128,8 +135,7 @@ struct EventView: View {
             )
         .onAppear() {
             Task{
-                await eventViewModel.createUrlEventFilteredGoing()
-                await eventViewModel.getEvents()
+                eventViewModel.performApiLogic(for: selectedTab)
                 startPollingForBadgeCount()
             }
         }
@@ -159,7 +165,8 @@ struct EventView: View {
     
     private func startPollingForBadgeCount() {
             isPolling = true
-            Task {
+        currentTask?.cancel()
+        currentTask = Task {
                 while isPolling {
                     if let userId = currentUserId {
                         await eventViewModel.createUrlInvitedEventsCount(idUser: userId)
