@@ -99,9 +99,12 @@ struct FriendsView: View {
                             )
                             .padding(.vertical, 8)
                         }
+                        .onDelete(perform: deleteFriend)
                         .listRowSeparator(.hidden)
+                        
                     }
                     .scrollContentBackground(.hidden)
+                    
                     
                 }
             }
@@ -135,7 +138,74 @@ struct FriendsView: View {
         }
         .applyGlobalBackground()
     }
-    func delete(){}
+//    func deleteFriend(at offsets: IndexSet) {
+//        for index in offsets {
+//            // Dohvatanje prijatelja koji se briše
+//            let friend = friendViewModel.sortedFriends[index]
+//            
+//            Task {
+//                // Poziv API-ja za brisanje prijatelja
+//                let statusCode = await friendViewModel.deleteFriend(friendId: friend.id)
+//                
+//                if statusCode == 200 {
+//                    print("Friend deleted successfully.")
+//                    // Nakon uspešnog brisanja, ponovo preuzmi sve prijatelje
+//                    await friendViewModel.getFriends()
+//                } else {
+//                    print("Failed to delete friend. API returned status code \(statusCode)")
+//                    // Ovde možete prikazati notifikaciju korisniku ako želite.
+//                }
+//            }
+//        }
+//    }
+//    func deleteFriend(at offsets: IndexSet) {
+//        Task {
+//            for index in offsets {
+//                guard index < friendViewModel.sortedFriends.count else { continue }
+//                let friendToDelete = friendViewModel.sortedFriends[index]
+//                
+//                let statusCode = await friendViewModel.deleteFriend(friendId: friendToDelete.id)
+//                if statusCode == 200 {
+//                    DispatchQueue.main.async {
+//                        friendViewModel.sortedFriends.remove(at: index)
+//                    }
+//                } else {
+//                    print("Failed to delete friend. API returned status code \(statusCode)")
+//                }
+//            }
+//            // Opcionalno osvežavanje svih prijatelja
+//            DispatchQueue.main.async {
+//                Task {
+//                    await friendViewModel.getFriends()
+//                }
+//            }
+//        }
+//    }
+    func deleteFriend(at offsets: IndexSet) {
+        Task {
+            for index in offsets {
+                guard index < friendViewModel.sortedFriends.count else { continue }
+                let friendToDelete = friendViewModel.sortedFriends[index]
+                
+                let statusCode = await friendViewModel.deleteFriend(friendId: friendToDelete.id)
+                if statusCode == 200 {
+                    print("Successfully deleted friend: \(friendToDelete.name)")
+                } else {
+                    print("Deleting friend with ID: \(friendToDelete.id)")
+                    print("Failed to delete friend. API returned status code \(statusCode)")
+                }
+            }
+            // Osveži celu listu prijatelja
+            DispatchQueue.main.async {
+                Task {
+                    await friendViewModel.getFriends()
+                }
+            }
+        }
+    }
+
+
+
 }
 
 
@@ -233,6 +303,12 @@ struct PopupView: View {
                                 HStack {
                                     Spacer()
                                     Button(action: {
+                                        Task {
+                                            await friendViewModel.addFriend(friendId: user.id ?? "")
+                                            await friendViewModel.reverseAddFriend(friendId: user.id ?? "")
+                                            await friendViewModel.getFriends()
+                                            await friendViewModel.getUsersWhoAreNotFriends()
+                                        }
                                     })
                                     {
                                         Image("AddButtonImage")

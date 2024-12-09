@@ -59,44 +59,65 @@ class FriendsViewModel : ObservableObject {
     }
     
     func createJsonObjectDelete(friendId: String) -> Data? {
-           let friendId = friendId
-           let jsonObject: [String: Any] = [
-               "user_id" : currentUserId,
-               "friend_id": friendId
-           ]
-           do {
-               let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
-               return jsonData
-           } catch {
-               print("Error creating JSON: \(error.localizedDescription)")
-               return nil
-           }
-       }
+        let friendId = friendId
+        let jsonObject: [String: Any] = [
+            "user_id" : currentUserId,
+            "friend_id": friendId
+        ]
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
+            return jsonData
+        } catch {
+            print("Error creating JSON: \(error.localizedDescription)")
+            return nil
+        }
+    }
     
     func createUrlDeleteFriend(){
-        url = SupabaseConfig.baseURL + "rest/v1/friends"
+        url = SupabaseConfig.baseURL + "rest/v1/friends?user_id=eq."
     }
     
-    func deleteFriend(friendId : String) async -> Int {
-        let friendId = friendId
-        createUrlDeleteFriend()
-        guard let jsonData = createJsonObjectDelete(friendId: friendId) else {
-            print("Failed to create JSON data.")
-            return 500
-        }
-        let userService = UserService()
+//    func deleteFriend(friendId : String) async -> Int {
+//        let friendId = friendId
+//        let apiUrl = SupabaseConfig.baseURL + "rest/v1/friends?user_id=eq." + "\(currentUserId)" + "&friend_id=" + "\(friendId)"
+//        
+//        guard let jsonData = createJsonObjectDelete(friendId: friendId) else {
+//            print("Failed to create JSON data.")
+//            return 500
+//        }
+//        let userService = UserService()
+//        do {
+//            let success = try await userService.deleteFriend(urlString: url)
+//            if success {
+//                print("User registered successfully!")
+//                return 200
+//            }
+//        } catch let error as NSError {
+//            print("Failed to register user: \(error.localizedDescription)")
+//            return error.code
+//        }
+//        return 500
+//    }
+    func deleteFriend(friendId: String) async -> Int {
+        let apiUrl = SupabaseConfig.baseURL + "rest/v1/friends?user_id=eq.\(currentUserId ?? "")" + "&friend_id=eq." + "\(friendId)"
+        print("current user id : \(currentUserId)")
+        let friendService = FriendsService()
+        
         do {
-            let success = try await userService.deleteFriend(urlString: url, jsonData: jsonData)
+            let success = try await friendService.deleteFriend(urlString: apiUrl)
             if success {
-                print("User registered successfully!")
-                return 200
+                print("Friend successfully deleted!")
+                return 200 // Uspeh
+            } else {
+                print("Failed to delete friend.")
+                return 400 // Neuspeh
             }
         } catch let error as NSError {
-            print("Failed to register user: \(error.localizedDescription)")
+            print("Error deleting friend: \(error.localizedDescription)")
             return error.code
         }
-        return 500
     }
-    }
-    
+
 }
+
+
