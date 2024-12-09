@@ -13,9 +13,9 @@ class CreateEventFriendsPopupViewModel : FriendsViewModel {
     @Published var myUrl: String = ""
     @Published var mySearchText = ""
     @Published var myFriends: [Friend] = []
+    @Published var checkedFriendIDs: [String] = []
     let myFriendsService = FriendsService()
     
-
     override func getFriends() async {
         guard let userId = currentUserId else {
             print("Current user ID is nil.")
@@ -27,7 +27,6 @@ class CreateEventFriendsPopupViewModel : FriendsViewModel {
             self.myFriends = fetchedFriends
         }
     }
-    
     override var filteredFriends: [Friend] {
         if mySearchText.count >= 3 {
             return myFriends.filter { friend in
@@ -46,9 +45,19 @@ class CreateEventFriendsPopupViewModel : FriendsViewModel {
         }
     }
     
-    func toggleFriendCheck(for friendID: String) {
-            if let index = myFriends.firstIndex(where: { $0.id == friendID }) {
-                myFriends[index].isChecked?.toggle()
-            }
+    func toggleFriendCheck(for id: String) {
+        guard let index = myFriends.firstIndex(where: { $0.id == id }) else {
+            return
         }
+        myFriends[index].isChecked?.toggle()
+        
+        if myFriends[index].isChecked == true {
+            if !checkedFriendIDs.contains(id) {
+                checkedFriendIDs.append(id)
+            }
+        } else {
+            checkedFriendIDs.removeAll { $0 == id }
+        }
+        print("CheckedFriendsIDs is : \(checkedFriendIDs)")
+    }
 }

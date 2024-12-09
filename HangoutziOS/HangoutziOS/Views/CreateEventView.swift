@@ -299,7 +299,6 @@ struct PopupViewFriends: View {
                                     
                                     createEventFriendsPopupViewModel.toggleFriendCheck(for: friend.id)
                                     
-                                    
                                 }){
                                     Image(systemName: (friend.isChecked ?? false) ? "checkmark.square" : "square").resizable()
                                         .frame(width: 30, height: 30)
