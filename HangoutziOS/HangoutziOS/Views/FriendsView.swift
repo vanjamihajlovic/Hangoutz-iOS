@@ -120,7 +120,11 @@ struct FriendsView: View {
                             .padding()
                     }
                     .accessibilityIdentifier("AddFriendButton")
-                    .sheet(isPresented: $showSheet){
+                    .sheet(isPresented: $showSheet, onDismiss: {
+                        Task {
+                            await friendViewModel.getFriends()
+                        }
+                    }){
                         PopupView()
                         
                     }
@@ -231,6 +235,12 @@ struct PopupView: View {
                                 HStack {
                                     Spacer()
                                     Button(action: {
+                                        Task {
+                                            await friendViewModel.addFriend(friendId: user.id ?? "")
+                                            await friendViewModel.reverseAddFriend(friendId: user.id ?? "")
+                                            await friendViewModel.getFriends()
+                                            await friendViewModel.getUsersWhoAreNotFriends()
+                                        }
                                     })
                                     {
                                         Image("AddButtonImage")

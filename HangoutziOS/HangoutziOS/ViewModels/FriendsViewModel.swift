@@ -57,4 +57,78 @@ class FriendsViewModel : ObservableObject {
             self.notFriends = fetchedNonFriends
         }
     }
+    func createJsonObject(friendId: String) -> Data? {
+        let friendId = friendId
+        let jsonObject: [String: Any] = [
+            "user_id" : currentUserId,
+            "friend_id": friendId
+        ]
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
+            return jsonData
+        } catch {
+            print("Error creating JSON: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    func createReverseJsonObject(friendId: String) -> Data? {
+        let friendId = friendId
+        let jsonObject: [String: Any] = [
+            "user_id" : friendId,
+            "friend_id": currentUserId
+        ]
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
+            return jsonData
+        } catch {
+            print("Error creating JSON: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    func createUrlAddFriend()  {
+        url = SupabaseConfig.baseURL + "rest/v1/friends"
+    }
+
+    func addFriend(friendId: String) async -> Int {
+        let friendId = friendId
+        createUrlAddFriend()
+        guard let jsonData = createJsonObject(friendId: friendId) else {
+            print("Failed to create JSON data.")
+            return 500
+        }
+        let userService = UserService()
+        do {
+            let success = try await userService.addUser(urlString: url, jsonData: jsonData)
+            if success {
+                print("User registered successfully!")
+                return 200
+            }
+        } catch let error as NSError {
+            print("Failed to register user: \(error.localizedDescription)")
+            return error.code
+        }
+        return 500
+    }
+    func reverseAddFriend(friendId: String) async -> Int {
+        let friendId = friendId
+        createUrlAddFriend()
+        guard let jsonData = createReverseJsonObject(friendId: friendId) else {
+            print("Failed to create JSON data.")
+            return 500
+        }
+        let userService = UserService()
+        do {
+            let success = try await userService.addUser(urlString: url, jsonData: jsonData)
+            if success {
+                print("User registered successfully!")
+                return 200
+            }
+        } catch let error as NSError {
+            print("Failed to register user: \(error.localizedDescription)")
+            return error.code
+        }
+        return 500
+    }
+
 }
