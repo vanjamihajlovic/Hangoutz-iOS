@@ -186,56 +186,55 @@ struct PopupViewFriends: View {
     
     var body: some View {
         ZStack {
-            Color("AddFriendsPopupColor")
-                .edgesIgnoringSafeArea(.all)
-            VStack {
+            VStack(spacing: 0) {
                 HStack {
-                    TextField("", text: $createEventFriendsPopupViewModel.mySearchUser,prompt:
+                    TextField("", text: $createEventFriendsPopupViewModel.mySearchText,prompt:
                                 Text("Search...")
-                        .foregroundColor(Color.black)
+                        .foregroundColor(Color.gray)
                     )
-                    .accessibilityIdentifier("usersSearchField")
-                    .padding()
-                    .onChange(of: createEventFriendsPopupViewModel.mySearchUser) { newValue in
-                        if newValue.count >= 3 {
-                            Task {
-                                await createEventFriendsPopupViewModel.getFriends()
-                            }
-                        }
-                    }
                     
-                    if !createEventFriendsPopupViewModel.mySearchUser.isEmpty {
+                    .accessibilityIdentifier("friendsSearchField")
+                    if !createEventFriendsPopupViewModel.mySearchText.isEmpty {
                         Button(action: {
-                            createEventFriendsPopupViewModel.mySearchUser = ""
+                            createEventFriendsPopupViewModel.mySearchText = ""
                         }){
                             Image(systemName: "x.circle")
                                 .foregroundColor(Color.gray)
                         }
-                        .accessibilityIdentifier("usersSearchFieldClearButton")
+                        .accessibilityIdentifier("friendsSearchFieldClearButton")
                     }
                 }
                 .padding(12)
-                .cornerRadius(20)
-                .frame(width: 320, height:60, alignment: .center)
+                .frame(width: 340, height: 40, alignment: .center)
                 .overlay(
                     RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.black, lineWidth: 1)
-                        .frame(height: 40)
+                        .stroke(Color.gray, lineWidth: 2)
                 )
-                .padding(.top, 15)
+                .padding(.top, 30)
                 
-                if createEventFriendsPopupViewModel.mySearchUser.count >= 3{
-                    ScrollView{
-                        ForEach(createEventFriendsPopupViewModel.sortedFriends){ user in
-                            HStack{
-                                if let avatarURL = user.avatar{
-                                    AsyncImage(url: URL(string: avatarURL), content: {image in
-                                        image
+                if createEventFriendsPopupViewModel.sortedFriends.isEmpty{
+                    Spacer()
+                    Text("No friends found.")
+                        .foregroundColor(Color.white)
+                    Spacer()
+                }
+                else {
+                    List {
+                        ForEach(createEventFriendsPopupViewModel.sortedFriends) { friend in
+                            HStack {
+                                if let avatarImage = friend.avatar {
+                                    AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
+                                               content:{ Image in
+                                        Image
                                             .resizable()
                                             .scaledToFill()
-                                            .frame(width: 47, height: 47)
                                             .clipShape(Circle())
-                                            .overlay(Circle().stroke(Color("FriendAddButton"), lineWidth: 2))
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color("FriendAddButton"), lineWidth: 4)
+                                            )
+                                            .frame(width: 50, height: 50)
+                                            .clipShape(Circle())
                                     }, placeholder: {
                                         Image("DefaultImage")
                                             .resizable()
@@ -245,11 +244,11 @@ struct PopupViewFriends: View {
                                                 Circle()
                                                     .stroke(Color("FriendAddButton"), lineWidth: 2)
                                             )
-                                            .frame(width: 47, height: 47)
-                                            .accessibilityIdentifier("userImagePlaceholder")
+                                            .frame(width: 50, height: 50)
+                                            .accessibilityIdentifier("friendImagePlaceholder")
                                     }
                                     )
-                                    .accessibilityIdentifier("userImage")
+                                    .accessibilityIdentifier("friendImage")
                                 } else {
                                     Image("DefaultImage")
                                         .resizable()
@@ -259,53 +258,32 @@ struct PopupViewFriends: View {
                                             Circle()
                                                 .stroke(Color("FriendAddButton"), lineWidth: 2)
                                         )
-                                        .frame(width: 47, height: 47)
-                                        .accessibilityIdentifier("defaultUserImage")
+                                        .frame(width: 50, height: 50)
+                                        .accessibilityIdentifier("defaultFriendImage")
+                                    
                                 }
-                                Text(user.name ?? "")
-                                    .font(.title3).padding(.leading, 10)
+                                Text(friend.name)
+                                    .accessibilityIdentifier("friendName")
+                                    .font(.headline)
                                     .foregroundColor(Color("FriendFontColor"))
-                                    .accessibilityIdentifier("userName")
-                                
-                                HStack {
-                                    Spacer()
-                                    Button(action: {
-                                    })
-                                    {
-                                        Image("AddButtonImage")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 40, height: 40)
-                                            .padding()
-                                    }
-                                    .accessibilityIdentifier("addUserButton")
+                                Spacer()
+                                Button(action: {isPressed.toggle()}){
+                                    Image(systemName: isPressed ? "checkmark.square" : "square").resizable()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundColor(Color.black)
                                 }
                             }
-                            .frame(maxWidth: 340, maxHeight: 50, alignment: .leading)
-                            .padding(.leading, 35)
-                            .groupBoxAccessibilityIdentifier("userListItem")
-                            Divider()
-                                .frame(height: 1)
-                                .background(Color.black)
-                                .frame(width: 340)
-                                .shadow(color: .black.opacity(0.4), radius: 4, x: 2, y: 2)
+                            .groupBoxAccessibilityIdentifier("friendListItem")
+                            
                         }
-                        Spacer()
                     }
-                    .padding(.top, 30)
-                }
-                else {
-                    Spacer()
-                    Text("No friends found...")
-                        .bold()
-                    Spacer()
+                    .scrollContentBackground(.hidden)
                 }
             }
-            .presentationDetents([.fraction(0.7)])
-            .onAppear {
-                Task {
-                    await createEventFriendsPopupViewModel.getFriends()
-                }
+            
+        } .onAppear(){
+            Task {
+                await createEventFriendsPopupViewModel.getFriends()
             }
         }
     }
