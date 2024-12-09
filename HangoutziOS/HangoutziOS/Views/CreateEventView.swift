@@ -175,7 +175,7 @@ struct FieldsCreateEvent: View {
             Text("\(fieldsCategory)")
                 .font(.caption)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 40)
+                .padding(.leading, 30)
                 .foregroundColor(.white)
             TextField("", text: $textFieldType, prompt: Text(textFieldPlaceholder)
                 .foregroundColor(.white))

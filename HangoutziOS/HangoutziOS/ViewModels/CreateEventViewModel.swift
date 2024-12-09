@@ -2,7 +2,7 @@
 //  CreateEventViewModel.swift
 //  HangoutziOS
 //
-//  Created by User03 on 12/5/24.
+//  Created by strahinjamil on 12/5/24.
 //
 
 import Foundation
