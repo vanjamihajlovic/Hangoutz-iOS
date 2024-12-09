@@ -67,7 +67,6 @@ struct CreateEventView: View {
                     Text(emptyError)
                         .foregroundColor(.red)
                         .font(.caption)
-                    
                 }
                 
                 if let dateError = createEventViewModel.dateError {

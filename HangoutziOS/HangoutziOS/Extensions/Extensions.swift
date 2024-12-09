@@ -15,8 +15,6 @@ extension GroupBoxStyle where Self == ContainerGroupBoxStyle {
 }
 
 extension View {
-    /// This method wraps the view inside a GroupBox
-    /// and adds accessibilityIdentifier to it
     func groupBoxAccessibilityIdentifier(_ identifier: String) -> some View {
         GroupBox {
             self
@@ -57,12 +55,7 @@ extension Image {
 }
 
 extension Date {
-//    func toSupabaseFormat() {
-//        var formatter = DateFormatter()
-//        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-//        return formatter.date(from: self)
-//    }
-//    
+
     func toString(format: String = "dd/MM/yyyy, HH:mm:ss") -> String {
             let formatter = DateFormatter()
             formatter.dateFormat = format

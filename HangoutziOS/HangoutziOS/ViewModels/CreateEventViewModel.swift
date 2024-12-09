@@ -65,13 +65,10 @@ class CreateEventViewModel : ObservableObject{
         dateComponents.second = timeComponents.second
         dateComponents.timeZone = TimeZone(secondsFromGMT: 0)
         
-        if let combined = calendar.date(from: dateComponents) {
-            print("Combined: \(combined)")
-                assembledDate = combined
-                print("Assembled Date: \(assembledDate)")
-            } else {
-                print(StringConstants.ASSEMBLE_FAILED)
-            }
+        guard let combined = calendar.date(from: dateComponents) else {
+            return
+        }
+        assembledDate = combined
     }
     
     func createCreateEventURLAndInstance() {
