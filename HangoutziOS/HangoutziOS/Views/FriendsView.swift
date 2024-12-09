@@ -5,6 +5,7 @@
 //  Created by strahinjamil on 11/21/24.
 //
 import SwiftUI
+import SwiftUISnackbar
 
 struct FriendsView: View {
     @AppStorage("currentUserId") var currentUserId: String?
@@ -132,12 +133,13 @@ struct FriendsView: View {
                         }
                     }){
                         PopupViewFriends()
-                        
                     }
                 }
             }
-           
-         
+            Text("")
+                .padding(.bottom, 50)
+                .snackbar(isShowing: $friendViewModel.show, title: friendViewModel.snackBarTitle, text: friendViewModel.snackBarText,style: .custom(Color("FriendAddButton")),  extraBottomPadding: 70)
+                
         }
         .onAppear(){
             Task {
@@ -195,7 +197,7 @@ struct FriendsView: View {
                 guard index < friendViewModel.sortedFriends.count else { continue }
                 let friendToDelete = friendViewModel.sortedFriends[index]
                 
-                let statusCode = await friendViewModel.deleteFriend(friendId: friendToDelete.id)
+                let statusCode = await friendViewModel.deleteFriend(friendId: friendToDelete.id, friendName: friendToDelete.name)
                 if statusCode == 200 {
                     print("Successfully deleted friend: \(friendToDelete.name)")
                 } else {

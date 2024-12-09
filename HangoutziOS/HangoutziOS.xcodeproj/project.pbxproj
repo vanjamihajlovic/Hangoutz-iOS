@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		59BDD7F32D07205A00ABC915 /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 59BDD7F22D07205A00ABC915 /* PopupView */; };
+		59BDD7F62D073A2500ABC915 /* SwiftUISnackbar in Frameworks */ = {isa = PBXBuildFile; productRef = 59BDD7F52D073A2500ABC915 /* SwiftUISnackbar */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				59BDD7F32D07205A00ABC915 /* PopupView in Frameworks */,
+				59BDD7F62D073A2500ABC915 /* SwiftUISnackbar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +73,7 @@
 			name = HangoutziOS;
 			packageProductDependencies = (
 				59BDD7F22D07205A00ABC915 /* PopupView */,
+				59BDD7F52D073A2500ABC915 /* SwiftUISnackbar */,
 			);
 			productName = HangoutziOS;
 			productReference = 59B6D5892CE60DC100BF6DE3 /* HangoutziOS.app */;
@@ -103,6 +106,7 @@
 			packageReferences = (
 				59B6D5A12CE625BB00BF6DE3 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				59BDD7F12D07205A00ABC915 /* XCRemoteSwiftPackageReference "PopupView" */,
+				59BDD7F42D073A2500ABC915 /* XCRemoteSwiftPackageReference "SwiftUISnackbar" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 59B6D58A2CE60DC100BF6DE3 /* Products */;
@@ -356,6 +360,14 @@
 				minimumVersion = 3.1.4;
 			};
 		};
+		59BDD7F42D073A2500ABC915 /* XCRemoteSwiftPackageReference "SwiftUISnackbar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/zaniluca/SwiftUISnackbar";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -363,6 +375,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 59BDD7F12D07205A00ABC915 /* XCRemoteSwiftPackageReference "PopupView" */;
 			productName = PopupView;
+		};
+		59BDD7F52D073A2500ABC915 /* SwiftUISnackbar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 59BDD7F42D073A2500ABC915 /* XCRemoteSwiftPackageReference "SwiftUISnackbar" */;
+			productName = SwiftUISnackbar;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

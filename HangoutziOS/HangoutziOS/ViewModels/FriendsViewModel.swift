@@ -12,6 +12,9 @@ class FriendsViewModel : ObservableObject {
     @Published var friends: [Friend] = []
     @Published var notFriends: [userData] = []
     @Published var searchUser = ""
+    @Published var snackBarText = ""
+    @Published var snackBarTitle = ""
+    @Published var show = false
     @Published var url: String = ""
     @Published var searchText = ""
     @AppStorage("currentUserId") var currentUserId: String?
@@ -98,7 +101,8 @@ class FriendsViewModel : ObservableObject {
 //        }
 //        return 500
 //    }
-    func deleteFriend(friendId: String) async -> Int {
+    func deleteFriend(friendId: String, friendName: String) async -> Int {
+        let friendName = friendName
         let apiUrl = SupabaseConfig.baseURL + "rest/v1/friends?user_id=eq.\(currentUserId ?? "")" + "&friend_id=eq." + "\(friendId)"
         print("current user id : \(currentUserId)")
         let friendService = FriendsService()
@@ -107,6 +111,8 @@ class FriendsViewModel : ObservableObject {
             let success = try await friendService.deleteFriend(urlString: apiUrl)
             if success {
                 print("Friend successfully deleted!")
+                show.toggle()
+                snackBarText = "\(friendName) is removed from the friend list"
                 return 200 // Uspeh
             } else {
                 print("Failed to delete friend.")
