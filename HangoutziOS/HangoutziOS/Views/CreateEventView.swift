@@ -10,6 +10,7 @@
 import SwiftUI
 
 struct CreateEventView: View {
+    
     @StateObject var createEventFriendsPopupViewModel = CreateEventFriendsPopupViewModel()
     @StateObject var createEventViewModel = CreateEventViewModel()
     @StateObject var eventViewModel = EventViewModel.shared
@@ -59,15 +60,72 @@ struct CreateEventView: View {
                                     .frame(width:40, height:40)
                                     .padding(.trailing, 20)
                             }.sheet(isPresented: $showSheet){
-                                PopupViewFriends(createEventFriendsPopupViewModel: createEventFriendsPopupViewModel)
+                                PopupViewFriends(createEventFriendsPopupViewModel: createEventFriendsPopupViewModel, showSheet: $showSheet)
                             }
                         }
                         Divider()
                             .background(Color.dividerColor)
                             .frame(width:350)
                         
-                        
-                        
+                        ForEach(createEventFriendsPopupViewModel.sortedFriends) { friend in
+                            if(friend.isChecked == true){
+                                HStack {
+                                    if let avatarImage = friend.avatar {
+                                        AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
+                                                   content:{ Image in
+                                            Image
+                                                .resizable()
+                                                .scaledToFill()
+                                                .clipShape(Circle())
+                                                .overlay(
+                                                    Circle()
+                                                        .stroke(Color("FriendAddButton"), lineWidth: 4)
+                                                )
+                                                .frame(width: 40, height: 40)
+                                                .clipShape(Circle())
+                                        }, placeholder: {
+                                            Image("DefaultImage")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .clipShape(Circle())
+                                                .overlay(
+                                                    Circle()
+                                                        .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                                )
+                                                .frame(width: 40, height: 40)
+                                                .accessibilityIdentifier("friendImagePlaceholder")
+                                        }
+                                        )
+                                        .padding(.leading, 20)
+                                        .accessibilityIdentifier("friendImage")
+                                    } else {
+                                        Image("DefaultImage")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .clipShape(Circle())
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                            )
+                                            .frame(width: 40, height: 40)
+                                            .padding(.leading, 20)
+                                            .accessibilityIdentifier("defaultFriendImage")
+                                        
+                                    }
+                                    Text(friend.name)
+                                        .accessibilityIdentifier("friendName")
+                                        .font(.headline)
+                                        .foregroundColor(Color.white)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.leading, 10)
+                                    
+                                        .accessibilityIdentifier(AccessibilityIdentifierConstants.PARTICIPANTS)
+                                }
+                                Divider()
+                                    .background(Color.dividerColor)
+                                    .frame(width:350)
+                            }
+                        }
                     }.padding(.top, 20)
                         .frame(maxWidth: .infinity)
                 }
@@ -213,7 +271,7 @@ struct PopupViewFriends: View {
     
     @StateObject var createEventFriendsPopupViewModel : CreateEventFriendsPopupViewModel
     @State var isPressed : Bool = false
-    
+    @Binding var showSheet : Bool
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -299,6 +357,8 @@ struct PopupViewFriends: View {
                                 Spacer()
                                 Button(action: {
                                     createEventFriendsPopupViewModel.toggleFriendCheck(for: friend.id)
+                                    //print("User: \(friend.name)\n avatar: \(friend.avatar)\n isChecked: \(friend.isChecked)\n")
+                                    print("User: \(friend.name)\n avatar: \(friend.avatar)\n isChecked: \(friend.isChecked)\n")
                                     
                                 }){
                                     Image(systemName: (friend.isChecked ?? false) ? "checkmark.square" : "square").resizable()
@@ -313,6 +373,7 @@ struct PopupViewFriends: View {
                     .scrollContentBackground(.hidden)
                     
                     Button(action: {
+                        showSheet.toggle()
                     }) {
                         Text("Add")
                             .font(.system(size: 18, weight: .medium))

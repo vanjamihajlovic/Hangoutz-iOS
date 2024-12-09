@@ -26,7 +26,6 @@ struct DetailsView: View {
         ZStack {
             VStack {
                 ZStack{
-                    
                     AppBarView()
                     Image(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? StringConstants.DELETE : "").resizable()
                         .frame(width : 30, height: 30, alignment: .trailing)
