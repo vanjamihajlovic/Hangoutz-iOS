@@ -12,6 +12,7 @@ class EventService : ObservableObject {
     @Published var count : [CountResponse] = []
     @Published var countint : Int = 0
     let decoder = JSONDecoder()
+    let encoder = JSONEncoder()
     let formatter = DateFormatter()
     let url: String = ""
     static let shared = EventService()
@@ -84,6 +85,7 @@ class EventService : ObservableObject {
             }.resume()
         }
     }
+    
     func updateInvitationStatus(fromURL url: String, changeTo: String, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let endpoint = URL(string: url) else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
@@ -112,4 +114,34 @@ class EventService : ObservableObject {
             completion(.success(()))
         }.resume()
     }
+    
+    func createEvent(newEvent: eventModel, fromURL urlString: String) async throws {
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL.")
+            return
+        }
+        print("newEvent when it reaches the DBService: \(newEvent)")
+        
+        var request = URLRequest(url:url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
+        request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        encoder.dateEncodingStrategy = .formatted(formatter)
+        
+        let jsonData = try encoder.encode(newEvent)
+        print("JSON encoded newEvent: \(jsonData)")
+        request.httpBody = jsonData
+        
+        let(data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 201 else {
+            let errorResponse = String(data:data, encoding: .utf8) ?? "Unknown error"
+            print(errorResponse)
+            throw URLError(.badServerResponse, userInfo: ["ErrorResponse": errorResponse])
+        }
+        
+        print("Event created successfully!")
+    }
 }
+
