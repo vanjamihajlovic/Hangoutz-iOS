@@ -114,6 +114,8 @@ class EventViewModel : ObservableObject {
                 await badgeCount = eventService.getCount(from: urlCount) ?? 0
             }
         }
+    
+        
     }
     
 

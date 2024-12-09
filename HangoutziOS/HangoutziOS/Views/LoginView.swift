@@ -18,7 +18,7 @@ struct LoginView: View {
     var body: some View {
         NavigationStack() {
             if isLoggedIn ?? false{
-                MainTabView()
+                MainTabView(selectedTab: .going)
                     .navigationBarBackButtonHidden(true)
             }else{
                 ZStack{

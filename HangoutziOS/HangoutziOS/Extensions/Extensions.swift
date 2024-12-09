@@ -56,6 +56,17 @@ extension Image {
 }
 
 extension Date {
+//    func toSupabaseFormat() {
+//        var formatter = DateFormatter()
+//        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+//        return formatter.date(from: self)
+//    }
+//    
+    func toString(format: String = "dd/MM/yyyy, HH:mm:ss") -> String {
+            let formatter = DateFormatter()
+            formatter.dateFormat = format
+            return formatter.string(from: self)
+        }
     
     func justTime() -> String {
         let formatter = DateFormatter()
