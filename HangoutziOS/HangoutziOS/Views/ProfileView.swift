@@ -249,6 +249,7 @@ struct ProfileView: View {
             
             Button(action: {
                 profileViewModel.isLoggedIn = false
+                profileViewModel.currentUserId = nil
             }){
                 HStack {
                     Text(StringConstants.LOGOUT)

@@ -16,6 +16,7 @@ struct EventView: View {
     @State private var selectedTabIndex: Int = 0
     @State var selectedTab: Tab = .going
     @State private var isPolling: Bool = false
+    @State var currentTask: Task<Void, Never>?
     
     var body: some View {
         ZStack {
@@ -158,7 +159,8 @@ struct EventView: View {
     
     private func startPollingForBadgeCount() {
             isPolling = true
-            Task {
+        currentTask?.cancel()
+        currentTask = Task {
                 while isPolling {
                     if let userId = currentUserId {
                         await eventViewModel.createUrlInvitedEventsCount(idUser: userId)
