@@ -10,7 +10,9 @@ struct FriendsView: View {
     @AppStorage("currentUserId") var currentUserId: String?
     @ObservedObject var friendViewModel = FriendsViewModel()
     @State var showSheet: Bool = false
-    
+//    @State private var showPopup = false // Kontrola prikaza popup-a
+//    @State private var popupMessage = ""
+//    
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -124,12 +126,18 @@ struct FriendsView: View {
                             .padding()
                     }
                     .accessibilityIdentifier("AddFriendButton")
-                    .sheet(isPresented: $showSheet){
-                        PopupView()
+                    .sheet(isPresented: $showSheet, onDismiss: {
+                        Task {
+                            await friendViewModel.getFriends()
+                        }
+                    }){
+                        PopupViewFriends()
                         
                     }
                 }
             }
+           
+         
         }
         .onAppear(){
             Task {
@@ -194,6 +202,14 @@ struct FriendsView: View {
                     print("Deleting friend with ID: \(friendToDelete.id)")
                     print("Failed to delete friend. API returned status code \(statusCode)")
                 }
+                
+                let reverseDeleteStatusCode = await friendViewModel.reverseDeleteFriend(friendId: friendToDelete.id)
+                if reverseDeleteStatusCode == 200 {
+                    print("Successfully deleted friend: \(friendToDelete.name)")
+                } else {
+                    print("Deleting friend with ID: \(friendToDelete.id)")
+                    print("Failed to delete friend. API returned status code \(statusCode)")
+                }
             }
             // Osveži celu listu prijatelja
             DispatchQueue.main.async {
@@ -203,9 +219,6 @@ struct FriendsView: View {
             }
         }
     }
-
-
-
 }
 
 
@@ -213,7 +226,7 @@ struct FriendsView: View {
     FriendsView()
 }
 
-struct PopupView: View {
+struct PopupViewFriends: View {
     @ObservedObject var friendViewModel = FriendsViewModel()
     @State private var excludedFriendIds: [String] = []
     

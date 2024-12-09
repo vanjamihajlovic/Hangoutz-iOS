@@ -131,7 +131,6 @@ class UserService : ObservableObject {
             }
             return true
         }
-        
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
