@@ -12,7 +12,7 @@ struct HangoutziOSApp: App {
     var body: some Scene {
         WindowGroup {
             //NavigationView (in this view check if(isLoggedIn) ? redirect him to home : redirect to login) EMPTY SCREEN (SPLASH SCREEN)
-            LoginView()
+            SplashScreenView()
         }
     }
 }

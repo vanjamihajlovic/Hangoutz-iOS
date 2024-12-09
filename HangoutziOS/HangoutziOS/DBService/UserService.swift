@@ -62,7 +62,6 @@ class UserService : ObservableObject {
         guard let jsonData = jsonData else {
             throw NSError(domain: "Invalid JSON data", code: 0, userInfo: nil)
         }
-        
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")

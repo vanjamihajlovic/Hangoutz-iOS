@@ -53,6 +53,7 @@ extension Image {
     static let profilelines = Image("profilelines")
     static let plusImage = Image("EventViewPlusSign")
     static let avatarImage = Image("avatar_default")
+    static let hangoutz = Image("Hangoutz")
 }
 
 extension Date {
