@@ -13,7 +13,7 @@ struct EventCard : View {
     @ObservedObject var eventViewModel = EventViewModel.shared
     @StateObject var eventService = EventService.shared
     let selTab : Tab
-   
+    
     
     var body: some View {
         let dateTimeString = eventViewModel.createDateTimeString(event: event)

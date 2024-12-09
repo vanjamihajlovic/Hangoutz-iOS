@@ -26,14 +26,12 @@ struct CreateEventView: View {
                 AppBarView()
                 ScrollView {
                     VStack{
-                        
                         FieldsCreateEvent(textFieldType: $createEventViewModel.title, fieldsCategory: DetailsViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.TITLE)
                         FieldsCreateEvent(textFieldType: $createEventViewModel.description,fieldsCategory: DetailsViewModel.FieldsCategory.description.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.DESCRIPTION)
-                        
                         FieldsCreateEvent(textFieldType: $createEventViewModel.city, fieldsCategory: DetailsViewModel.FieldsCategory.city.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.CITY)
@@ -118,8 +116,12 @@ struct CreateEventView: View {
                                         .foregroundColor(Color.white)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .padding(.leading, 10)
-                                    
                                         .accessibilityIdentifier(AccessibilityIdentifierConstants.PARTICIPANTS)
+                                    Button(action : {createEventFriendsPopupViewModel.removeFriendCheck(for: friend.id)}){
+                                        Image(systemName: "minus.circle")
+                                            .padding(.trailing, 20)
+                                            .foregroundColor(Color.white)
+                                    }.accessibilityIdentifier("minus")
                                 }
                                 Divider()
                                     .background(Color.dividerColor)
@@ -386,10 +388,8 @@ struct PopupViewFriends: View {
                     .shadow(color: Color.black.opacity(0.25), radius: 4, x: 2, y: 2)
                     .padding()
                     .accessibilityIdentifier("addButton")
-                    
                 }
             }
-            
         }
     }
 }

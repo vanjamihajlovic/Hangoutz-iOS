@@ -60,4 +60,13 @@ class CreateEventFriendsPopupViewModel : FriendsViewModel {
         }
         print("CheckedFriendsIDs is : \(checkedFriendIDs)")
     }
+    
+    func removeFriendCheck(for id: String) {
+        guard let index = myFriends.firstIndex(where: { $0.id == id }) else {
+            return
+        }
+        myFriends[index].isChecked = false
+        checkedFriendIDs.removeAll { $0 == id }
+        print("CheckedFriendsIDs is : \(checkedFriendIDs)")
+    }
 }
