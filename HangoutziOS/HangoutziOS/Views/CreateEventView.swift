@@ -10,7 +10,7 @@
 import SwiftUI
 
 struct CreateEventView: View {
-    
+    @StateObject var createEventFriendsPopupViewModel = CreateEventFriendsPopupViewModel()
     @StateObject var createEventViewModel = CreateEventViewModel()
     @StateObject var eventViewModel = EventViewModel.shared
     @Environment(\.presentationMode) var presentationMode
@@ -57,7 +57,7 @@ struct CreateEventView: View {
                                     .frame(width:40, height:40)
                                     .padding(.trailing, 20)
                             }.sheet(isPresented: $showSheet){
-                                PopupViewFriends()
+                                PopupViewFriends(createEventFriendsPopupViewModel: createEventFriendsPopupViewModel)
                             }
                         }
                         
@@ -97,6 +97,10 @@ struct CreateEventView: View {
                 
             }
             .applyBlurredBackground()
+        }.onAppear{
+            Task{
+                await createEventFriendsPopupViewModel.getFriends()
+            }
         }
     }
     var DateAndTime : some View{
@@ -177,7 +181,7 @@ struct FieldsCreateEvent: View {
 
 struct PopupViewFriends: View {
     
-    @ObservedObject var createEventViewModel = CreateEventViewModel()
+    @StateObject var createEventFriendsPopupViewModel : CreateEventFriendsPopupViewModel
     @State var isPressed : Bool = false
     
     var body: some View {
@@ -186,23 +190,23 @@ struct PopupViewFriends: View {
                 .edgesIgnoringSafeArea(.all)
             VStack {
                 HStack {
-                    TextField("", text: $createEventViewModel.searchUser,prompt:
+                    TextField("", text: $createEventFriendsPopupViewModel.mySearchUser,prompt:
                                 Text("Search...")
                         .foregroundColor(Color.black)
-                    ).autocorrectionDisabled()
-                        .accessibilityIdentifier("usersSearchField")
-                        .padding()
-                        .onChange(of: createEventViewModel.searchUser) { newValue in
-                            if newValue.count >= 3 {
-                                Task {
-                                    await createEventViewModel.getFriends()
-                                }
+                    )
+                    .accessibilityIdentifier("usersSearchField")
+                    .padding()
+                    .onChange(of: createEventFriendsPopupViewModel.mySearchUser) { newValue in
+                        if newValue.count >= 3 {
+                            Task {
+                                await createEventFriendsPopupViewModel.getFriends()
                             }
                         }
+                    }
                     
-                    if !createEventViewModel.searchUser.isEmpty {
+                    if !createEventFriendsPopupViewModel.mySearchUser.isEmpty {
                         Button(action: {
-                            createEventViewModel.searchUser = ""
+                            createEventFriendsPopupViewModel.mySearchUser = ""
                         }){
                             Image(systemName: "x.circle")
                                 .foregroundColor(Color.gray)
@@ -220,9 +224,9 @@ struct PopupViewFriends: View {
                 )
                 .padding(.top, 15)
                 
-                if createEventViewModel.searchUser.count >= 3{
+                if createEventFriendsPopupViewModel.mySearchUser.count >= 3{
                     ScrollView{
-                        ForEach(createEventViewModel.myFriends){ user in
+                        ForEach(createEventFriendsPopupViewModel.sortedFriends){ user in
                             HStack{
                                 if let avatarURL = user.avatar{
                                     AsyncImage(url: URL(string: avatarURL), content: {image in
@@ -266,17 +270,15 @@ struct PopupViewFriends: View {
                                 HStack {
                                     Spacer()
                                     Button(action: {
-                                        isPressed.toggle()
                                     })
                                     {
-                                        Image(systemName:"square")
+                                        Image("AddButtonImage")
                                             .resizable()
-                                            .foregroundColor(Color.black)
                                             .scaledToFit()
-                                            .frame(width: 30, height: 30)
+                                            .frame(width: 40, height: 40)
                                             .padding()
                                     }
-                                    .accessibilityIdentifier("checkbox")
+                                    .accessibilityIdentifier("addUserButton")
                                 }
                             }
                             .frame(maxWidth: 340, maxHeight: 50, alignment: .leading)
@@ -294,7 +296,7 @@ struct PopupViewFriends: View {
                 }
                 else {
                     Spacer()
-                    Text("Search for new friends...")
+                    Text("No friends found...")
                         .bold()
                     Spacer()
                 }
@@ -302,7 +304,7 @@ struct PopupViewFriends: View {
             .presentationDetents([.fraction(0.7)])
             .onAppear {
                 Task {
-                    await createEventViewModel.getFriends()
+                    await createEventFriendsPopupViewModel.getFriends()
                 }
             }
         }

@@ -128,7 +128,7 @@ class UserService : ObservableObject {
             }.resume()
         }
     }
-    func updateName(url: String, userId: String, newName: String) {
+    func updateName(url: String, userId: String, newName: String) async {
         guard let url = URL(string: url) else {
             print("Invalid URL")
             return
@@ -164,7 +164,7 @@ class UserService : ObservableObject {
             }
         }.resume()
     }
-    func deleteInvite(url: String) {
+    func deleteInvite(url: String) async {
         
         guard let url = URL(string: url) else {
             print("Invalid URL")
@@ -193,7 +193,7 @@ class UserService : ObservableObject {
             }
         }.resume()
     }
-    func updateAvatar(url: String, userId: String, newAvatar: String) {
+    func updateAvatar(url: String, userId: String, newAvatar: String) async {
         guard let url = URL(string: url) else {
             print("Invalid URL")
             return
@@ -229,7 +229,7 @@ class UserService : ObservableObject {
             }
         }.resume()
     }
-    func uploadImageToSupabase(image: UIImage, fileName: String) {
+    func uploadImageToSupabase(image: UIImage, fileName: String) async {
         guard let imageData = image.jpegData(compressionQuality: 0.2) else {
             print("Error, no image detected")
             return

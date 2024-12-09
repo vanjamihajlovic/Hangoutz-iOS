@@ -26,7 +26,7 @@ struct DetailsView: View {
         ZStack {
             VStack {
                 ZStack{
-
+                    
                     AppBarView()
                     Image(detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? StringConstants.DELETE : "").resizable()
                         .frame(width : 30, height: 30, alignment: .trailing)
@@ -125,7 +125,7 @@ struct DetailsView: View {
             }.onAppear{getAcceptedUsers()}
                 .applyBlurredBackground()
         }.ignoresSafeArea(.keyboard, edges: .all)
-
+        
     }
     var DateAndTime : some View{
         
@@ -182,8 +182,10 @@ struct DetailsView: View {
         }
     }
     func deleteInvite() {
-        detailsViewModel.createUrlToDeleteInvite(eventId: event.id)
-        userService.deleteInvite(url: detailsViewModel.urlToDeleteInvite)
+        Task {
+            detailsViewModel.createUrlToDeleteInvite(eventId: event.id)
+            await userService.deleteInvite(url: detailsViewModel.urlToDeleteInvite)
+        }
     }
 }
 

@@ -278,17 +278,21 @@ struct ProfileView: View {
         }
     }
     func uploadProfilePicture(imageToUpload: UIImage) {
-        let photoName = profileViewModel.randomAlphanumericString(10)
-        profileViewModel.createUrlToUpdateAvatar(id: profileViewModel.currentUserId ?? "")
-        userService.updateAvatar(url: profileViewModel.urlToUpdateAvatar, userId: profileViewModel.currentUserId ?? "", newAvatar: photoName)
-        userService.uploadImageToSupabase(image: imageToUpload, fileName: photoName)
+        Task {
+            let photoName = profileViewModel.randomAlphanumericString(10)
+            profileViewModel.createUrlToUpdateAvatar(id: profileViewModel.currentUserId ?? "")
+            await  userService.updateAvatar(url: profileViewModel.urlToUpdateAvatar, userId: profileViewModel.currentUserId ?? "", newAvatar: photoName)
+            await  userService.uploadImageToSupabase(image: imageToUpload, fileName: photoName)
+        }
     }
     func updateUserName() {
-        profileViewModel.currentUserName = newUserName.trimmingCharacters(in: .whitespaces)
-        newUserName = newUserName.trimmingCharacters(in: .whitespaces)
-        print("CurrentUserName is : \(profileViewModel.currentUserName)")
-        profileViewModel.createUrlToUpdateName(id: profileViewModel.currentUserId)
-        userService.updateName(url: profileViewModel.urlToUpdateName, userId: profileViewModel.currentUserId ?? "", newName: profileViewModel.currentUserName ?? "")
+        Task {
+            profileViewModel.currentUserName = newUserName.trimmingCharacters(in: .whitespaces)
+            newUserName = newUserName.trimmingCharacters(in: .whitespaces)
+            print("CurrentUserName is : \(profileViewModel.currentUserName)")
+            profileViewModel.createUrlToUpdateName(id: profileViewModel.currentUserId)
+            await userService.updateName(url: profileViewModel.urlToUpdateName, userId: profileViewModel.currentUserId ?? "", newName: profileViewModel.currentUserName ?? "")
+        }
     }
 }
 
