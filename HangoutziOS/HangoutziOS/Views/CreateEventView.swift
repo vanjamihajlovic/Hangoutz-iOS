@@ -66,6 +66,8 @@ struct CreateEventView: View {
                             .background(Color.dividerColor)
                             .frame(width:350)
                         
+                        
+                        
                     }.padding(.top, 20)
                         .frame(maxWidth: .infinity)
                 }
@@ -309,6 +311,21 @@ struct PopupViewFriends: View {
                         }
                     }
                     .scrollContentBackground(.hidden)
+                    
+                    Button(action: {
+                    }) {
+                        Text("Add")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundColor(.black)
+                            .padding()
+                            .frame(maxWidth: 150)
+                    }
+                    .background(Color("ButtonBackground"))
+                    .cornerRadius(20)
+                    .shadow(color: Color.black.opacity(0.25), radius: 4, x: 2, y: 2)
+                    .padding()
+                    .accessibilityIdentifier("addButton")
+                    
                 }
             }
             
