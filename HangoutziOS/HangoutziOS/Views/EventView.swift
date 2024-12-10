@@ -140,7 +140,6 @@ struct EventView: View {
         .onAppear() {
             Task{
                 eventViewModel.performApiLogic(for: selectedTab)
-                //startPollingForBadgeCount()
                 await eventViewModel.createUrlInvitedEventsCount(idUser: currentUserId ?? "")
                 await eventViewModel.getBadgeCount()
             }
