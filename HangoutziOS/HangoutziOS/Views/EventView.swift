@@ -108,8 +108,9 @@ struct EventView: View {
                     Spacer()
                   
                     HStack {
+                        
                         Spacer()
-                       
+                        
                         ZStack {
 
                             NavigationLink(destination: CreateEventView(selectedTab:selectedTab)) {
@@ -119,7 +120,8 @@ struct EventView: View {
                                 .padding(.bottom, UIConstants.AVATAR_PADDING_BOTTOM)
                                 .frame(width: UIConstants.PLUS_SIGN_FRAME_WIDTH, height: UIConstants.PLUS_SIGN_FRAME_HEIGHT)
                                 .accessibilityIdentifier(IdentifierConstants.NEW_EVENT_BUTTON)
-                        }
+                            }.tint(.white)
+
                         }.onTapGesture {
                             CreateEventView(selectedTab: selectedTab)
                     }

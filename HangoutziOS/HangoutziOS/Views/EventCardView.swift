@@ -87,7 +87,8 @@ struct EventCard : View {
                     Spacer()
                     
                 }
-            }
+            }.tint(.white)
+
             if(selTab != .invited){
                 HStack{
                     Spacer()
