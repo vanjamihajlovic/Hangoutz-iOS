@@ -131,7 +131,7 @@ struct DetailsView: View {
         HStack(spacing: 30) {
             //Date
             HStack {
-                DatePicker("", selection: $selectedDate, displayedComponents: .date)
+                DatePicker("", selection: $selectedDate, in: Date()..., displayedComponents: .date)
                     .labelsHidden()
                     .tint(.white)
                     .foregroundColor(.white)
@@ -149,7 +149,7 @@ struct DetailsView: View {
             .accessibilityIdentifier(AccessibilityIdentifierConstants.DATE)
             
             HStack {
-                DatePicker("", selection: $selectedTime, displayedComponents: .hourAndMinute)
+                DatePicker("", selection: $selectedTime, in: Date()..., displayedComponents: .hourAndMinute)
                     .labelsHidden()
                     .environment(\.locale, Locale(identifier: "en_GB"))
                     .tint(.white)

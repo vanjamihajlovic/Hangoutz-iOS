@@ -16,7 +16,7 @@ class EventViewModel : ObservableObject {
     @Published var urlPatch: String = ""
     @ObservedObject var eventService = EventService.shared
     @Published var events: [eventModelDTO] = []
-    @Published var count: Int? = nil
+    @Published var count: Int = 0
     @AppStorage("currentUserId") var currentUserId: String?
     @Published var updateStatus: String = ""
     @Published var isLoading: Bool = false
@@ -81,8 +81,7 @@ class EventViewModel : ObservableObject {
         }
         
         func createUrlPeopleGoingCount(idEvent: String) async {
-            urlCountPeople = SupabaseConfig.baseURL + SupabaseConstants.SELECT_PEOPLE_COUNT + idEvent
-            print("Id event from the url is: \(idEvent)")
+            urlCountPeople = SupabaseConfig.baseURL + "rest/v1/invites?&event_status=eq.accepted&event_id=eq." + idEvent
         }
     
         func createUrlInvitedEventsCount(idUser: String) async {
@@ -107,9 +106,8 @@ class EventViewModel : ObservableObject {
         
         func getPeopleCount() async {
             Task{
-                await count = 1 + eventService.getCount(from: urlCountPeople)!
+                await count = 1 + (eventService.getCount(from: urlCountPeople) ?? 0)
             }
-            print("Count is: \(count)")
         }
     
         func getBadgeCount() async {

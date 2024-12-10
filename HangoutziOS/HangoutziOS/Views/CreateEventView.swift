@@ -191,7 +191,7 @@ struct CreateEventView: View {
         
         HStack(spacing: 30) {
             HStack {
-                DatePicker("", selection: $createEventViewModel.selectedDate, displayedComponents: .date)
+                DatePicker("", selection: $createEventViewModel.selectedDate, in: Date()..., displayedComponents: .date)
                     .labelsHidden()
                     .tint(.white)
                     .onChange(of: createEventViewModel.selectedDate) { newDate in
@@ -212,7 +212,7 @@ struct CreateEventView: View {
             .accessibilityIdentifier(AccessibilityIdentifierConstants.DATE)
             
             HStack {
-                DatePicker("", selection: $createEventViewModel.selectedTime, displayedComponents: .hourAndMinute)
+                DatePicker("", selection: $createEventViewModel.selectedTime, in: Date()..., displayedComponents: .hourAndMinute)
                     .labelsHidden()
                     .environment(\.locale, Locale(identifier: "en_GB"))
                     .onChange(of: createEventViewModel.selectedDate) { newDate in
