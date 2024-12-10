@@ -55,12 +55,28 @@ class UserService : ObservableObject {
             return []
         }
     }
+
     func addUser(urlString: String, jsonData: Data?) async throws -> Bool {
         guard let url = URL(string: urlString) else {
             throw URLError(.badURL)
         }
         guard let jsonData = jsonData else {
             throw NSError(domain: "Invalid JSON data", code: 0, userInfo: nil)
+            var request = URLRequest(url: url)
+            request.httpMethod = "DELETE"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: "apikey")
+            request.httpBody = jsonData
+            
+            let (data, response) = try await URLSession.shared.data(for: request)
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 409 {
+                    throw NSError(domain: "User already exists", code: 409, userInfo: nil)
+                } else if httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
+                    throw NSError(domain: "HTTP Error", code: httpResponse.statusCode, userInfo: nil)
+                }
+            }
+            return true
         }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

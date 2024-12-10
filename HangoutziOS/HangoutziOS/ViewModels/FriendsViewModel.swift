@@ -12,6 +12,9 @@ class FriendsViewModel : ObservableObject {
     @Published var friends: [Friend] = []
     @Published var notFriends: [userData] = []
     @Published var searchUser = ""
+    @Published var snackBarText = ""
+    @Published var snackBarTitle = ""
+    @Published var show = false
     @Published var url: String = ""
     @Published var searchText = ""
     @AppStorage("currentUserId") var currentUserId: String?
@@ -57,6 +60,7 @@ class FriendsViewModel : ObservableObject {
             self.notFriends = fetchedNonFriends
         }
     }
+
     func createJsonObject(friendId: String) -> Data? {
         let friendId = friendId
         let jsonObject: [String: Any] = [
@@ -69,6 +73,49 @@ class FriendsViewModel : ObservableObject {
         } catch {
             print("Error creating JSON: \(error.localizedDescription)")
             return nil
+        }
+    }
+    
+    func createUrlDeleteFriend(){
+        url = SupabaseConfig.baseURL + "rest/v1/friends?user_id=eq."
+    }
+    
+    func deleteFriend(friendId: String, friendName: String) async -> Int {
+        let friendName = friendName
+        let apiUrl = SupabaseConfig.baseURL + "rest/v1/friends?user_id=eq.\(currentUserId ?? "")" + "&friend_id=eq." + "\(friendId)"
+        let friendService = FriendsService()
+        
+        do {
+            let success = try await friendService.deleteFriend(urlString: apiUrl)
+            if success {
+                print("Friend successfully deleted!")
+                show.toggle()
+                snackBarText = "\(friendName) is removed from the friend list"
+                return 200
+            } else {
+                print("Failed to delete friend.")
+                return 400
+            }
+        } catch let error as NSError {
+            print("Error deleting friend: \(error.localizedDescription)")
+            return error.code
+        }
+    }
+    func reverseDeleteFriend(friendId: String) async -> Int {
+        let apiUrl = SupabaseConfig.baseURL + "rest/v1/friends?user_id=eq.\(friendId)" + "&friend_id=eq.\(currentUserId ?? "")"
+        let friendService = FriendsService()
+        do {
+            let success = try await friendService.deleteFriend(urlString: apiUrl)
+            if success {
+                print("Friend successfully Reverse- deleted!")
+                return 200
+            } else {
+                print("Failed to delete friend.")
+                return 400
+            }
+        } catch let error as NSError {
+            print("Error deleting friend: \(error.localizedDescription)")
+            return error.code
         }
     }
     func createReverseJsonObject(friendId: String) -> Data? {
@@ -132,3 +179,5 @@ class FriendsViewModel : ObservableObject {
     }
 
 }
+
+

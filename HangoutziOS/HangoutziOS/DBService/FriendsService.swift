@@ -37,6 +37,30 @@ class FriendsService : ObservableObject{
             return []
         }
     }
+    func deleteFriend(urlString: String) async throws -> Bool {
+        guard let url = URL(string: urlString) else {
+            throw URLError(.badURL)
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = HTTPConstants.DELETE.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
+        request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+        
+        if (200...299).contains(httpResponse.statusCode) {
+            print("Friend successfully deleted!")
+            return true
+        } else {
+            print("Failed to delete friend. Status code: \(httpResponse.statusCode)")
+            return false
+        }
+    }
 
     func downloadData(fromURL url: URL) async -> Data? {
         var request = URLRequest(url: url)

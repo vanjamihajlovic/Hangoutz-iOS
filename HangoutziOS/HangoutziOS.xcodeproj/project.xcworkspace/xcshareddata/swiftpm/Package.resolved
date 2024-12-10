@@ -1,6 +1,15 @@
 {
-  "originHash" : "ccc727310637079b7355ccf59e7d153c26677020c1a43e177b78cc9df7963c0f",
+  "originHash" : "2b400478b3d5b439ebdbe0fcceab850d9e6c61e346ef5a8f4ef6a38c10a57fff",
   "pins" : [
+    {
+      "identity" : "popupview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/exyte/PopupView",
+      "state" : {
+        "revision" : "d619317dbb98fe071d11be36c2525d3c213ad8e4",
+        "version" : "3.1.4"
+      }
+    },
     {
       "identity" : "supabase-swift",
       "kind" : "remoteSourceControl",
@@ -44,6 +53,24 @@
       "state" : {
         "revision" : "ef18d829e8b92d731ad27bb81583edd2094d1ce3",
         "version" : "1.3.1"
+      }
+    },
+    {
+      "identity" : "swiftui-introspect",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/siteline/swiftui-introspect",
+      "state" : {
+        "revision" : "807f73ce09a9b9723f12385e592b4e0aaebd3336",
+        "version" : "1.3.0"
+      }
+    },
+    {
+      "identity" : "swiftuisnackbar",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/zaniluca/SwiftUISnackbar",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ff5132c91e3a3855af679e648b95c8ab60c5eeb1"
       }
     },
     {

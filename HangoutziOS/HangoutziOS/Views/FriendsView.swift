@@ -5,6 +5,7 @@
 //  Created by strahinjamil on 11/21/24.
 //
 import SwiftUI
+import SwiftUISnackbar
 
 struct FriendsView: View {
     @AppStorage("currentUserId") var currentUserId: String?
@@ -99,6 +100,7 @@ struct FriendsView: View {
                             )
                             .padding(.vertical, 8)
                         }
+                        .onDelete(perform: deleteFriend)
                         .listRowSeparator(.hidden)
                     }
                     .scrollContentBackground(.hidden)
@@ -125,11 +127,13 @@ struct FriendsView: View {
                             await friendViewModel.getFriends()
                         }
                     }){
-                        PopupView()
-                        
+                        PopupViewAddFriends()
                     }
                 }
             }
+            Text("")
+                .padding(.bottom, 50)
+                .snackbar(isShowing: $friendViewModel.show, title: friendViewModel.snackBarTitle, text: friendViewModel.snackBarText,style: .custom(Color("FriendAddButton")),  extraBottomPadding: 70)
         }
         .onAppear(){
             Task {
@@ -138,14 +142,43 @@ struct FriendsView: View {
         }
         .applyGlobalBackground()
     }
+    
+    func deleteFriend(at offsets: IndexSet) {
+        Task {
+            for index in offsets {
+                guard index < friendViewModel.sortedFriends.count else { continue }
+                let friendToDelete = friendViewModel.sortedFriends[index]
+                
+                let statusCode = await friendViewModel.deleteFriend(friendId: friendToDelete.id, friendName: friendToDelete.name)
+                if statusCode == 200 {
+                    print("Successfully deleted friend: \(friendToDelete.name)")
+                } else {
+                    print("Deleting friend with ID: \(friendToDelete.id)")
+                    print("Failed to delete friend. API returned status code \(statusCode)")
+                }
+                
+                let reverseDeleteStatusCode = await friendViewModel.reverseDeleteFriend(friendId: friendToDelete.id)
+                if reverseDeleteStatusCode == 200 {
+                    print("Successfully deleted friend: \(friendToDelete.name)")
+                } else {
+                    print("Deleting friend with ID: \(friendToDelete.id)")
+                    print("Failed to delete friend. API returned status code \(statusCode)")
+                }
+            }
+            DispatchQueue.main.async {
+                Task {
+                    await friendViewModel.getFriends()
+                }
+            }
+        }
+    }
 }
-
 
 #Preview {
     FriendsView()
 }
 
-struct PopupView: View {
+struct PopupViewAddFriends: View {
     @ObservedObject var friendViewModel = FriendsViewModel()
     @State private var excludedFriendIds: [String] = []
     
