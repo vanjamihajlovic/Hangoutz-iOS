@@ -127,7 +127,7 @@ struct FriendsView: View {
                             await friendViewModel.getFriends()
                         }
                     }){
-                        PopupViewFriends()
+                        PopupViewAddFriends()
                     }
                 }
             }
@@ -178,7 +178,7 @@ struct FriendsView: View {
     FriendsView()
 }
 
-struct PopupViewFriends: View {
+struct PopupViewAddFriends: View {
     @ObservedObject var friendViewModel = FriendsViewModel()
     @State private var excludedFriendIds: [String] = []
     
