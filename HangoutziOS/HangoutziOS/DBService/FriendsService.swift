@@ -58,7 +58,6 @@ class FriendsService : ObservableObject{
         }
     }
 
-
     func downloadData(fromURL url: URL) async -> Data? {
         var request = URLRequest(url: url)
         request.httpMethod = HTTPConstants.GET.rawValue

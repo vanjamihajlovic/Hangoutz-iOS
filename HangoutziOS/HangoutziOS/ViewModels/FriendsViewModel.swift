@@ -80,31 +80,9 @@ class FriendsViewModel : ObservableObject {
         url = SupabaseConfig.baseURL + "rest/v1/friends?user_id=eq."
     }
     
-//    func deleteFriend(friendId : String) async -> Int {
-//        let friendId = friendId
-//        let apiUrl = SupabaseConfig.baseURL + "rest/v1/friends?user_id=eq." + "\(currentUserId)" + "&friend_id=" + "\(friendId)"
-//        
-//        guard let jsonData = createJsonObjectDelete(friendId: friendId) else {
-//            print("Failed to create JSON data.")
-//            return 500
-//        }
-//        let userService = UserService()
-//        do {
-//            let success = try await userService.deleteFriend(urlString: url)
-//            if success {
-//                print("User registered successfully!")
-//                return 200
-//            }
-//        } catch let error as NSError {
-//            print("Failed to register user: \(error.localizedDescription)")
-//            return error.code
-//        }
-//        return 500
-//    }
     func deleteFriend(friendId: String, friendName: String) async -> Int {
         let friendName = friendName
         let apiUrl = SupabaseConfig.baseURL + "rest/v1/friends?user_id=eq.\(currentUserId ?? "")" + "&friend_id=eq." + "\(friendId)"
-        print("current user id : \(currentUserId)")
         let friendService = FriendsService()
         
         do {
@@ -113,10 +91,10 @@ class FriendsViewModel : ObservableObject {
                 print("Friend successfully deleted!")
                 show.toggle()
                 snackBarText = "\(friendName) is removed from the friend list"
-                return 200 // Uspeh
+                return 200
             } else {
                 print("Failed to delete friend.")
-                return 400 // Neuspeh
+                return 400
             }
         } catch let error as NSError {
             print("Error deleting friend: \(error.localizedDescription)")
@@ -124,20 +102,16 @@ class FriendsViewModel : ObservableObject {
         }
     }
     func reverseDeleteFriend(friendId: String) async -> Int {
-       // let apiUrl = SupabaseConfig.baseURL + "rest/v1/friends?user_id=eq.\(currentUserId ?? "")" + "&friend_id=eq." + "\(friendId)"
         let apiUrl = SupabaseConfig.baseURL + "rest/v1/friends?user_id=eq.\(friendId)" + "&friend_id=eq.\(currentUserId ?? "")"
-        print("\(apiUrl)")
-        print("current user id : \(currentUserId)")
         let friendService = FriendsService()
-        
         do {
             let success = try await friendService.deleteFriend(urlString: apiUrl)
             if success {
                 print("Friend successfully Reverse- deleted!")
-                return 200 // Uspeh
+                return 200
             } else {
                 print("Failed to delete friend.")
-                return 400 // Neuspeh
+                return 400
             }
         } catch let error as NSError {
             print("Error deleting friend: \(error.localizedDescription)")

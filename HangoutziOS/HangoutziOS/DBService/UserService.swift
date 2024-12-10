@@ -55,60 +55,7 @@ class UserService : ObservableObject {
             return []
         }
     }
-    
-//    func deleteFriend(urlString: String){
-//        guard let url = URL(string: url) else {
-//            print("Invalid URL")
-//            return
-//        }
-//        var request = URLRequest(url: url)
-//        request.httpMethod = HTTPConstants.DELETE.rawValue
-//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//        request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
-//        request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
-//        
-//        URLSession.shared.dataTask(with: request) { data, response, error in
-//            if let error = error {
-//                print("Error: \(error.localizedDescription)")
-//                return
-//            }
-//            guard let httpResponse = response as? HTTPURLResponse else {
-//                print("Invalid response")
-//                return
-//            }
-//            if (200...299).contains(httpResponse.statusCode) {
-//                print("Friend successfully deleted!")
-//            } else {
-//                print("Failed to delete friend. Status code: \(httpResponse.statusCode)")
-//            }
-//        }.resume()
-//    }
-//    func deleteFriend(urlString: String) async throws -> Bool {
-//        guard let url = URL(string: urlString) else {
-//            throw URLError(.badURL)
-//        }
-//        var request = URLRequest(url: url)
-//        request.httpMethod = HTTPConstants.DELETE.rawValue
-//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//        request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
-//        request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
-//
-//        let (data, response) = try await URLSession.shared.data(for: request)
-//        
-//        guard let httpResponse = response as? HTTPURLResponse else {
-//            throw URLError(.badServerResponse)
-//        }
-//        
-//        if (200...299).contains(httpResponse.statusCode) {
-//            print("Friend successfully deleted!")
-//            return true
-//        } else {
-//            print("Failed to delete friend. Status code: \(httpResponse.statusCode)")
-//            return false
-//        }
-//    }
 
-    
     func addUser(urlString: String, jsonData: Data?) async throws -> Bool {
         guard let url = URL(string: urlString) else {
             throw URLError(.badURL)

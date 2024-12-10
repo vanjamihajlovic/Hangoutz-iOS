@@ -11,9 +11,7 @@ struct FriendsView: View {
     @AppStorage("currentUserId") var currentUserId: String?
     @ObservedObject var friendViewModel = FriendsViewModel()
     @State var showSheet: Bool = false
-//    @State private var showPopup = false // Kontrola prikaza popup-a
-//    @State private var popupMessage = ""
-//    
+    
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -104,11 +102,8 @@ struct FriendsView: View {
                         }
                         .onDelete(perform: deleteFriend)
                         .listRowSeparator(.hidden)
-                        
                     }
                     .scrollContentBackground(.hidden)
-                    
-                    
                 }
             }
             
@@ -139,7 +134,6 @@ struct FriendsView: View {
             Text("")
                 .padding(.bottom, 50)
                 .snackbar(isShowing: $friendViewModel.show, title: friendViewModel.snackBarTitle, text: friendViewModel.snackBarText,style: .custom(Color("FriendAddButton")),  extraBottomPadding: 70)
-                
         }
         .onAppear(){
             Task {
@@ -148,49 +142,7 @@ struct FriendsView: View {
         }
         .applyGlobalBackground()
     }
-//    func deleteFriend(at offsets: IndexSet) {
-//        for index in offsets {
-//            // Dohvatanje prijatelja koji se briše
-//            let friend = friendViewModel.sortedFriends[index]
-//            
-//            Task {
-//                // Poziv API-ja za brisanje prijatelja
-//                let statusCode = await friendViewModel.deleteFriend(friendId: friend.id)
-//                
-//                if statusCode == 200 {
-//                    print("Friend deleted successfully.")
-//                    // Nakon uspešnog brisanja, ponovo preuzmi sve prijatelje
-//                    await friendViewModel.getFriends()
-//                } else {
-//                    print("Failed to delete friend. API returned status code \(statusCode)")
-//                    // Ovde možete prikazati notifikaciju korisniku ako želite.
-//                }
-//            }
-//        }
-//    }
-//    func deleteFriend(at offsets: IndexSet) {
-//        Task {
-//            for index in offsets {
-//                guard index < friendViewModel.sortedFriends.count else { continue }
-//                let friendToDelete = friendViewModel.sortedFriends[index]
-//                
-//                let statusCode = await friendViewModel.deleteFriend(friendId: friendToDelete.id)
-//                if statusCode == 200 {
-//                    DispatchQueue.main.async {
-//                        friendViewModel.sortedFriends.remove(at: index)
-//                    }
-//                } else {
-//                    print("Failed to delete friend. API returned status code \(statusCode)")
-//                }
-//            }
-//            // Opcionalno osvežavanje svih prijatelja
-//            DispatchQueue.main.async {
-//                Task {
-//                    await friendViewModel.getFriends()
-//                }
-//            }
-//        }
-//    }
+    
     func deleteFriend(at offsets: IndexSet) {
         Task {
             for index in offsets {
@@ -213,7 +165,6 @@ struct FriendsView: View {
                     print("Failed to delete friend. API returned status code \(statusCode)")
                 }
             }
-            // Osveži celu listu prijatelja
             DispatchQueue.main.async {
                 Task {
                     await friendViewModel.getFriends()
@@ -222,7 +173,6 @@ struct FriendsView: View {
         }
     }
 }
-
 
 #Preview {
     FriendsView()
