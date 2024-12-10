@@ -29,7 +29,7 @@ struct LoginView: View {
                 }.applyGlobalBackground()
                     .ignoresSafeArea(.keyboard, edges: .all)
             }
-        }
+        }.tint(.white)
     }
     var hangoutzLogo: some View {
         VStack{
@@ -137,7 +137,8 @@ struct CreateAccount: View {
                     .padding(5)
                     .font(.title3)
                     .bold()
-                .foregroundColor(.white)})
+                    .foregroundColor(.white)
+                })
         }
         .padding(.bottom, 10)
     }
