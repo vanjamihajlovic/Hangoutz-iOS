@@ -133,7 +133,7 @@ struct FriendsView: View {
             }
             Text("")
                 .padding(.bottom, 50)
-                .snackbar(isShowing: $friendViewModel.show, title: friendViewModel.snackBarTitle, text: friendViewModel.snackBarText,style: .custom(Color("FriendAddButton")),  extraBottomPadding: 70)
+                .snackbar(isShowing: $friendViewModel.show, title: friendViewModel.snackBarTitle, text: friendViewModel.snackBarText,style: .custom(Color("FriendAddButton")), dismissOnTap: true, dismissAfter: 2,  extraBottomPadding: 70)
         }
         .onAppear(){
             Task {
