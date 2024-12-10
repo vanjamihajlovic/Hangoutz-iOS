@@ -43,6 +43,10 @@ struct EventView: View {
                                         withAnimation{
                                             selectedTab = tab
                                             eventViewModel.performApiLogic(for:tab)
+                                            Task {
+                                                await eventViewModel.createUrlInvitedEventsCount(idUser: currentUserId ?? "")
+                                                await eventViewModel.getBadgeCount()
+                                            }
                                         }
                                     }
                                 if tab == .invited {
@@ -136,7 +140,9 @@ struct EventView: View {
         .onAppear() {
             Task{
                 eventViewModel.performApiLogic(for: selectedTab)
-                startPollingForBadgeCount()
+                //startPollingForBadgeCount()
+                await eventViewModel.createUrlInvitedEventsCount(idUser: currentUserId ?? "")
+                await eventViewModel.getBadgeCount()
             }
         }
     }
@@ -162,20 +168,6 @@ struct EventView: View {
             }
         }
     }
-    
-    private func startPollingForBadgeCount() {
-            isPolling = true
-        currentTask?.cancel()
-        currentTask = Task {
-                while isPolling {
-                    if let userId = currentUserId {
-                        await eventViewModel.createUrlInvitedEventsCount(idUser: userId)
-                        await eventViewModel.getBadgeCount()
-                        }
-                    try? await Task.sleep(nanoseconds: NumberConstants.BADGE_NANOSECONDS)
-                }
-            }
-        }
 }
 
 #Preview {
