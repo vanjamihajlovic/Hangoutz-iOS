@@ -111,6 +111,7 @@ struct EventView: View {
                         Spacer()
                        
                         ZStack {
+
                             NavigationLink(destination: CreateEventView(selectedTab:selectedTab)) {
                                 Image.plusImage
                                 .resizable()

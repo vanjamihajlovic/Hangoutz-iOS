@@ -10,9 +10,22 @@
 		59B6D5892CE60DC100BF6DE3 /* HangoutziOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HangoutziOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		57DE76612D077240002244F0 /* Exceptions for "HangoutziOS" folder in "HangoutziOS" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 59B6D5882CE60DC100BF6DE3 /* HangoutziOS */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		59B6D58B2CE60DC100BF6DE3 /* HangoutziOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				57DE76612D077240002244F0 /* Exceptions for "HangoutziOS" folder in "HangoutziOS" target */,
+			);
 			path = HangoutziOS;
 			sourceTree = "<group>";
 		};

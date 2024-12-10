@@ -11,9 +11,9 @@ import SwiftUI
 
 struct DetailsView: View {
     
-    @ObservedObject var detailsViewModel = DetailsViewModel()
-    @ObservedObject var userService = UserService()
-    @ObservedObject var eventViewModel = EventViewModel.shared
+    @StateObject var detailsViewModel = DetailsViewModel()
+    @StateObject var userService = UserService()
+    @StateObject var eventViewModel = EventViewModel.shared
     @State private var selectedDate = Date()
     @State private var selectedTime = Date()
     @State var isOwner : Bool = false
@@ -119,11 +119,12 @@ struct DetailsView: View {
                         .foregroundColor(.black)
                     }
                     .padding(.bottom, 20)
-                    .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGOUT)
+                    .accessibilityIdentifier(AccessibilityIdentifierConstants.CREATE_EVENT)
                 }
             }.onAppear{getAcceptedUsers()}
                 .applyBlurredBackground()
         }.ignoresSafeArea(.keyboard, edges: .all)
+        
     }
     var DateAndTime : some View{
         
@@ -180,8 +181,10 @@ struct DetailsView: View {
         }
     }
     func deleteInvite() {
-        detailsViewModel.createUrlToDeleteInvite(eventId: event.id)
-        userService.deleteInvite(url: detailsViewModel.urlToDeleteInvite)
+        Task {
+            detailsViewModel.createUrlToDeleteInvite(eventId: event.id)
+            await userService.deleteInvite(url: detailsViewModel.urlToDeleteInvite)
+        }
     }
 }
 
@@ -196,7 +199,7 @@ struct Fields: View {
             Text("\(fieldsCategory)")
                 .font(.caption)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 40)
+                .padding(.leading, 20)
                 .foregroundColor(.white)
             TextField("", text: $textFieldType, prompt: Text(textFieldPlaceholder)
                 .foregroundColor(.white))

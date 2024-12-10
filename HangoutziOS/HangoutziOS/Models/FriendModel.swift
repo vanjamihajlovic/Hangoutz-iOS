@@ -8,12 +8,13 @@
 import Foundation
 
 struct APIResponse: Codable{
-    let users: Friend
+    var users: Friend
 }
 
 struct Friend: Codable, Identifiable {
     let id: String
     let name: String
     let avatar: String?
+    var isChecked: Bool?
 }
 

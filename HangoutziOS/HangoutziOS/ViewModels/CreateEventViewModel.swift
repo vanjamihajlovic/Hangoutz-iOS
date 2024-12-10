@@ -2,13 +2,16 @@
 //  CreateEventViewModel.swift
 //  HangoutziOS
 //
-//  Created by strahinjamil on 12/5/24.
+//  Created by Aleksa on 12/6/24.
 //
-
 import Foundation
+import SwiftUICore
 import SwiftUI
 
-class CreateEventViewModel : ObservableObject{
+class CreateEventViewModel : ObservableObject {
+    
+    @Published var selectedDate = Date()
+    @Published var selectedTime = Date()
 
     @ObservedObject var eventService = EventService.shared
     @AppStorage("currentUserId") var currentUserId : String?
@@ -17,8 +20,6 @@ class CreateEventViewModel : ObservableObject{
     @Published var city : String = ""
     @Published var street : String = ""
     @Published var place : String = ""
-    @Published var selectedDate = Date()
-    @Published var selectedTime = Date()
     @Published var assembledDate = Date()
     @Published var emptyError: String? = nil
     @Published var dateError: String? = nil

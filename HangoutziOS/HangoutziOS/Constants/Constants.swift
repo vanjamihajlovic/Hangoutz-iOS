@@ -89,14 +89,14 @@ class StringConstants {
     static let CAMERA : String = "camera"
     static let GALLERY : String = "Gallery"
     static let PHOTO : String = "photo"
+    static let DELETE: String = "Delete"
+    static let ADD_BUTTON: String = "AddButtonImage"
     static let NO_EVENTS : String = "No events available"
     static let LOADING_EVENTS : String = "Loading events..."
     static let ACCEPT : String = "Accept"
     static let DECLINE : String = "Decline"
     static let ACCEPTED : String = "accepted"
     static let DECLINED : String = "declined"
-    static let DELETE: String = "Delete"
-    static let ADD_BUTTON: String = "AddButtonImage"
     static let VALIDATION_FAILED: String = "Validation failed"
     static let ASSEMBLE_FAILED: String = "Failed to assemble date"
     static let EMPTY_ERROR: String = "Title, place, date and time fields cannot be empty!"
@@ -140,6 +140,7 @@ class AccessibilityIdentifierConstants {
     static let STREET : String = "street"
     static let TITLE : String = "title"
     static let PARTICIPANTS : String = "participants"
+    static let CREATE_EVENT : String = "createEvent"
 }
 
 class ColorConstants {

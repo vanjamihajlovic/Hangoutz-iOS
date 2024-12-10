@@ -11,17 +11,19 @@ import SwiftUI
 
 struct CreateEventView: View {
     
+    @StateObject var createEventFriendsPopupViewModel = CreateEventFriendsPopupViewModel()
     @StateObject var createEventViewModel = CreateEventViewModel()
     @StateObject var eventViewModel = EventViewModel.shared
-    @State private var navigateToMainTab = false
     @Environment(\.presentationMode) var presentationMode
+    @State private var navigateToMainTab = false
+    @State var showSheet: Bool = false
+    @State var searchText: String = ""
     let selectedTab : Tab
+    
     var body: some View {
-        
         ZStack {
             VStack {
                 AppBarView()
-                
                 ScrollView {
                     VStack{
                         FieldsCreateEvent(textFieldType: $createEventViewModel.title, fieldsCategory: DetailsViewModel.FieldsCategory.title.rawValue, textFieldPlaceholder: "")
@@ -30,7 +32,6 @@ struct CreateEventView: View {
                         FieldsCreateEvent(textFieldType: $createEventViewModel.description,fieldsCategory: DetailsViewModel.FieldsCategory.description.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.DESCRIPTION)
-                            
                         FieldsCreateEvent(textFieldType: $createEventViewModel.city, fieldsCategory: DetailsViewModel.FieldsCategory.city.rawValue, textFieldPlaceholder: "")
                             .padding(5)
                             .accessibilityIdentifier(AccessibilityIdentifierConstants.CITY)
@@ -51,16 +52,84 @@ struct CreateEventView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.leading, 15)
                                 .foregroundColor(.white)
-                            Image("AddButtonImage")
-                                .resizable()
-                                .frame(width:40, height:40)
-                                .padding(.trailing, 20)
+                            Button(action: {showSheet.toggle()}){
+                                Image("AddButtonImage")
+                                    .resizable()
+                                    .frame(width:40, height:40)
+                                    .padding(.trailing, 20)
+                            }.sheet(isPresented: $showSheet){
+                                PopupViewFriends(createEventFriendsPopupViewModel: createEventFriendsPopupViewModel, showSheet: $showSheet)
+                            }
                         }
-                        
                         Divider()
                             .background(Color.dividerColor)
                             .frame(width:350)
+                        
+                        ForEach(createEventFriendsPopupViewModel.sortedFriends) { friend in
+                            if(friend.isChecked == true){
+                                HStack {
+                                    if let avatarImage = friend.avatar {
+                                        AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
+                                                   content:{ Image in
+                                            Image
+                                                .resizable()
+                                                .scaledToFill()
+                                                .clipShape(Circle())
+                                                .overlay(
+                                                    Circle()
+                                                        .stroke(Color("FriendAddButton"), lineWidth: 4)
+                                                )
+                                                .frame(width: 40, height: 40)
+                                                .clipShape(Circle())
+                                        }, placeholder: {
+                                            Image("DefaultImage")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .clipShape(Circle())
+                                                .overlay(
+                                                    Circle()
+                                                        .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                                )
+                                                .frame(width: 40, height: 40)
+                                                .accessibilityIdentifier("friendImagePlaceholder")
+                                        }
+                                        )
+                                        .padding(.leading, 20)
+                                        .accessibilityIdentifier("friendImage")
+                                    } else {
+                                        Image("DefaultImage")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .clipShape(Circle())
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                            )
+                                            .frame(width: 40, height: 40)
+                                            .padding(.leading, 20)
+                                            .accessibilityIdentifier("defaultFriendImage")
+                                        
+                                    }
+                                    Text(friend.name)
+                                        .accessibilityIdentifier("friendName")
+                                        .font(.headline)
+                                        .foregroundColor(Color.white)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.leading, 10)
+                                        .accessibilityIdentifier(AccessibilityIdentifierConstants.PARTICIPANTS)
+                                    Button(action : {createEventFriendsPopupViewModel.removeFriendCheck(for: friend.id)}){
+                                        Image(systemName: "minus.circle")
+                                            .padding(.trailing, 20)
+                                            .foregroundColor(Color.white)
+                                    }.accessibilityIdentifier("minus")
+                                }
+                                Divider()
+                                    .background(Color.dividerColor)
+                                    .frame(width:350)
+                            }
+                        }
                     }.padding(.top, 20)
+                        .frame(maxWidth: .infinity)
                 }
                 
                 if let emptyError = createEventViewModel.emptyError {
@@ -98,7 +167,6 @@ struct CreateEventView: View {
                         }) {
                             HStack {
                                 Text(StringConstants.CREATE)
-                                Image.doorRightHandOpen
                             }
                             .padding()
                             .frame(width: 310)
@@ -108,10 +176,15 @@ struct CreateEventView: View {
                         }
                     }
                 )
+                .ignoresSafeArea(.keyboard, edges: .all)
                 .accessibilityIdentifier(AccessibilityIdentifierConstants.LOGOUT)
                 .padding(.bottom, 20)
             }
             .applyBlurredBackground()
+        }.onAppear{
+            Task{
+                await createEventFriendsPopupViewModel.getFriends()
+            }
         }
     }
     var DateAndTime : some View{
@@ -122,8 +195,8 @@ struct CreateEventView: View {
                     .labelsHidden()
                     .tint(.white)
                     .onChange(of: createEventViewModel.selectedDate) { newDate in
-                            print("Selected Date Picker Value: \(newDate)")
-                        }
+                        print("Selected Date Picker Value: \(newDate)")
+                    }
                     .foregroundColor(.white)
                 Image(systemName: ImageConstants.CALENDAR)
                     .foregroundColor(.white)
@@ -143,8 +216,8 @@ struct CreateEventView: View {
                     .labelsHidden()
                     .environment(\.locale, Locale(identifier: "en_GB"))
                     .onChange(of: createEventViewModel.selectedDate) { newDate in
-                            print("Selected Time Picker Value: \(newDate)")
-                        }
+                        print("Selected Time Picker Value: \(newDate)")
+                    }
                     .tint(.white)
                     .foregroundColor(.white)
                 Image(systemName: ImageConstants.CLOCK)
@@ -162,6 +235,7 @@ struct CreateEventView: View {
         }.padding()
             .padding(.leading, -3)
     }
+    
 }
 
 struct FieldsCreateEvent: View {
@@ -175,12 +249,13 @@ struct FieldsCreateEvent: View {
             Text("\(fieldsCategory)")
                 .font(.caption)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 30)
+                .padding(.leading, 20)
                 .foregroundColor(.white)
             TextField("", text: $textFieldType, prompt: Text(textFieldPlaceholder)
                 .foregroundColor(.white))
             .accessibilityIdentifier(AccessibilityIdentifierConstants.USER_NAME)
             .autocapitalization(.none)
+            .autocorrectionDisabled()
             .frame(width: 320, height: 15, alignment: .center)
             .foregroundColor(.white)
             .textContentType(.emailAddress)
@@ -190,6 +265,131 @@ struct FieldsCreateEvent: View {
                 RoundedRectangle(cornerRadius: 20)
                     .stroke(Color.white, lineWidth: 3)
             )
+        }
+    }
+}
+
+struct PopupViewFriends: View {
+    
+    @StateObject var createEventFriendsPopupViewModel : CreateEventFriendsPopupViewModel
+    @State var isPressed : Bool = false
+    @Binding var showSheet : Bool
+    var body: some View {
+        ZStack {
+            VStack(spacing: 0) {
+                HStack {
+                    TextField("", text: $createEventFriendsPopupViewModel.mySearchText,prompt:
+                                Text("Search...")
+                        .foregroundColor(Color.gray)
+                    )
+                    
+                    .accessibilityIdentifier("friendsSearchField")
+                    if !createEventFriendsPopupViewModel.mySearchText.isEmpty {
+                        Button(action: {
+                            createEventFriendsPopupViewModel.mySearchText = ""
+                        }){
+                            Image(systemName: "x.circle")
+                                .foregroundColor(Color.gray)
+                        }
+                        .accessibilityIdentifier("friendsSearchFieldClearButton")
+                    }
+                }
+                .padding(12)
+                .frame(width: 340, height: 40, alignment: .center)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.gray, lineWidth: 2)
+                )
+                .padding(.top, 30)
+                
+                if createEventFriendsPopupViewModel.sortedFriends.isEmpty{
+                    Spacer()
+                    Text("No friends found.")
+                        .foregroundColor(Color.white)
+                    Spacer()
+                }
+                else {
+                    List {
+                        ForEach(createEventFriendsPopupViewModel.sortedFriends) { friend in
+                            HStack {
+                                if let avatarImage = friend.avatar {
+                                    AsyncImage(url: URL(string: SupabaseConfig.baseURLStorage + avatarImage),
+                                               content:{ Image in
+                                        Image
+                                            .resizable()
+                                            .scaledToFill()
+                                            .clipShape(Circle())
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color("FriendAddButton"), lineWidth: 4)
+                                            )
+                                            .frame(width: 50, height: 50)
+                                            .clipShape(Circle())
+                                    }, placeholder: {
+                                        Image("DefaultImage")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .clipShape(Circle())
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                            )
+                                            .frame(width: 50, height: 50)
+                                            .accessibilityIdentifier("friendImagePlaceholder")
+                                    }
+                                    )
+                                    .accessibilityIdentifier("friendImage")
+                                } else {
+                                    Image("DefaultImage")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipShape(Circle())
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color("FriendAddButton"), lineWidth: 2)
+                                        )
+                                        .frame(width: 50, height: 50)
+                                        .accessibilityIdentifier("defaultFriendImage")
+                                    
+                                }
+                                Text(friend.name)
+                                    .accessibilityIdentifier("friendName")
+                                    .font(.headline)
+                                    .foregroundColor(Color("FriendFontColor"))
+                                Spacer()
+                                Button(action: {
+                                    createEventFriendsPopupViewModel.toggleFriendCheck(for: friend.id)
+                                    //print("User: \(friend.name)\n avatar: \(friend.avatar)\n isChecked: \(friend.isChecked)\n")
+                                    print("User: \(friend.name)\n avatar: \(friend.avatar)\n isChecked: \(friend.isChecked)\n")
+                                    
+                                }){
+                                    Image(systemName: (friend.isChecked ?? false) ? "checkmark.square" : "square").resizable()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundColor(Color.black)
+                                    
+                                }
+                            }
+                            .groupBoxAccessibilityIdentifier("friendListItem")
+                        }
+                    }
+                    .scrollContentBackground(.hidden)
+                    
+                    Button(action: {
+                        showSheet.toggle()
+                    }) {
+                        Text("Add")
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundColor(.black)
+                            .padding()
+                            .frame(maxWidth: 150)
+                    }
+                    .background(Color("ButtonBackground"))
+                    .cornerRadius(20)
+                    .shadow(color: Color.black.opacity(0.25), radius: 4, x: 2, y: 2)
+                    .padding()
+                    .accessibilityIdentifier("addButton")
+                }
+            }
         }
     }
 }
