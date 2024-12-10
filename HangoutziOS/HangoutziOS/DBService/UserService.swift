@@ -10,6 +10,7 @@ class UserService : ObservableObject {
     
     @Published var users: [userData] = []
     @Published var acceptedEventUsers: [AcceptedUsersList] = []
+    
     let url: String = ""
     let body: [String: Any] = ["data": []]
     

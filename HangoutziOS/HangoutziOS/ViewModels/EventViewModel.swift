@@ -11,11 +11,12 @@ import SwiftUI
 
 class EventViewModel : ObservableObject {
     @Published var url: String = ""
-    @Published var urlCount: String = ""
+    @Published var urlCountPeople: String = ""
+    @Published var urlCountBadge: String = ""
     @Published var urlPatch: String = ""
     @ObservedObject var eventService = EventService.shared
     @Published var events: [eventModelDTO] = []
-    @Published var count: Int = 0
+    @Published var count: Int? = nil
     @AppStorage("currentUserId") var currentUserId: String?
     @Published var updateStatus: String = ""
     @Published var isLoading: Bool = false
@@ -80,11 +81,12 @@ class EventViewModel : ObservableObject {
         }
         
         func createUrlPeopleGoingCount(idEvent: String) async {
-            urlCount = SupabaseConfig.baseURL + SupabaseConstants.SELECT_PEOPLE_COUNT + idEvent
+            urlCountPeople = SupabaseConfig.baseURL + SupabaseConstants.SELECT_PEOPLE_COUNT + idEvent
+            print("Id event from the url is: \(idEvent)")
         }
     
         func createUrlInvitedEventsCount(idUser: String) async {
-            urlCount = SupabaseConfig.baseURL + SupabaseConstants.SELECT_INVITED_COUNT + idUser
+            urlCountBadge = SupabaseConfig.baseURL + SupabaseConstants.SELECT_INVITED_COUNT + idUser
         }
         
         func getEvents() async {
@@ -105,13 +107,14 @@ class EventViewModel : ObservableObject {
         
         func getPeopleCount() async {
             Task{
-                await count = 1 + (eventService.getCount(from: urlCount) ?? 0)
+                await count = 1 + eventService.getCount(from: urlCountPeople)!
             }
+            print("Count is: \(count)")
         }
     
         func getBadgeCount() async {
             Task{
-                await badgeCount = eventService.getCount(from: urlCount) ?? 0
+                await badgeCount = eventService.getCount(from: urlCountBadge)!
             }
         }
     

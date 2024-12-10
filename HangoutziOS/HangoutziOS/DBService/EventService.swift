@@ -10,8 +10,7 @@ import SwiftUI
 
 class EventService : ObservableObject {
     @Published var events: [eventModelDTO] = []
-    @Published var count : [CountResponse] = []
-    @Published var countint : Int = 0
+    @Published var countint : Int? = nil
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
     let formatter = DateFormatter()
@@ -26,6 +25,7 @@ class EventService : ObservableObject {
             print("Invalid URL.")
             return nil
         }
+        print("Url from service is : \(url)")
         let returnedData = await downloadData(fromURL: url)
         if let data = returnedData{
             guard let countResponse = try? JSONDecoder().decode([CountResponse].self, from: data) else {
@@ -36,7 +36,8 @@ class EventService : ObservableObject {
             await MainActor.run {
                 self.countint = countValue
             }
-            return countValue
+            print("Count int is: \(countint)")
+            return countint
         } else {
             return nil
         }
