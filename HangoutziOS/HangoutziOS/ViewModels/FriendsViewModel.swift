@@ -54,7 +54,8 @@ class FriendsViewModel : ObservableObject {
     func getUsersWhoAreNotFriends() async {
         let excludedFriendIds = sortedFriends.compactMap { $0.id }
         let joinedString = excludedFriendIds.joined(separator: ",")
-        url = SupabaseConfig.baseURL + SupabaseConstants.GET_USERS_WHO_ARE_NOT_FRIENDS + joinedString + ")&name=ilike." + searchUser + "*"
+        let excludeOneself = joinedString + ",\(currentUserId ?? "")"
+        url = SupabaseConfig.baseURL + SupabaseConstants.GET_USERS_WHO_ARE_NOT_FRIENDS + excludeOneself + ")&name=ilike." + searchUser + "*"
         let fetchedNonFriends = await userService.getUsers(from: url)
         await MainActor.run {
             self.notFriends = fetchedNonFriends
