@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class EventService : ObservableObject {
     @Published var events: [eventModelDTO] = []
@@ -115,22 +116,21 @@ class EventService : ObservableObject {
         }.resume()
     }
     
-    func createEvent(newEvent: eventModel, fromURL urlString: String) async throws {
-        guard let url = URL(string: urlString) else {
+    func createInvitation(eventId: String, friendId: String) async throws {
+       var invURL = SupabaseConfig.baseURL + SupabaseConstants.CREATE_INVITE
+        guard let url = URL(string: invURL) else {
             print("Invalid URL.")
             return
         }
-        print("newEvent when it reaches the DBService: \(newEvent)")
+        let newInvite = inviteModel(event_id:eventId, user_id: friendId, event_status: "invited")
         
         var request = URLRequest(url:url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
         request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        encoder.dateEncodingStrategy = .formatted(formatter)
         
-        let jsonData = try encoder.encode(newEvent)
+        let jsonData = try encoder.encode(newInvite)
         print("JSON encoded newEvent: \(jsonData)")
         request.httpBody = jsonData
         
@@ -141,7 +141,68 @@ class EventService : ObservableObject {
             throw URLError(.badServerResponse, userInfo: ["ErrorResponse": errorResponse])
         }
         
-        print("Event created successfully!")
+        print("Invitation created successfully!")
     }
-}
+    
+    func createEvent(newEvent: eventModel, fromURL urlString: String, invitations:[String]) async throws {
+            var eventIdFinal = ""
+            guard let url = URL(string: urlString) else {
+                print("Invalid URL.")
+                return
+            }
+            print("newEvent when it reaches the DBService: \(newEvent)")
+            
+            var request = URLRequest(url:url)
+            request.httpMethod = "POST"
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue(SupabaseConfig.apiKey, forHTTPHeaderField: HTTPConstants.API_KEY.rawValue)
+            request.setValue("Bearer \(SupabaseConfig.serviceRole)", forHTTPHeaderField: HTTPConstants.AUTHORIZATION.rawValue)
+            request.setValue("return=representation", forHTTPHeaderField: "Prefer")
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            encoder.dateEncodingStrategy = .formatted(formatter)
+            
+            let jsonData = try encoder.encode(newEvent)
+            print("JSON encoded newEvent: \(jsonData)")
+            request.httpBody = jsonData
+            
+            let(data, response) = try await URLSession.shared.data(for: request)
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 201 else {
+                let errorResponse = String(data:data, encoding: .utf8) ?? "Unknown error"
+                print(errorResponse)
+                throw URLError(.badServerResponse, userInfo: ["ErrorResponse": errorResponse])
+            }
+            
+            print("Event created successfully!")
+            do {
+                if let jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]],
+                   let firstEvent = jsonArray.first,
+                   let eventId = firstEvent["id"] as? String {
+                    print("Created Event ID: \(eventId)")
+                    print("Invitations: \(invitations)")
+                    eventIdFinal = eventId
+                    for friendId in invitations {
+                        Task {
+                            try? await createInvitation(eventId: eventIdFinal, friendId: friendId)
+                        }
+                    }
+                } else {
+                    print("Failed to extract event ID: Response is empty or incorrect format")
+                    throw URLError(.cannotParseResponse)
+                }
+            } catch {
+                print("Decoding Error: \(error.localizedDescription)")
+                throw error
+            }
+        
+        
+        }
+    
+    struct EventResponse: Decodable {
+        let id: String
+    }
+
+
+    }
+   
+
 

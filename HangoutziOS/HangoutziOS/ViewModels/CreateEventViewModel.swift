@@ -34,6 +34,9 @@ class CreateEventViewModel : ObservableObject {
     @Published var isTimeValid = true
     @Published var hasValidationErrors = false
     
+    @ObservedObject var createEventFriendsList = CreateEventFriendsPopupViewModel.shared
+    
+    
     enum FieldsCategory: String {
         case title = "Title*"
         case description = "Description"
@@ -79,7 +82,7 @@ class CreateEventViewModel : ObservableObject {
     func createEvent() {
        if validateFields(){
             Task{
-                try? await eventService.createEvent(newEvent: createEventInstance(), fromURL: url)
+                try? await eventService.createEvent(newEvent: createEventInstance(), fromURL: url, invitations: createEventFriendsList.checkedFriendIDs)
             }
         } else {
             print(StringConstants.VALIDATION_FAILED)

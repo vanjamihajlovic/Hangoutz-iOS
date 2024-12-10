@@ -11,7 +11,7 @@ import SwiftUI
 
 struct CreateEventView: View {
     
-    @StateObject var createEventFriendsPopupViewModel = CreateEventFriendsPopupViewModel()
+    @StateObject var createEventFriendsPopupViewModel = CreateEventFriendsPopupViewModel.shared
     @StateObject var createEventViewModel = CreateEventViewModel()
     @StateObject var eventViewModel = EventViewModel.shared
     @Environment(\.presentationMode) var presentationMode
