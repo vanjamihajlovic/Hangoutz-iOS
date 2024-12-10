@@ -11,13 +11,14 @@ struct MainTabView: View {
     @AppStorage("currentUserId") var currentUserId: String?
     @AppStorage("currentUserEmail") var currentUserEmail: String?
     @State var currentTab = 0
+    @State var selectedTab: Tab = .going
     
     var body: some View {
         VStack(spacing: 0) {
             AppBarView()
             ZStack{
                 TabView(selection: $currentTab ) {
-                    EventView()
+                    EventView(selectedTab:selectedTab)
                         .tabItem {
                             Label("Events", systemImage: "calendar")
                                 .accessibilityIdentifier("eventIcon")

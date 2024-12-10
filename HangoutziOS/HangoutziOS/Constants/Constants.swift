@@ -89,14 +89,19 @@ class StringConstants {
     static let CAMERA : String = "camera"
     static let GALLERY : String = "Gallery"
     static let PHOTO : String = "photo"
+    static let DELETE: String = "Delete"
+    static let ADD_BUTTON: String = "AddButtonImage"
     static let NO_EVENTS : String = "No events available"
     static let LOADING_EVENTS : String = "Loading events..."
     static let ACCEPT : String = "Accept"
     static let DECLINE : String = "Decline"
     static let ACCEPTED : String = "accepted"
     static let DECLINED : String = "declined"
-    static let DELETE: String = "Delete"
-    static let ADD_BUTTON: String = "AddButtonImage"
+    static let VALIDATION_FAILED: String = "Validation failed"
+    static let ASSEMBLE_FAILED: String = "Failed to assemble date"
+    static let EMPTY_ERROR: String = "Title, place, date and time fields cannot be empty!"
+    static let DATE_ERROR: String = "Invalid date and time input!"
+    static let DESCRIPTION_ERROR: String = "Description must be no longer than 3 lines of text!"
 
 }
 
@@ -112,6 +117,7 @@ class SupabaseConstants {
     static let SET_EVENT_STATUS_ACC_DEC_1 : String = "rest/v1/invites?event_id=eq."
     static let SET_EVENT_STATUS_ACC_DEC_2 : String = "&user_id=eq."
     static let SELECT_INVITED_COUNT : String = "rest/v1/invites?select=count&event_status=eq.invited&user_id=eq."
+    static let CREATE_EVENT : String = "rest/v1/events"
 
 }
 
@@ -134,6 +140,7 @@ class AccessibilityIdentifierConstants {
     static let STREET : String = "street"
     static let TITLE : String = "title"
     static let PARTICIPANTS : String = "participants"
+    static let CREATE_EVENT : String = "createEvent"
 }
 
 class ColorConstants {

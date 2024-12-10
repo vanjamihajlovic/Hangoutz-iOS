@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct eventModel : Decodable, Identifiable {
-    let title : String?
-    let description : String?
-    let city : String?
-    let street : String?
-    let place : String?
-    let date : Date?
-    let id : String?
-    let owner : String?
+struct eventModel : Identifiable, Encodable {
+    var title : String?
+    var description : String?
+    var city : String?
+    var street : String?
+    var place : String?
+    var date : Date?
+    var id : String?
+    var owner : String?
 }
