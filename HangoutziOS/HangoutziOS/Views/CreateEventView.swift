@@ -118,8 +118,8 @@ struct CreateEventView: View {
                                         .padding(.leading, 10)
                                         .accessibilityIdentifier(AccessibilityIdentifierConstants.PARTICIPANTS)
                                     Button(action : {createEventFriendsPopupViewModel.removeFriendCheck(for: friend.id)}){
-                                        Image(systemName: "minus.circle")
-                                            .padding(.trailing, 20)
+                                        Image(systemName: "x.circle")
+                                            .padding(.trailing, 30)
                                             .foregroundColor(Color.white)
                                     }.accessibilityIdentifier("minus")
                                 }

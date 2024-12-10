@@ -43,6 +43,10 @@ struct EventView: View {
                                         withAnimation{
                                             selectedTab = tab
                                             eventViewModel.performApiLogic(for:tab)
+                                            Task {
+                                                await eventViewModel.createUrlInvitedEventsCount(idUser: currentUserId ?? "")
+                                                await eventViewModel.getBadgeCount()
+                                            }
                                         }
                                     }
                                 if tab == .invited {
@@ -108,8 +112,9 @@ struct EventView: View {
                     Spacer()
                   
                     HStack {
+                        
                         Spacer()
-                       
+                        
                         ZStack {
 
                             NavigationLink(destination: CreateEventView(selectedTab:selectedTab)) {
@@ -119,7 +124,8 @@ struct EventView: View {
                                 .padding(.bottom, UIConstants.AVATAR_PADDING_BOTTOM)
                                 .frame(width: UIConstants.PLUS_SIGN_FRAME_WIDTH, height: UIConstants.PLUS_SIGN_FRAME_HEIGHT)
                                 .accessibilityIdentifier(IdentifierConstants.NEW_EVENT_BUTTON)
-                        }
+                            }.tint(.white)
+
                         }.onTapGesture {
                             CreateEventView(selectedTab: selectedTab)
                     }
@@ -136,7 +142,8 @@ struct EventView: View {
         .onAppear() {
             Task{
                 eventViewModel.performApiLogic(for: selectedTab)
-                startPollingForBadgeCount()
+                await eventViewModel.createUrlInvitedEventsCount(idUser: currentUserId ?? "")
+                await eventViewModel.getBadgeCount()
             }
         }
     }
@@ -162,20 +169,6 @@ struct EventView: View {
             }
         }
     }
-    
-    private func startPollingForBadgeCount() {
-            isPolling = true
-        currentTask?.cancel()
-        currentTask = Task {
-                while isPolling {
-                    if let userId = currentUserId {
-                        await eventViewModel.createUrlInvitedEventsCount(idUser: userId)
-                        await eventViewModel.getBadgeCount()
-                        }
-                    try? await Task.sleep(nanoseconds: NumberConstants.BADGE_NANOSECONDS)
-                }
-            }
-        }
 }
 
 #Preview {

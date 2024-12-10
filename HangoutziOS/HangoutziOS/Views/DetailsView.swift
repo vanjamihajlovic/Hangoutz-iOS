@@ -99,7 +99,7 @@ struct DetailsView: View {
                 
                 NavigationLink(destination: MainTabView().navigationBarBackButtonHidden(true)){
                     
-                    Button(action: {
+                    Button(action: detailsViewModel.checkIfUserIsOwner(ownerOfEvent: event.owner ?? "") ? {/*TODO: UPDATE BUTTON LOGIC*/} : {
                         deleteInvite()
                         print("Button pressed! \n URL to delete invite: \(detailsViewModel.urlToDeleteInvite)\n")
                         presentationMode.wrappedValue.dismiss()
