@@ -81,7 +81,7 @@ class EventViewModel : ObservableObject {
         }
         
         func createUrlPeopleGoingCount(idEvent: String) async {
-            urlCountPeople = SupabaseConfig.baseURL + "rest/v1/invites?&event_status=eq.accepted&event_id=eq." + idEvent
+            urlCountPeople = SupabaseConfig.baseURL + SupabaseConstants.SELECT_PEOPLE_COUNT + idEvent
         }
     
         func createUrlInvitedEventsCount(idUser: String) async {

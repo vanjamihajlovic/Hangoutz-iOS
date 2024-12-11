@@ -247,8 +247,8 @@ struct ProfileView: View {
             .ignoresSafeArea(.keyboard, edges: .all)
             
             Button(action: {
+                @AppStorage("currentUserId") var currentUserId = ""
                 profileViewModel.isLoggedIn = false
-                profileViewModel.currentUserId = nil
             }){
                 HStack {
                     Text(StringConstants.LOGOUT)
