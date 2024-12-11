@@ -168,7 +168,8 @@ struct EventCard : View {
         }
         .onAppear() {
             Task{
-                await eventViewModel.createUrlPeopleGoingCount(idEvent: event.id ?? "")
+                let id = event.id
+                await eventViewModel.createUrlPeopleGoingCount(idEvent: id ?? "")
                 await eventViewModel.getPeopleCount()
             }
         }

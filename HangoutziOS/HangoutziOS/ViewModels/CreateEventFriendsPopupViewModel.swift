@@ -13,8 +13,16 @@ class CreateEventFriendsPopupViewModel : FriendsViewModel {
     @Published var myUrl: String = ""
     @Published var mySearchText = ""
     @Published var myFriends: [Friend] = []
-    @Published var checkedFriendIDs: [String] = []
+    @Published var checkedFriendIDs: [String] = []{
+        didSet{
+            print("CheckedFriendIDs: \(checkedFriendIDs)")
+        }
+    }
     let myFriendsService = FriendsService()
+    static let shared = CreateEventFriendsPopupViewModel()
+       
+     override private init() {} // Prevent direct instantiation
+   
     
     override func getFriends() async {
         guard let userId = currentUserId else {

@@ -18,6 +18,7 @@ struct eventModelDTO: Decodable {
     let owner: String?
     let users: User?
     let invites: [Invite]?
+    var count: Int?
 
     struct User: Codable {
         let id: String?

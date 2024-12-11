@@ -11,7 +11,8 @@ import SwiftUI
 
 class EventViewModel : ObservableObject {
     @Published var url: String = ""
-    @Published var urlCount: String = ""
+    @Published var urlCountPeople: String = ""
+    @Published var urlCountBadge: String = ""
     @Published var urlPatch: String = ""
     @ObservedObject var eventService = EventService.shared
     @Published var events: [eventModelDTO] = []
@@ -80,11 +81,11 @@ class EventViewModel : ObservableObject {
         }
         
         func createUrlPeopleGoingCount(idEvent: String) async {
-            urlCount = SupabaseConfig.baseURL + SupabaseConstants.SELECT_PEOPLE_COUNT + idEvent
+            urlCountPeople = SupabaseConfig.baseURL + "rest/v1/invites?&event_status=eq.accepted&event_id=eq." + idEvent
         }
     
         func createUrlInvitedEventsCount(idUser: String) async {
-            urlCount = SupabaseConfig.baseURL + SupabaseConstants.SELECT_INVITED_COUNT + idUser
+            urlCountBadge = SupabaseConfig.baseURL + SupabaseConstants.SELECT_INVITED_COUNT + idUser
         }
         
         func getEvents() async {
@@ -105,13 +106,13 @@ class EventViewModel : ObservableObject {
         
         func getPeopleCount() async {
             Task{
-                await count = 1 + (eventService.getCount(from: urlCount) ?? 0)
+                await count = 1 + (eventService.getCount(from: urlCountPeople) ?? 0)
             }
         }
     
         func getBadgeCount() async {
             Task{
-                await badgeCount = eventService.getCount(from: urlCount) ?? 0
+                await badgeCount = eventService.getCount(from: urlCountBadge)!
             }
         }
     

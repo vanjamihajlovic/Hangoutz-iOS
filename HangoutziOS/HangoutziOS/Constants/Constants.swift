@@ -118,6 +118,8 @@ class SupabaseConstants {
     static let SET_EVENT_STATUS_ACC_DEC_2 : String = "&user_id=eq."
     static let SELECT_INVITED_COUNT : String = "rest/v1/invites?select=count&event_status=eq.invited&user_id=eq."
     static let CREATE_EVENT : String = "rest/v1/events"
+    static let CREATE_INVITE : String = "rest/v1/invites"
+
 
 }
 
