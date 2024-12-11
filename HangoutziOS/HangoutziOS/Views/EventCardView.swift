@@ -169,7 +169,6 @@ struct EventCard : View {
         .onAppear() {
             Task{
                 let id = event.id
-                print("event id from eventCard: \(id)")
                 await eventViewModel.createUrlPeopleGoingCount(idEvent: id ?? "")
                 await eventViewModel.getPeopleCount()
             }

@@ -10,7 +10,7 @@ import SwiftUI
 
 class EventService : ObservableObject {
     @Published var events: [eventModelDTO] = []
-    @Published var countint : Int = 0
+    @Published var countInt : Int = 0
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
     let formatter = DateFormatter()
@@ -25,7 +25,6 @@ class EventService : ObservableObject {
             print("Invalid URL.")
             return nil
         }
-        print("Url from service is : \(url)")
         let returnedData = await downloadData(fromURL: url)
         if let data = returnedData{
             guard let eventResponse = try? JSONDecoder().decode([eventModelDTO].self, from: data) else {
@@ -34,9 +33,9 @@ class EventService : ObservableObject {
             }
             guard let countValue = eventResponse.first?.count else { return nil }
             await MainActor.run {
-                self.countint = countValue
+                self.countInt = countValue
             }
-            return countint
+            return countInt
         } else {
             return nil
         }
@@ -140,8 +139,6 @@ class EventService : ObservableObject {
             print(errorResponse)
             throw URLError(.badServerResponse, userInfo: ["ErrorResponse": errorResponse])
         }
-        
-        print("Invitation created successfully!")
     }
     
     func createEvent(newEvent: eventModel, fromURL urlString: String, invitations:[String]) async throws {
