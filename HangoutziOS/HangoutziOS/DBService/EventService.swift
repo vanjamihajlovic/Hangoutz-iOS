@@ -20,6 +20,7 @@ class EventService : ObservableObject {
     private init() {
     }
     
+    
     func getCount(from urlString: String) async -> Int?{
         guard let url = URL(string: urlString) else {
             print("Invalid URL.")
