@@ -1,7 +1,6 @@
 
 # Hangoutz-iOS
 Discover Hangoutz, an app that makes it easy to organize events with friends
-![avatar_default](https://github.com/user-attachments/assets/4fa14692-88e2-4f3a-a0a3-c5d8c8b657af)
 
 ## Authors
 
