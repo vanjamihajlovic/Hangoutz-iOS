@@ -70,7 +70,6 @@ Daily meetings were everyday at 10:00AM CET. The planning of tasks was every 1 w
 
 # Design 
 * Design tool for our teams is [Figma](https://www.figma.com)
-* Link to the design is [here](https://www.figma.com)
 * Colors in the Figma must have same name as colors in Xcode project.
 
 # API 
