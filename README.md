@@ -22,7 +22,7 @@ Discover Hangoutz, an app that makes it easy to organize events with friends.
 
 
 # Description
-Hangoutz app is an event planner app that has the following functionalities: 
+Hangoutz-iOS is an event planner app that has the following functionalities: 
 - Login/Registration
 - Profile settings 
 - Create, update and delete events
@@ -34,29 +34,8 @@ Hangoutz app is an event planner app that has the following functionalities:
 
 
 # Architecture
-Hangoutz-iOS project is implemented using the MVVM (Model-View-ViewModel) architecture pattern.
-### 1. **Model**
-The Model represents the application's data and business logic. It is responsible for:
-- Fetching and storing data (e.g., from a database or API).
-- Notifying the ViewModel about data changes.
-
-### 2. **View**
-The View is the user interface of the application. It:
-- Displays data provided by the ViewModel.
-- Relies on data bindings or observables to update dynamically when data changes in the ViewModel.
-
-### 3. **ViewModel**
-The ViewModel acts as a bridge between the Model and the View. It:
-- Holds the application state and prepares data from the Model to be displayed in the View.
-- Implements business logic that is independent of the UI.
-- Uses data-binding mechanisms or publishers to notify the View about data updates.
-
-### Benefits of MVVM
-- **Separation of Concerns**: Clear distinction between UI, business logic, and data.
-- **Testability**: The ViewModel can be easily unit tested as it does not depend on the View.
-- **Maintainability**: Changes in the UI or business logic are easier to implement without affecting other layers.
-
-Project database was Supabase.
+Hangoutz-iOS project is implemented using the **MVVM (Model-View-ViewModel)** architecture pattern.
+Project database was **Supabase**.
 
 # Task board
 * Task management tool for our team was [Jira](https://www.atlassian.com/software/jira)
