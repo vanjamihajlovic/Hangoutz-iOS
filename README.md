@@ -17,7 +17,7 @@ Discover Hangoutz, an app that makes it easy to organize events with friends.
 
 # Table of Contents
   1. [Description](#description)
-  2. [Arhitecture](#arhitecture)
+  2. [Architecture](#architecture)
   3. [Task board](#task-board)
   4. [Design](#design)
   5. [API](#api)
