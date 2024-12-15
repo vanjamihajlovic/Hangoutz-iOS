@@ -11,7 +11,7 @@ Discover Hangoutz, an app that makes it easy to organize events with friends.
 - [@alex64a](https://www.github.com/alex64a)
 
 ## Demo
-<img src="https://github.com/user-attachments/assets/22e664d3-56c2-4201-a7b0-d18eed2799db" alt="HangoutzIOSRecording" width="400"/>
+<img src="https://github.com/user-attachments/assets/22e664d3-56c2-4201-a7b0-d18eed2799db" alt="HangoutzIOSRecording" width="100"/>
 
 # Table of Contents
   1. [Description](#description)
